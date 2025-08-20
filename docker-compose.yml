@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: vue_gmap_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: vue_gmap_db
+      MYSQL_USER: vue_user
+      MYSQL_PASSWORD: vue_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - vue_gmap_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: vue_gmap_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: password
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - vue_gmap_network
+
+volumes:
+  mysql_data:
+
+networks:
+  vue_gmap_network:
+    driver: bridge
