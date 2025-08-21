@@ -1,0 +1,128 @@
+import type { Order } from '@/types/marketplace'
+import { mockProducts } from './products'
+
+export const mockOrders: Order[] = [
+  {
+    id: '1',
+    buyerId: 'buyer1',
+    sellerId: 'seller1',
+    status: 'DELIVERED',
+    total: 89999.0,
+    subtotal: 89999.0,
+    tax: 10799.88,
+    shipping: 0,
+    discount: 0,
+    items: [
+      {
+        id: '1',
+        productId: '1',
+        orderId: '1',
+        product: mockProducts[0], // iPhone 15 Pro
+        quantity: 1,
+        price: 89999.0,
+        total: 89999.0,
+        createdAt: '2024-01-15T00:00:00Z',
+      },
+    ],
+    createdAt: '2024-01-15T00:00:00Z',
+    updatedAt: '2024-01-15T00:00:00Z',
+    shippingAddress: {
+      id: '1',
+      userId: 'buyer1',
+      type: 'SHIPPING',
+      name: 'John Doe',
+      phone: '+63 912 345 6789',
+      address: '123 Main St',
+      city: 'Manila',
+      state: 'Metro Manila',
+      country: 'Philippines',
+      postalCode: '1000',
+      isDefault: true,
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
+    },
+    shippingAddressId: '1'
+  },
+  {
+    id: '2',
+    buyerId: 'buyer1',
+    sellerId: 'seller2',
+    status: 'SHIPPED',
+    total: 2499.0,
+    subtotal: 2499.0,
+    tax: 299.88,
+    shipping: 0,
+    discount: 0,
+    items: [
+      {
+        id: '2',
+        productId: '8',
+        orderId: '2',
+        product: mockProducts[7], // Wireless Headphones
+        quantity: 1,
+        price: 2499.0,
+        total: 2499.0,
+        createdAt: '2024-01-18T00:00:00Z',
+      },
+    ],
+    createdAt: '2024-01-18T00:00:00Z',
+    updatedAt: '2024-01-18T00:00:00Z',
+    shippingAddress: {
+      id: '2',
+      userId: 'buyer1',
+      type: 'SHIPPING',
+      name: 'John Doe',
+      phone: '+63 912 345 6789',
+      address: '456 Oak Ave',
+      city: 'Quezon City',
+      state: 'Metro Manila',
+      country: 'Philippines',
+      postalCode: '1100',
+      isDefault: false,
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
+    },
+    shippingAddressId: '2'
+  },
+  {
+    id: '3',
+    buyerId: 'buyer1',
+    sellerId: 'seller1',
+    status: 'PROCESSING',
+    total: 129999.0,
+    subtotal: 129999.0,
+    tax: 15599.88,
+    shipping: 0,
+    discount: 0,
+    items: [
+      {
+        id: '3',
+        productId: '2',
+        orderId: '3',
+        product: mockProducts[1], // MacBook Air M2
+        quantity: 1,
+        price: 129999.0,
+        total: 129999.0,
+        createdAt: '2024-01-20T00:00:00Z',
+      },
+    ],
+    createdAt: '2024-01-20T00:00:00Z',
+    updatedAt: '2024-01-20T00:00:00Z',
+    shippingAddress: {
+      id: '3',
+      userId: 'buyer1',
+      type: 'SHIPPING',
+      name: 'John Doe',
+      phone: '+63 912 345 6789',
+      address: '789 Pine St',
+      city: 'Makati',
+      state: 'Metro Manila',
+      country: 'Philippines',
+      postalCode: '1200',
+      isDefault: false,
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
+    },
+    shippingAddressId: '3'
+  }
+]

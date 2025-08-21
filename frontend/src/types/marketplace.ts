@@ -13,6 +13,13 @@ export interface Category {
   _count?: {
     products: number
   }
+  // Add these properties for the CategoriesView
+  productCount?: number
+  storeCount?: number
+  popularProducts?: Array<{
+    id: string
+    name: string
+  }>
 }
 
 export interface Store {
@@ -31,6 +38,7 @@ export interface Store {
   phone?: string
   email?: string
   website?: string
+  banner?: string
   openingHours?: any
   isActive: boolean
   createdAt: string
@@ -52,10 +60,12 @@ export interface Product {
   comparePrice?: number
   cost?: number
   sku?: string
+  rating?: number
+  reviewCount?: number
+  images: string[]
   barcode?: string
   weight?: number
   dimensions?: any
-  images: string[]
   isActive: boolean
   isFeatured: boolean
   stock: number
@@ -72,7 +82,7 @@ export interface Product {
 export interface SellerProfile {
   id: string
   userId: string
-  user?: User
+  user?: MarketplaceUser
   businessName: string
   businessType: string
   description?: string
@@ -107,7 +117,7 @@ export interface StoreTheme {
 export interface Review {
   id: string
   buyerId: string
-  buyer?: User
+  buyer?: MarketplaceUser
   productId: string
   product?: Product
   rating: number
@@ -141,10 +151,17 @@ export interface WishlistItem {
 export interface Order {
   id: string
   buyerId: string
-  buyer?: User
+  buyer?: MarketplaceUser
   sellerId: string
   seller?: SellerProfile
-  status: 'PENDING' | 'CONFIRMED' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' | 'REFUNDED'
+  status:
+    | 'PENDING'
+    | 'CONFIRMED'
+    | 'PROCESSING'
+    | 'SHIPPED'
+    | 'DELIVERED'
+    | 'CANCELLED'
+    | 'REFUNDED'
   total: number
   subtotal: number
   tax: number
@@ -172,7 +189,7 @@ export interface OrderItem {
 export interface Address {
   id: string
   userId: string
-  user?: User
+  user?: MarketplaceUser
   type: 'SHIPPING' | 'BILLING'
   name: string
   phone: string
@@ -189,14 +206,14 @@ export interface Address {
 export interface BuyerProfile {
   id: string
   userId: string
-  user?: User
+  user?: MarketplaceUser
   birthDate?: string
   preferences?: any
   createdAt: string
   updatedAt: string
 }
 
-export interface User {
+export interface MarketplaceUser {
   id: string
   email: string
   name: string
@@ -208,20 +225,9 @@ export interface User {
   updatedAt: string
 }
 
-export interface PaginationMeta {
-  page: number
-  limit: number
-  total: number
-  pages: number
-}
+// PaginationMeta moved to api.ts for centralized API types
 
-export interface ApiResponse<T = any> {
-  success: boolean
-  data?: T
-  error?: string
-  message?: string
-  pagination?: PaginationMeta
-}
+// ApiResponse moved to api.ts for centralized API types
 
 export interface SearchParams {
   q: string

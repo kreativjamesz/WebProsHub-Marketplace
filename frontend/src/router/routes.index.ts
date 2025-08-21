@@ -1,0 +1,6 @@
+export { authRoutes } from './auth.routes'
+export { marketplaceRoutes } from './marketplace.routes'
+export { buyerRoutes } from './buyer.routes'
+export { sellerRoutes } from './seller.routes'
+export { adminRoutes } from './admin.routes'
+export { generalRoutes } from './general.routes'

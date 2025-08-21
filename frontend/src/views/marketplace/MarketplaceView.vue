@@ -4,13 +4,11 @@
     <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
       <div class="container mx-auto px-4 py-16">
         <div class="text-center">
-          <h1 class="text-4xl md:text-6xl font-bold mb-4">
-            Discover Amazing Products
-          </h1>
+          <h1 class="text-4xl md:text-6xl font-bold mb-4">Discover Amazing Products</h1>
           <p class="text-xl md:text-2xl mb-8 opacity-90">
             Shop from thousands of local businesses and sellers
           </p>
-          
+
           <!-- Search Bar -->
           <div class="max-w-2xl mx-auto">
             <div class="relative">
@@ -40,7 +38,7 @@
         <div class="lg:w-1/4">
           <div class="bg-white rounded-lg shadow-sm p-6 sticky top-4">
             <h3 class="text-lg font-semibold mb-4">Filters</h3>
-            
+
             <!-- Categories -->
             <div class="mb-6">
               <h4 class="font-medium mb-3">Categories</h4>
@@ -86,14 +84,7 @@
             <div class="mb-6">
               <h4 class="font-medium mb-3">Minimum Rating</h4>
               <div class="flex items-center space-x-2">
-                <input
-                  v-model="minRating"
-                  type="range"
-                  min="0"
-                  max="5"
-                  step="0.5"
-                  class="flex-1"
-                />
+                <input v-model="minRating" type="range" min="0" max="5" step="0.5" class="flex-1" />
                 <span class="text-sm text-gray-600">{{ minRating }}+</span>
               </div>
             </div>
@@ -121,11 +112,9 @@
           <!-- Sort and View Options -->
           <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
             <div class="flex items-center space-x-4 mb-4 sm:mb-0">
-              <span class="text-sm text-gray-600">
-                {{ totalProducts }} products found
-              </span>
+              <span class="text-sm text-gray-600"> {{ totalProducts }} products found </span>
             </div>
-            
+
             <div class="flex items-center space-x-4">
               <select
                 v-model="sortBy"
@@ -146,7 +135,9 @@
                   class="p-2 hover:text-blue-600 transition-colors"
                 >
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    <path
+                      d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                    />
                   </svg>
                 </button>
                 <button
@@ -155,7 +146,11 @@
                   class="p-2 hover:text-blue-600 transition-colors"
                 >
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                 </button>
               </div>
@@ -164,12 +159,17 @@
 
           <!-- Loading State -->
           <div v-if="isLoading" class="text-center py-12">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <div
+              class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"
+            ></div>
             <p class="mt-4 text-gray-600">Loading products...</p>
           </div>
 
           <!-- Products Grid -->
-          <div v-else-if="products.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div
+            v-else-if="products.length > 0"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
             <div
               v-for="product in products"
               :key="product.id"
@@ -190,7 +190,11 @@
                     class="p-2 bg-white rounded-full shadow-sm hover:shadow-md transition-all"
                   >
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+                      <path
+                        fill-rule="evenodd"
+                        d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                        clip-rule="evenodd"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -204,7 +208,7 @@
                 <p class="text-sm text-gray-600 mb-3 line-clamp-2">
                   {{ product.description }}
                 </p>
-                
+
                 <!-- Price -->
                 <div class="flex items-center justify-between mb-3">
                   <div class="flex items-center space-x-2">
@@ -215,19 +219,21 @@
                       ${{ product.comparePrice.toFixed(2) }}
                     </span>
                   </div>
-                  
+
                   <!-- Rating -->
                   <div class="flex items-center space-x-1">
                     <div class="flex items-center">
                       <svg
                         v-for="star in 5"
                         :key="star"
-                        :class="star <= product.rating ? 'text-yellow-400' : 'text-gray-300'"
+                        :class="star <= (product.rating || 0) ? 'text-yellow-400' : 'text-gray-300'"
                         class="w-4 h-4"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        <path
+                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                        />
                       </svg>
                     </div>
                     <span class="text-sm text-gray-600">({{ product._count?.reviews || 0 }})</span>
@@ -253,8 +259,18 @@
 
           <!-- Empty State -->
           <div v-else class="text-center py-12">
-            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            <svg
+              class="mx-auto h-12 w-12 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+              />
             </svg>
             <h3 class="mt-2 text-sm font-medium text-gray-900">No products found</h3>
             <p class="mt-1 text-sm text-gray-500">Try adjusting your search or filter criteria.</p>
@@ -270,17 +286,21 @@
               >
                 Previous
               </button>
-              
+
               <button
                 v-for="page in visiblePages"
                 :key="page"
                 @click="changePage(page)"
-                :class="page === currentPage ? 'bg-blue-600 text-white' : 'text-gray-500 bg-white hover:bg-gray-50'"
+                :class="
+                  page === currentPage
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-500 bg-white hover:bg-gray-50'
+                "
                 class="px-3 py-2 text-sm font-medium border border-gray-300 rounded-md"
               >
                 {{ page }}
               </button>
-              
+
               <button
                 @click="changePage(currentPage + 1)"
                 :disabled="currentPage === totalPages"
@@ -322,7 +342,7 @@ const categories = ref<Category[]>([])
 // Price range
 const priceRange = reactive({
   min: '',
-  max: ''
+  max: '',
 })
 
 // Computed
@@ -330,7 +350,7 @@ const visiblePages = computed(() => {
   const pages = []
   const start = Math.max(1, currentPage.value - 2)
   const end = Math.min(totalPages.value, currentPage.value + 2)
-  
+
   for (let i = start; i <= end; i++) {
     pages.push(i)
   }
@@ -375,7 +395,7 @@ const changePage = (page: number) => {
 const loadProducts = async () => {
   try {
     isLoading.value = true
-    
+
     // TODO: Replace with actual API call
     // const response = await apiService.marketplace.getProducts({
     //   page: currentPage.value,
@@ -386,10 +406,10 @@ const loadProducts = async () => {
     //   minRating: minRating.value,
     //   sortBy: sortBy.value
     // })
-    
+
     // Mock data for now
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
     products.value = [
       {
         id: '1',
@@ -401,11 +421,11 @@ const loadProducts = async () => {
         images: ['/placeholder-product.jpg'],
         seller: { businessName: 'TechStore' },
         store: { city: 'Manila' },
-        _count: { reviews: 128 }
+        _count: { reviews: 128 },
       } as Product,
       // Add more mock products...
     ]
-    
+
     totalProducts.value = 150
     totalPages.value = 8
   } catch (error) {
@@ -437,14 +457,14 @@ const isInWishlist = (productId: string) => {
 // Lifecycle
 onMounted(() => {
   loadProducts()
-  
+
   // Load categories
   categories.value = [
-    { id: '1', name: 'Electronics' },
-    { id: '2', name: 'Fashion' },
-    { id: '3', name: 'Home & Garden' },
-    { id: '4', name: 'Sports' },
-    { id: '5', name: 'Books' }
+    { id: '1', name: 'Electronics', isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    { id: '2', name: 'Fashion', isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    { id: '3', name: 'Home & Garden', isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    { id: '4', name: 'Sports', isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    { id: '5', name: 'Books', isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
   ]
 })
 </script>
@@ -452,6 +472,7 @@ onMounted(() => {
 <style scoped>
 .line-clamp-2 {
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;

@@ -288,12 +288,13 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { toast } from 'vue3-toastify'
+import type { AdminStats, RecentActivity, PendingApproval } from '@/types/admin'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
 // State
-const stats = ref({
+const stats = ref<AdminStats>({
   totalUsers: 0,
   newUsersThisMonth: 0,
   totalOrders: 0,
@@ -304,8 +305,8 @@ const stats = ref({
   revenueGrowth: 0
 })
 
-const recentActivities = ref([])
-const pendingApprovals = ref([])
+const recentActivities = ref<RecentActivity[]>([])
+const pendingApprovals = ref<PendingApproval[]>([])
 
 // Methods
 const navigateTo = (path: string) => {
