@@ -17,6 +17,7 @@ const validateRegister = [
   body('name').trim().isLength({ min: 2, max: 50 }),
   body('email').isEmail().normalizeEmail(),
   body('password').isLength({ min: 6 }),
+  body('accountType').optional().isIn(['BUYER', 'SELLER']),
 ]
 
 // JWT options
@@ -184,7 +185,7 @@ router.post('/register', validateRegister, async (req: Request, res: Response) =
       return res.status(400).json({ errors: errors.array() })
     }
 
-    const { name, email, password } = req.body
+    const { name, email, password, accountType = 'BUYER' } = req.body
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
@@ -198,15 +199,17 @@ router.post('/register', validateRegister, async (req: Request, res: Response) =
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    // Create user
+    // Create user with specified role
     const user = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
-        role: 'BUYER' as UserRole,
+        role: accountType as UserRole,
       },
     })
+
+    console.log(`✅ User registered successfully: ${user.name} as ${user.role}`)
 
     // Generate JWT token
     const token = jwt.sign(

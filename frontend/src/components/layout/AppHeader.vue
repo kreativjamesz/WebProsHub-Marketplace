@@ -50,12 +50,13 @@
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" class="w-48">
+              <!-- Be a Seller Section -->
               <DropdownMenuLabel>Menu</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem as-child>
                 <router-link
-                  to="/marketplace"
-                  class="w-full flex items-center justify-space-between"
+                  to="/seller/onboarding"
+                  class="w-full flex items-center justify-between"
                 >
                   <div class="flex flex-col items-start justify-start">
                     <h4 class="text-lg font-bold">Be a seller</h4>
@@ -67,7 +68,9 @@
                 </router-link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuLabel>Menu</DropdownMenuLabel>
+              
+              <!-- Navigation Links -->
+              <DropdownMenuLabel>Navigation</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem as-child>
                 <router-link to="/marketplace" class="w-full">
@@ -93,22 +96,23 @@
                   Deals
                 </router-link>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem as-child>
-                <router-link to="/login" class="w-full">
-                  <LogInIcon class="mr-2 h-4 w-4" />
-                  Login
-                </router-link>
-              </DropdownMenuItem>
-              <DropdownMenuItem as-child>
-                <router-link
-                  to="/register"
-                  class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-                >
-                  <UserPlusIcon class="text-white mr-2 h-4 w-4" />
-                  Register
-                </router-link>
-              </DropdownMenuItem>
+              
+              <!-- Auth Section (only show when not authenticated) -->
+              <template v-if="!authStore.isAuthenticated">
+                <DropdownMenuSeparator />
+                <DropdownMenuItem as-child>
+                  <router-link to="/login" class="w-full">
+                    <LogInIcon class="mr-2 h-4 w-4" />
+                    Login
+                  </router-link>
+                </DropdownMenuItem>
+                <DropdownMenuItem as-child>
+                  <router-link to="/register" class="w-full">
+                    <UserPlusIcon class="mr-2 h-4 w-4" />
+                    Register
+                  </router-link>
+                </DropdownMenuItem>
+              </template>
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -160,7 +164,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { StoreIcon, Building2Icon, FolderIcon, TagIcon, MenuIcon, UserPlusIcon } from 'lucide-vue-next'
+import { StoreIcon, Building2Icon, FolderIcon, TagIcon, MenuIcon, UserPlusIcon, ArrowRightIcon, LogInIcon } from 'lucide-vue-next'
 
 // Composables
 const router = useRouter()

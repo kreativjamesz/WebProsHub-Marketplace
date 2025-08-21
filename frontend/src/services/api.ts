@@ -68,7 +68,7 @@ export const apiService = {
   auth: {
     login: (credentials: { email: string; password: string }) =>
       api.post('/auth/login', credentials),
-    register: (data: { name: string; email: string; password: string }) =>
+    register: (data: { name: string; email: string; password: string; accountType?: string }) =>
       api.post('/auth/register', data),
     logout: () => api.post('/auth/logout'),
     refresh: (token: string) => api.post('/auth/refresh', { token }),

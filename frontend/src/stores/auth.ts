@@ -2,11 +2,11 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { apiService } from '@/services/api'
 import { USER_ROLES } from '@/config/app'
-import type { User, LoginCredentials, RegisterData } from '@/types/auth'
+import type { AuthUser, LoginCredentials, RegisterData } from '@/types/auth'
 
 export const useAuthStore = defineStore('auth', () => {
   // State
-  const user = ref<User | null>(null)
+  const user = ref<AuthUser | null>(null)
   const token = ref<string | null>(null)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
@@ -27,20 +27,31 @@ export const useAuthStore = defineStore('auth', () => {
       isLoading.value = true
       error.value = null
       
+      console.log('🔐 Attempting login with:', { email: credentials.email })
+      
       const response = await apiService.auth.login(credentials)
-      const { user: userData, token: authToken } = response.data
+      console.log('📡 Login response:', response.data)
       
-      user.value = userData
-      token.value = authToken
-      
-      // Store in localStorage
-      localStorage.setItem('auth_token', authToken)
-      localStorage.setItem('user', JSON.stringify(userData))
-      
-      return { success: true, user: userData }
+      // Handle backend response format
+      if (response.data.success) {
+        const { user: userData, token: authToken } = response.data
+        
+        user.value = userData
+        token.value = authToken
+        
+        // Store in localStorage
+        localStorage.setItem('auth_token', authToken)
+        localStorage.setItem('user', JSON.stringify(userData))
+        
+        console.log('✅ Login successful for user:', userData.name)
+        return { success: true, user: userData }
+      } else {
+        throw new Error(response.data.error || 'Login failed')
+      }
     } catch (err: any) {
-      error.value = err.response?.data?.error || 'Login failed'
-      throw error.value
+      console.error('❌ Login error:', err)
+      error.value = err.response?.data?.error || err.message || 'Login failed'
+      throw new Error(error.value || 'Login failed')
     } finally {
       isLoading.value = false
     }
@@ -51,20 +62,35 @@ export const useAuthStore = defineStore('auth', () => {
       isLoading.value = true
       error.value = null
       
+      console.log('📝 Attempting registration for:', { 
+        name: data.name, 
+        email: data.email, 
+        accountType: data.accountType || 'BUYER' 
+      })
+      
       const response = await apiService.auth.register(data)
-      const { user: userData, token: authToken } = response.data
+      console.log('📡 Registration response:', response.data)
       
-      user.value = userData
-      token.value = authToken
-      
-      // Store in localStorage
-      localStorage.setItem('auth_token', authToken)
-      localStorage.setItem('user', JSON.stringify(userData))
-      
-      return { success: true, user: userData }
+      // Handle backend response format
+      if (response.data.success) {
+        const { user: userData, token: authToken } = response.data
+        
+        user.value = userData
+        token.value = authToken
+        
+        // Store in localStorage
+        localStorage.setItem('auth_token', authToken)
+        localStorage.setItem('user', JSON.stringify(userData))
+        
+        console.log('✅ Registration successful for user:', userData.name, 'as', userData.role)
+        return { success: true, user: userData }
+      } else {
+        throw new Error(response.data.error || 'Registration failed')
+      }
     } catch (err: any) {
-      error.value = err.response?.data?.error || 'Registration failed'
-      throw error.value
+      console.error('❌ Registration error:', err)
+      error.value = err.response?.data?.error || err.message || 'Registration failed'
+      throw new Error(error.value || 'Registration failed')
     } finally {
       isLoading.value = false
     }
@@ -129,7 +155,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  const updateProfile = async (data: Partial<User>) => {
+  const updateProfile = async (data: Partial<AuthUser>) => {
     try {
       isLoading.value = true
       error.value = null

@@ -23,6 +23,7 @@ export interface RegisterData {
   email: string
   password: string
   confirmPassword: string
+  accountType: 'BUYER' | 'SELLER'
   acceptTerms: boolean
   marketingEmails?: boolean
 }
