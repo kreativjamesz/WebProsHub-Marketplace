@@ -94,6 +94,9 @@
               <router-link to="/terms" class="footer-bottom-link">Terms of Service</router-link>
               <router-link to="/cookies" class="footer-bottom-link">Cookie Policy</router-link>
             </div>
+            <div class="theme-toggle">
+              <ColorThemeDropdown />
+            </div>
           </div>
         </div>
       </div>
@@ -110,6 +113,7 @@ import {
   Instagram,
   Linkedin,
 } from 'lucide-vue-next'
+import ColorThemeDropdown from '@/components/ColorThemeDropdown.vue'
 
 const currentYear = computed(() => new Date().getFullYear())
 </script>
@@ -272,6 +276,12 @@ const currentYear = computed(() => new Date().getFullYear())
 
 .footer-bottom-link:hover {
   color: white;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Responsive */

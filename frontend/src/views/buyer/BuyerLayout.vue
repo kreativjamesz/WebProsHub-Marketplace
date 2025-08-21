@@ -76,6 +76,9 @@
               </span>
             </button>
 
+            <!-- Theme Toggle -->
+            <ColorThemeDropdown />
+
             <!-- User Menu -->
             <div class="relative">
               <button
@@ -243,7 +246,8 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import type { User } from '@/types/auth'
+import type { AuthUser } from '@/types/auth'
+import ColorThemeDropdown from '@/components/ColorThemeDropdown.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -254,12 +258,12 @@ const cartItemCount = ref(0)
 const notificationCount = ref(3)
 
 // Computed properties
-const user = computed<User | null>(() => authStore.user)
+const user = computed<AuthUser | null>(() => authStore.user)
 const userInitials = computed(() => {
   if (!user.value?.name) return 'U'
   return user.value.name
     .split(' ')
-    .map((name) => name.charAt(0))
+    .map((name: string) => name.charAt(0))
     .join('')
     .toUpperCase()
     .slice(0, 2)

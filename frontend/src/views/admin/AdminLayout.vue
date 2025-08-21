@@ -104,6 +104,9 @@
               <span class="text-xs text-gray-500">System Online</span>
             </div>
 
+            <!-- Theme Toggle -->
+            <ColorThemeDropdown />
+
             <!-- User Menu -->
             <div class="relative">
               <button
@@ -356,6 +359,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import type { User } from '@/types/auth'
+import ColorThemeDropdown from '@/components/ColorThemeDropdown.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()

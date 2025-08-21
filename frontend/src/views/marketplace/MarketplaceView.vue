@@ -178,10 +178,11 @@
             >
               <!-- Product Image -->
               <div class="relative">
-                <img
+                <SafeImage
                   :src="product.images[0] || '/placeholder-product.jpg'"
                   :alt="product.name"
-                  class="w-full h-48 object-cover rounded-t-lg"
+                  class="w-full h-48 rounded-t-lg"
+                  object-fit="cover"
                 />
                 <div class="absolute top-2 right-2">
                   <button
@@ -321,6 +322,7 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
 import type { Product, Category } from '@/types/marketplace'
+import SafeImage from '@/components/ui/SafeImage.vue'
 
 const router = useRouter()
 
@@ -460,11 +462,41 @@ onMounted(() => {
 
   // Load categories
   categories.value = [
-    { id: '1', name: 'Electronics', isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-    { id: '2', name: 'Fashion', isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-    { id: '3', name: 'Home & Garden', isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-    { id: '4', name: 'Sports', isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-    { id: '5', name: 'Books', isActive: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    {
+      id: '1',
+      name: 'Electronics',
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: '2',
+      name: 'Fashion',
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: '3',
+      name: 'Home & Garden',
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: '4',
+      name: 'Sports',
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: '5',
+      name: 'Books',
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
   ]
 })
 </script>

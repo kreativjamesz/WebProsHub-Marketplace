@@ -41,7 +41,34 @@ router.get('/profile', authenticateToken, requireBuyer, async (req: Request, res
   }
 })
 
-// Get cart items
+/**
+ * @swagger
+ * /api/buyers/cart:
+ *   get:
+ *     summary: Get user's cart items
+ *     description: Retrieve all items in the authenticated buyer's shopping cart
+ *     tags: [Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Cart items retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 cart:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/CartItem'
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       403:
+ *         description: Forbidden - User is not a buyer
+ *       500:
+ *         description: Internal server error
+ */
 router.get('/cart', authenticateToken, requireBuyer, async (req: Request, res: Response) => {
   try {
     const cartItems = await prisma.cartItem.findMany({
@@ -56,7 +83,55 @@ router.get('/cart', authenticateToken, requireBuyer, async (req: Request, res: R
   }
 })
 
-// Add to cart
+/**
+ * @swagger
+ * /api/buyers/cart:
+ *   post:
+ *     summary: Add item to cart
+ *     description: Add a product to the authenticated buyer's shopping cart
+ *     tags: [Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - productId
+ *               - quantity
+ *             properties:
+ *               productId:
+ *                 type: string
+ *                 description: ID of the product to add
+ *                 example: "clx1234567890abcdef"
+ *               quantity:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Quantity of the product
+ *                 example: 2
+ *     responses:
+ *       201:
+ *         description: Item added to cart successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 cartItem:
+ *                   $ref: '#/components/schemas/CartItem'
+ *       400:
+ *         description: Bad request - Invalid input data
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       403:
+ *         description: Forbidden - User is not a buyer
+ *       404:
+ *         description: Product not found
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/cart', authenticateToken, requireBuyer, validateCartItem, async (req: Request, res: Response) => {
   try {
     const errors = validationResult(req)

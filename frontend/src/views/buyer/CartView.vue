@@ -25,11 +25,12 @@
                 <!-- Product Image -->
                 <div class="flex-shrink-0">
                   <div class="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden">
-                    <img
+                    <SafeImage
                       v-if="item.product.images && item.product.images.length > 0"
                       :src="item.product.images[0]"
                       :alt="item.product.name"
-                      class="w-full h-full object-cover"
+                      class="w-full h-full"
+                      object-fit="cover"
                     />
                     <div
                       v-else
@@ -191,11 +192,12 @@
             @click="navigateToProduct(product.id)"
           >
             <div class="aspect-w-1 aspect-h-1 bg-gray-200">
-              <img
+              <SafeImage
                 v-if="product.images && product.images.length > 0"
                 :src="product.images[0]"
                 :alt="product.name"
-                class="w-full h-32 object-cover"
+                class="w-full h-32"
+                object-fit="cover"
               />
               <div
                 v-else
@@ -231,6 +233,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { CartItem, Product } from '@/types/marketplace'
 import { mockCartItems, mockProducts } from '@/mocks'
+import SafeImage from '@/components/ui/SafeImage.vue'
 
 const router = useRouter()
 

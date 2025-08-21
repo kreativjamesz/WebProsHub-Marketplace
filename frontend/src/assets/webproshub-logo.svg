@@ -1,0 +1,21 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with rounded corners -->
+  <rect width="200" height="200" rx="20" fill="#1E40AF"/>
+  
+  <!-- Sun icon (representing web/professional services) -->
+  <circle cx="100" cy="80" r="25" fill="#FBBF24"/>
+  <circle cx="100" cy="80" r="20" fill="#1E40AF"/>
+  <circle cx="100" cy="80" r="15" fill="#FBBF24"/>
+  
+  <!-- Smile (representing friendly service) -->
+  <path d="M60 120 Q100 100 140 120" stroke="#FBBF24" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- Company name -->
+  <text x="100" y="170" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">WebProSHub</text>
+  
+  <!-- Optional: Add some decorative elements -->
+  <circle cx="40" cy="40" r="3" fill="#FBBF24" opacity="0.6"/>
+  <circle cx="160" cy="40" r="3" fill="#FBBF24" opacity="0.6"/>
+  <circle cx="40" cy="160" r="3" fill="#FBBF24" opacity="0.6"/>
+  <circle cx="160" cy="160" r="3" fill="#FBBF24" opacity="0.6"/>
+</svg>

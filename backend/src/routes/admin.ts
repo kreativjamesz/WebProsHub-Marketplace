@@ -14,7 +14,57 @@ const validateUserUpdate = [
   body('isActive').optional().isBoolean()
 ]
 
-// Get admin dashboard stats
+/**
+ * @swagger
+ * /api/admin/dashboard:
+ *   get:
+ *     summary: Get admin dashboard stats
+ *     description: Retrieve statistics for the admin dashboard
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Dashboard stats retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 stats:
+ *                   type: object
+ *                   properties:
+ *                     totalUsers:
+ *                       type: integer
+ *                       description: Total number of users
+ *                       example: 1250
+ *                     totalSellers:
+ *                       type: integer
+ *                       description: Total number of sellers
+ *                       example: 89
+ *                     totalProducts:
+ *                       type: integer
+ *                       description: Total number of products
+ *                       example: 5670
+ *                     totalOrders:
+ *                       type: integer
+ *                       description: Total number of orders
+ *                       example: 2340
+ *                     totalRevenue:
+ *                       type: number
+ *                       description: Total revenue from delivered orders
+ *                       example: 125000.50
+ *                     pendingOrders:
+ *                       type: integer
+ *                       description: Number of pending orders
+ *                       example: 45
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       403:
+ *         description: Forbidden - User is not an admin
+ *       500:
+ *         description: Internal server error
+ */
 router.get('/dashboard', authenticateToken, requireAdmin, async (req: Request, res: Response) => {
   try {
     const [
@@ -52,7 +102,91 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req: Request, r
   }
 })
 
-// Get all users
+/**
+ * @swagger
+ * /api/admin/users:
+ *   get:
+ *     summary: Get all users
+ *     description: Retrieve a paginated list of all users with optional filtering
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         description: Number of items per page
+ *       - in: query
+ *         name: role
+ *         schema:
+ *           type: string
+ *           enum: [BUYER, SELLER, ADMIN, STAFF]
+ *         description: Filter users by role
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search users by name or email
+ *       - in: query
+ *         name: isActive
+ *         schema:
+ *           type: boolean
+ *         description: Filter users by active status
+ *     responses:
+ *       200:
+ *         description: Users retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 users:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       email:
+ *                         type: string
+ *                       name:
+ *                         type: string
+ *                       role:
+ *                         type: string
+ *                       isActive:
+ *                         type: boolean
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *                       updatedAt:
+ *                         type: string
+ *                         format: date-time
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     page:
+ *                       type: integer
+ *                     limit:
+ *                       type: integer
+ *                     total:
+ *                       type: integer
+ *                     pages:
+ *                       type: integer
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       403:
+ *         description: Forbidden - User is not an admin
+ *       500:
+ *         description: Internal server error
+ */
 router.get('/users', authenticateToken, requireAdmin, async (req: Request, res: Response) => {
   try {
     const { page = 1, limit = 20, role, search, isActive } = req.query
@@ -95,7 +229,70 @@ router.get('/users', authenticateToken, requireAdmin, async (req: Request, res: 
   }
 })
 
-// Update user
+/**
+ * @swagger
+ * /api/admin/users/{id}:
+ *   put:
+ *     summary: Update user
+ *     description: Update user information (admin only)
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 minLength: 2
+ *                 maxLength: 100
+ *                 description: User's name
+ *                 example: "John Doe"
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: User's email
+ *                 example: "user@example.com"
+ *               role:
+ *                 type: string
+ *                 enum: [BUYER, SELLER, ADMIN, STAFF]
+ *                 description: User's role
+ *                 example: "SELLER"
+ *               isActive:
+ *                 type: boolean
+ *                 description: User's active status
+ *                 example: true
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad request - Validation error
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       403:
+ *         description: Forbidden - User is not an admin
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
 router.put('/users/:id', authenticateToken, requireAdmin, validateUserUpdate, async (req: Request, res: Response) => {
   try {
     const errors = validationResult(req)

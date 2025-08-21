@@ -28,11 +28,12 @@
             <!-- Product Images -->
             <div class="space-y-4">
               <div class="aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden">
-                <img
+                <SafeImage
                   v-if="selectedImage"
                   :src="selectedImage"
                   :alt="product.name"
-                  class="w-full h-96 object-cover"
+                  class="w-full h-96"
+                  object-fit="cover"
                 />
                 <div
                   v-else
@@ -57,10 +58,11 @@
                       : 'border-gray-200 hover:border-gray-300'
                   ]"
                 >
-                  <img
+                  <SafeImage
                     :src="image"
                     :alt="`${product.name} - Image ${index + 1}`"
-                    class="w-full h-full object-cover"
+                    class="w-full h-full"
+                    object-fit="cover"
                   />
                 </button>
               </div>
@@ -279,11 +281,12 @@
               @click="navigateToProduct(relatedProduct.id)"
             >
               <div class="aspect-w-1 aspect-h-1 bg-gray-200">
-                <img
+                <SafeImage
                   v-if="relatedProduct.images && relatedProduct.images.length > 0"
                   :src="relatedProduct.images[0]"
                   :alt="relatedProduct.name"
-                  class="w-full h-32 object-cover"
+                  class="w-full h-32"
+                  object-fit="cover"
                 />
                 <div
                   v-else
@@ -341,6 +344,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import type { Product, Review } from '@/types/marketplace'
 import { mockProducts, mockReviews } from '@/mocks'
+import SafeImage from '@/components/ui/SafeImage.vue'
 
 const router = useRouter()
 const route = useRoute()

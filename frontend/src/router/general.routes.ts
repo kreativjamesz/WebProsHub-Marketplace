@@ -14,6 +14,12 @@ export const generalRoutes: RouteRecordRaw[] = [
     meta: { title: 'About - WebProsHubMarketplace' }
   },
   {
+    path: '/tailwind-test',
+    name: 'tailwind-test',
+    component: () => import('@/components/TailwindTest.vue'),
+    meta: { title: 'Tailwind CSS Test - WebProsHubMarketplace' }
+  },
+  {
     path: '/profile',
     name: 'profile',
     component: () => import('@/views/ProfileView.vue'),

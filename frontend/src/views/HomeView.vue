@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
+import SafeImage from '@/components/ui/SafeImage.vue'
 
 const router = useRouter()
 
@@ -199,10 +200,11 @@ onMounted(() => {
             class="bg-white rounded-lg shadow-sm p-6 text-center hover:shadow-md transition-shadow cursor-pointer group"
           >
             <div class="w-16 h-16 mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <img
+              <SafeImage
                 :src="category.icon"
                 :alt="category.name"
-                class="w-full h-full object-cover rounded-lg"
+                class="w-full h-full rounded-lg"
+                object-fit="cover"
               />
             </div>
             <h3 class="font-semibold text-gray-900 mb-2">{{ category.name }}</h3>
@@ -240,10 +242,11 @@ onMounted(() => {
             class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100"
           >
             <div class="relative">
-              <img
+              <SafeImage
                 :src="product.image"
                 :alt="product.name"
-                class="w-full h-48 object-cover rounded-t-lg"
+                class="w-full h-48 rounded-t-lg"
+                object-fit="cover"
               />
               <div class="absolute top-2 right-2">
                 <button

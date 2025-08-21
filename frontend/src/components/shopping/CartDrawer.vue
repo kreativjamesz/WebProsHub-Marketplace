@@ -69,10 +69,11 @@
                         class="py-6 flex"
                       >
                         <div class="flex-shrink-0 w-24 h-24">
-                          <img
+                          <SafeImage
                             :src="item.product.images[0] || '/placeholder-product.jpg'"
                             :alt="item.product.name"
-                            class="w-full h-full object-cover rounded-md"
+                            class="w-full h-full rounded-md"
+                            object-fit="cover"
                           />
                         </div>
 
@@ -150,6 +151,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
 import type { CartItem } from '@/types/marketplace'
+import SafeImage from '@/components/ui/SafeImage.vue'
 
 const router = useRouter()
 

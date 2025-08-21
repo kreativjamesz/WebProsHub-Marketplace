@@ -4,7 +4,83 @@ import { PrismaClient } from '@prisma/client'
 const router = Router()
 const prisma = new PrismaClient()
 
-// Get all stores
+/**
+ * @swagger
+ * /api/marketplace/stores:
+ *   get:
+ *     summary: Get all stores
+ *     description: Retrieve a paginated list of active stores with optional filtering
+ *     tags: [Marketplace]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         description: Number of items per page
+ *       - in: query
+ *         name: city
+ *         schema:
+ *           type: string
+ *         description: Filter stores by city
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Filter stores by category
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search stores by name, description, or business name
+ *     responses:
+ *       200:
+ *         description: Stores retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 stores:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       name:
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       seller:
+ *                         type: object
+ *                         properties:
+ *                           businessName:
+ *                             type: string
+ *                           businessType:
+ *                             type: string
+ *                           logo:
+ *                             type: string
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     page:
+ *                       type: integer
+ *                     limit:
+ *                       type: integer
+ *                     total:
+ *                       type: integer
+ *                     pages:
+ *                       type: integer
+ *       500:
+ *         description: Internal server error
+ */
 router.get('/stores', async (req: Request, res: Response) => {
   try {
     const { page = 1, limit = 20, city, category, search } = req.query
@@ -49,7 +125,59 @@ router.get('/stores', async (req: Request, res: Response) => {
   }
 })
 
-// Get store by ID
+/**
+ * @swagger
+ * /api/marketplace/stores/{id}:
+ *   get:
+ *     summary: Get store by ID
+ *     description: Retrieve detailed information about a specific store
+ *     tags: [Marketplace]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Store ID
+ *     responses:
+ *       200:
+ *         description: Store retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 store:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     description:
+ *                       type: string
+ *                     seller:
+ *                       type: object
+ *                       properties:
+ *                         businessName:
+ *                           type: string
+ *                         businessType:
+ *                           type: string
+ *                         logo:
+ *                           type: string
+ *                         banner:
+ *                           type: string
+ *                         description:
+ *                           type: string
+ *                     products:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Product'
+ *       404:
+ *         description: Store not found
+ *       500:
+ *         description: Internal server error
+ */
 router.get('/stores/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params
@@ -81,7 +209,91 @@ router.get('/stores/:id', async (req: Request, res: Response) => {
   }
 })
 
-// Get all products
+/**
+ * @swagger
+ * /api/marketplace/products:
+ *   get:
+ *     summary: Get all products
+ *     description: Retrieve a paginated list of active products with optional filtering and sorting
+ *     tags: [Marketplace]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         description: Number of items per page
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Filter products by category
+ *       - in: query
+ *         name: seller
+ *         schema:
+ *           type: string
+ *         description: Filter products by seller
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search products by name or description
+ *       - in: query
+ *         name: minPrice
+ *         schema:
+ *           type: number
+ *         description: Minimum price filter
+ *       - in: query
+ *         name: maxPrice
+ *         schema:
+ *           type: number
+ *         description: Maximum price filter
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *           enum: [createdAt, price, name]
+ *           default: createdAt
+ *         description: Sort field
+ *       - in: query
+ *         name: sortOrder
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *           default: desc
+ *         description: Sort order
+ *     responses:
+ *       200:
+ *         description: Products retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 products:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Product'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     page:
+ *                       type: integer
+ *                     limit:
+ *                       type: integer
+ *                     total:
+ *                       type: integer
+ *                     pages:
+ *                       type: integer
+ *       500:
+ *         description: Internal server error
+ */
 router.get('/products', async (req: Request, res: Response) => {
   try {
     const {

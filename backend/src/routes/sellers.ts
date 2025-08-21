@@ -24,6 +24,51 @@ const validateStore = [
   body('longitude').isFloat({ min: -180, max: 180 })
 ]
 
+/**
+ * @swagger
+ * /api/sellers/profile:
+ *   get:
+ *     summary: Get seller profile
+ *     description: Retrieve the authenticated seller's profile information
+ *     tags: [Sellers]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Seller profile retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 seller:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     businessName:
+ *                       type: string
+ *                     businessType:
+ *                       type: string
+ *                     description:
+ *                       type: string
+ *                     logo:
+ *                       type: string
+ *                     banner:
+ *                       type: string
+ *                     isVerified:
+ *                       type: boolean
+ *                     user:
+ *                       $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       403:
+ *         description: Forbidden - User is not a seller
+ *       404:
+ *         description: Seller profile not found
+ *       500:
+ *         description: Internal server error
+ */
 // Get seller profile
 router.get('/profile', authenticateToken, requireSeller, async (req: Request, res: Response) => {
   try {
@@ -50,6 +95,82 @@ router.get('/profile', authenticateToken, requireSeller, async (req: Request, re
   }
 })
 
+/**
+ * @swagger
+ * /api/sellers/profile:
+ *   put:
+ *     summary: Update seller profile
+ *     description: Update the authenticated seller's profile information
+ *     tags: [Sellers]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - businessName
+ *               - businessType
+ *             properties:
+ *               businessName:
+ *                 type: string
+ *                 minLength: 2
+ *                 maxLength: 100
+ *                 description: Business name
+ *                 example: "Tech Solutions Inc"
+ *               businessType:
+ *                 type: string
+ *                 minLength: 2
+ *                 maxLength: 50
+ *                 description: Type of business
+ *                 example: "Technology"
+ *               description:
+ *                 type: string
+ *                 maxLength: 500
+ *                 description: Business description
+ *                 example: "Leading technology solutions provider"
+ *               logo:
+ *                 type: string
+ *                 description: Logo URL
+ *                 example: "https://example.com/logo.png"
+ *               banner:
+ *                 type: string
+ *                 description: Banner URL
+ *                 example: "https://example.com/banner.png"
+ *               themeId:
+ *                 type: string
+ *                 description: Store theme ID
+ *                 example: "clx1234567890abcdef"
+ *     responses:
+ *       200:
+ *         description: Seller profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 seller:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     businessName:
+ *                       type: string
+ *                     businessType:
+ *                       type: string
+ *                     description:
+ *                       type: string
+ *       400:
+ *         description: Bad request - Validation error
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       403:
+ *         description: Forbidden - User is not a seller
+ *       500:
+ *         description: Internal server error
+ */
 // Update seller profile
 router.put('/profile', authenticateToken, requireSeller, validateSellerProfile, async (req: Request, res: Response) => {
   try {
@@ -78,6 +199,117 @@ router.put('/profile', authenticateToken, requireSeller, validateSellerProfile, 
   }
 })
 
+/**
+ * @swagger
+ * /api/sellers/stores:
+ *   post:
+ *     summary: Create store
+ *     description: Create a new store for the authenticated seller
+ *     tags: [Sellers]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - address
+ *               - city
+ *               - state
+ *               - country
+ *               - postalCode
+ *               - latitude
+ *               - longitude
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 minLength: 2
+ *                 maxLength: 100
+ *                 description: Store name
+ *                 example: "Main Store"
+ *               address:
+ *                 type: string
+ *                 minLength: 5
+ *                 maxLength: 200
+ *                 description: Store address
+ *                 example: "123 Main Street"
+ *               city:
+ *                 type: string
+ *                 minLength: 2
+ *                 maxLength: 50
+ *                 description: City
+ *                 example: "New York"
+ *               state:
+ *                 type: string
+ *                 minLength: 2
+ *                 maxLength: 50
+ *                 description: State/Province
+ *                 example: "NY"
+ *               country:
+ *                 type: string
+ *                 minLength: 2
+ *                 maxLength: 50
+ *                 description: Country
+ *                 example: "USA"
+ *               postalCode:
+ *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 10
+ *                 description: Postal code
+ *                 example: "10001"
+ *               latitude:
+ *                 type: number
+ *                 minimum: -90
+ *                 maximum: 90
+ *                 description: Latitude coordinate
+ *                 example: 40.7128
+ *               longitude:
+ *                 type: number
+ *                 minimum: -180
+ *                 maximum: 180
+ *                 description: Longitude coordinate
+ *                 example: -74.0060
+ *     responses:
+ *       201:
+ *         description: Store created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 store:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     address:
+ *                       type: string
+ *                     city:
+ *                       type: string
+ *                     state:
+ *                       type: string
+ *                     country:
+ *                       type: string
+ *                     postalCode:
+ *                       type: string
+ *                     latitude:
+ *                       type: number
+ *                     longitude:
+ *                       type: number
+ *       400:
+ *         description: Bad request - Validation error
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       403:
+ *         description: Forbidden - User is not a seller
+ *       500:
+ *         description: Internal server error
+ */
 // Create store
 router.post('/stores', authenticateToken, requireSeller, validateStore, async (req: Request, res: Response) => {
   try {

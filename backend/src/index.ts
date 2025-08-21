@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import compression from 'compression'
 import rateLimit from 'express-rate-limit'
 import dotenv from 'dotenv'
+import swaggerUi from 'swagger-ui-express'
 
 // Import routes
 import authRoutes from './routes/auth'
@@ -13,6 +14,9 @@ import sellerRoutes from './routes/sellers'
 import buyerRoutes from './routes/buyers'
 import marketplaceRoutes from './routes/marketplace'
 import adminRoutes from './routes/admin'
+
+// Import Swagger specs
+import { specs } from './config/swagger'
 
 // Load environment variables
 dotenv.config()
@@ -50,6 +54,19 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
 
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'WebProsHubMarketplace API Documentation',
+  customfavIcon: '/favicon.ico',
+  swaggerOptions: {
+    persistAuthorization: true,
+    displayRequestDuration: true,
+    filter: true,
+    deepLinking: true
+  }
+}))
+
 // Routes
 app.use('/api/auth', authRoutes)
 app.use('/api/users', userRoutes)
@@ -74,6 +91,7 @@ app.get('/api', (req: Request, res: Response) => {
     app: 'WebProsHubMarketplace',
     version: '1.0.0',
     description: 'Professional marketplace with Google Maps integration',
+    documentation: '/api-docs',
     endpoints: {
       auth: '/api/auth',
       users: '/api/users',
