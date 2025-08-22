@@ -1,59 +1,59 @@
 <template>
-  <div class="py-8">
+  <div class="py-8 bg-background">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Settings</h1>
-        <p class="mt-2 text-gray-600">Manage your application preferences and account settings</p>
+        <h1 class="text-3xl font-bold text-foreground">Settings</h1>
+        <p class="mt-2 text-muted-foreground">Manage your application preferences and account settings</p>
       </div>
 
       <!-- Settings Content -->
       <div class="space-y-8">
         <!-- Account Settings -->
-        <div class="bg-white rounded-lg shadow-md">
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-medium text-gray-900">Account Settings</h2>
+        <div class="bg-card rounded-xl shadow-sm border border-border">
+          <div class="px-6 py-4 border-b border-border">
+            <h2 class="text-lg font-medium text-foreground">Account Settings</h2>
           </div>
           
           <div class="p-6">
             <div class="space-y-6">
               <!-- Profile Link -->
-              <div class="flex items-center justify-between">
+              <div class="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
                 <div>
-                  <h3 class="text-sm font-medium text-gray-700">Profile Information</h3>
-                  <p class="text-sm text-gray-500">Update your personal information and contact details</p>
+                  <h3 class="text-sm font-medium text-foreground">Profile Information</h3>
+                  <p class="text-sm text-muted-foreground">Update your personal information and contact details</p>
                 </div>
                 <router-link
                   to="/buyer/profile"
-                  class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium"
+                  class="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors duration-200 font-medium"
                 >
                   Manage Profile
                 </router-link>
               </div>
               
               <!-- Password Change -->
-              <div class="flex items-center justify-between">
+              <div class="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
                 <div>
-                  <h3 class="text-sm font-medium text-gray-700">Password</h3>
-                  <p class="text-sm text-gray-500">Change your account password</p>
+                  <h3 class="text-sm font-medium text-foreground">Password</h3>
+                  <p class="text-sm text-muted-foreground">Change your account password</p>
                 </div>
                 <button
                   @click="showPasswordModal = true"
-                  class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors duration-200 font-medium"
+                  class="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/90 transition-colors duration-200 font-medium"
                 >
                   Change Password
                 </button>
               </div>
               
               <!-- Two-Factor Authentication -->
-              <div class="flex items-center justify-between">
+              <div class="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
                 <div>
-                  <h3 class="text-sm font-medium text-gray-700">Two-Factor Authentication</h3>
-                  <p class="text-sm text-gray-500">Add an extra layer of security to your account</p>
+                  <h3 class="text-sm font-medium text-foreground">Two-Factor Authentication</h3>
+                  <p class="text-sm text-muted-foreground">Add an extra layer of security to your account</p>
                 </div>
                 <button
                   @click="toggleTwoFactor"
-                  class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors duration-200 font-medium"
+                  class="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/90 transition-colors duration-200 font-medium"
                 >
                   {{ settings.twoFactorEnabled ? 'Disable' : 'Enable' }}
                 </button>
@@ -63,75 +63,66 @@
         </div>
 
         <!-- Notification Settings -->
-        <div class="bg-white rounded-lg shadow-md">
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-medium text-gray-900">Notification Settings</h2>
+        <div class="bg-card rounded-xl shadow-sm border border-border">
+          <div class="px-6 py-4 border-b border-border">
+            <h2 class="text-lg font-medium text-foreground">Notification Settings</h2>
           </div>
           
           <div class="p-6">
             <form @submit.prevent="updateNotificationSettings" class="space-y-6">
               <div class="space-y-4">
-                <h3 class="text-sm font-medium text-gray-700">Email Notifications</h3>
+                <h3 class="text-sm font-medium text-foreground">Email Notifications</h3>
                 
                 <div class="space-y-3">
-                  <label class="flex items-center">
+                  <label class="flex items-center p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors duration-200">
                     <input
                       v-model="settings.emailNotifications"
                       type="checkbox"
-                      class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      class="rounded border-border text-primary focus:ring-ring"
                     />
-                    <span class="ml-2 text-sm text-gray-700">Order updates and shipping notifications</span>
+                    <span class="ml-3 text-sm text-foreground">Order updates and shipping notifications</span>
                   </label>
                   
-                  <label class="flex items-center">
+                  <label class="flex items-center p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors duration-200">
                     <input
                       v-model="settings.promotionalEmails"
                       type="checkbox"
-                      class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      class="rounded border-border text-primary focus:ring-ring"
                     />
-                    <span class="ml-2 text-sm text-gray-700">Promotional offers and deals</span>
+                    <span class="ml-3 text-sm text-foreground">Promotional offers and deals</span>
                   </label>
                   
-                  <label class="flex items-center">
+                  <label class="flex items-center p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors duration-200">
                     <input
                       v-model="settings.newsletterEmails"
                       type="checkbox"
-                      class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      class="rounded border-border text-primary focus:ring-ring"
                     />
-                    <span class="ml-2 text-sm text-gray-700">Weekly newsletter</span>
+                    <span class="ml-3 text-sm text-foreground">Newsletter and updates</span>
                   </label>
                 </div>
               </div>
               
               <div class="space-y-4">
-                <h3 class="text-sm font-medium text-gray-700">Push Notifications</h3>
+                <h3 class="text-sm font-medium text-foreground">Push Notifications</h3>
                 
                 <div class="space-y-3">
-                  <label class="flex items-center">
+                  <label class="flex items-center p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors duration-200">
                     <input
                       v-model="settings.pushNotifications"
                       type="checkbox"
-                      class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      class="rounded border-border text-primary focus:ring-ring"
                     />
-                    <span class="ml-2 text-sm text-gray-700">Order status updates</span>
+                    <span class="ml-3 text-sm text-foreground">Push notifications for important updates</span>
                   </label>
                   
-                  <label class="flex items-center">
+                  <label class="flex items-center p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors duration-200">
                     <input
-                      v-model="settings.pushPromotions"
+                      v-model="settings.orderAlerts"
                       type="checkbox"
-                      class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      class="rounded border-border text-primary focus:ring-ring"
                     />
-                    <span class="ml-2 text-sm text-gray-700">Promotional notifications</span>
-                  </label>
-                  
-                  <label class="flex items-center">
-                    <input
-                      v-model="settings.pushAbandonedCart"
-                      type="checkbox"
-                      class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span class="ml-2 text-sm text-gray-700">Abandoned cart reminders</span>
+                    <span class="ml-3 text-sm text-foreground">Order status alerts</span>
                   </label>
                 </div>
               </div>
@@ -139,10 +130,9 @@
               <div class="flex justify-end">
                 <button
                   type="submit"
-                  :disabled="updatingNotifications"
-                  class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors duration-200 font-medium"
                 >
-                  {{ updatingNotifications ? 'Updating...' : 'Update Notifications' }}
+                  Save Preferences
                 </button>
               </div>
             </form>
@@ -150,66 +140,42 @@
         </div>
 
         <!-- Privacy Settings -->
-        <div class="bg-white rounded-lg shadow-md">
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-medium text-gray-900">Privacy Settings</h2>
+        <div class="bg-card rounded-xl shadow-sm border border-border">
+          <div class="px-6 py-4 border-b border-border">
+            <h2 class="text-lg font-medium text-foreground">Privacy Settings</h2>
           </div>
           
           <div class="p-6">
             <form @submit.prevent="updatePrivacySettings" class="space-y-6">
               <div class="space-y-4">
-                <h3 class="text-sm font-medium text-gray-700">Data Sharing</h3>
+                <h3 class="text-sm font-medium text-foreground">Data Sharing</h3>
                 
                 <div class="space-y-3">
-                  <label class="flex items-center">
+                  <label class="flex items-center p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors duration-200">
                     <input
-                      v-model="settings.shareData"
+                      v-model="privacy.allowAnalytics"
                       type="checkbox"
-                      class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      class="rounded border-border text-primary focus:ring-ring"
                     />
-                    <span class="ml-2 text-sm text-gray-700">Allow data sharing for improved services</span>
+                    <span class="ml-3 text-sm text-foreground">Allow analytics and performance data collection</span>
                   </label>
                   
-                  <label class="flex items-center">
+                  <label class="flex items-center p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors duration-200">
                     <input
-                      v-model="settings.analyticsTracking"
+                      v-model="privacy.allowMarketing"
                       type="checkbox"
-                      class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      class="rounded border-border text-primary focus:ring-ring"
                     />
-                    <span class="ml-2 text-sm text-gray-700">Analytics and usage tracking</span>
+                    <span class="ml-3 text-sm text-foreground">Allow marketing and advertising data sharing</span>
                   </label>
                   
-                  <label class="flex items-center">
+                  <label class="flex items-center p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors duration-200">
                     <input
-                      v-model="settings.personalizedAds"
+                      v-model="privacy.publicProfile"
                       type="checkbox"
-                      class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      class="rounded border-border text-primary focus:ring-ring"
                     />
-                    <span class="ml-2 text-sm text-gray-700">Personalized advertisements</span>
-                  </label>
-                </div>
-              </div>
-              
-              <div class="space-y-4">
-                <h3 class="text-sm font-medium text-gray-700">Profile Visibility</h3>
-                
-                <div class="space-y-3">
-                  <label class="flex items-center">
-                    <input
-                      v-model="settings.publicProfile"
-                      type="checkbox"
-                      class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span class="ml-2 text-sm text-gray-700">Make profile visible to other users</span>
-                  </label>
-                  
-                  <label class="flex items-center">
-                    <input
-                      v-model="settings.showActivity"
-                      type="checkbox"
-                      class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span class="ml-2 text-sm text-gray-700">Show recent activity to friends</span>
+                    <span class="ml-3 text-sm text-foreground">Make profile visible to other users</span>
                   </label>
                 </div>
               </div>
@@ -217,248 +183,94 @@
               <div class="flex justify-end">
                 <button
                   type="submit"
-                  :disabled="updatingPrivacy"
-                  class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors duration-200 font-medium"
                 >
-                  {{ updatingPrivacy ? 'Updating...' : 'Update Privacy' }}
+                  Save Privacy Settings
                 </button>
               </div>
             </form>
           </div>
         </div>
 
-        <!-- Language & Region -->
-        <div class="bg-white rounded-lg shadow-md">
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-medium text-gray-900">Language & Region</h2>
+        <!-- Theme Settings -->
+        <div class="bg-card rounded-xl shadow-sm border border-border">
+          <div class="px-6 py-4 border-b border-border">
+            <h2 class="text-lg font-medium text-foreground">Theme Settings</h2>
           </div>
           
           <div class="p-6">
-            <form @submit.prevent="updateLanguageSettings" class="space-y-6">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Language</label>
-                  <select
-                    v-model="settings.language"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="en">English</option>
-                    <option value="tl">Tagalog</option>
-                    <option value="es">Spanish</option>
-                    <option value="zh">Chinese</option>
-                    <option value="ja">Japanese</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Region</label>
-                  <select
-                    v-model="settings.region"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="PH">Philippines</option>
-                    <option value="US">United States</option>
-                    <option value="CA">Canada</option>
-                    <option value="GB">United Kingdom</option>
-                    <option value="AU">Australia</option>
-                  </select>
-                </div>
-              </div>
+            <div class="space-y-4">
+              <h3 class="text-sm font-medium text-foreground">Appearance</h3>
               
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Currency</label>
-                <select
-                  v-model="settings.currency"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="PHP">Philippine Peso (₱)</option>
-                  <option value="USD">US Dollar ($)</option>
-                  <option value="EUR">Euro (€)</option>
-                  <option value="GBP">British Pound (£)</option>
-                  <option value="AUD">Australian Dollar (A$)</option>
-                </select>
-              </div>
-              
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Time Zone</label>
-                <select
-                  v-model="settings.timezone"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="Asia/Manila">Asia/Manila (UTC+8)</option>
-                  <option value="America/New_York">America/New_York (UTC-5)</option>
-                  <option value="America/Los_Angeles">America/Los_Angeles (UTC-8)</option>
-                  <option value="Europe/London">Europe/London (UTC+0)</option>
-                  <option value="Europe/Paris">Europe/Paris (UTC+1)</option>
-                </select>
-              </div>
-              
-              <div class="flex justify-end">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <button
-                  type="submit"
-                  :disabled="updatingLanguage"
-                  class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  @click="setTheme('light')"
+                  :class="[
+                    'p-4 rounded-lg border-2 transition-all duration-200',
+                    theme === 'light' 
+                      ? 'border-primary bg-primary/10' 
+                      : 'border-border hover:border-primary/50'
+                  ]"
                 >
-                  {{ updatingLanguage ? 'Updating...' : 'Update Language & Region' }}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <!-- Security Settings -->
-        <div class="bg-white rounded-lg shadow-md">
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-medium text-gray-900">Security Settings</h2>
-          </div>
-          
-          <div class="p-6">
-            <div class="space-y-6">
-              <!-- Login History -->
-              <div>
-                <h3 class="text-sm font-medium text-gray-700 mb-4">Recent Login Activity</h3>
-                <div class="space-y-3">
-                  <div
-                    v-for="login in recentLogins"
-                    :key="login.id"
-                    class="flex items-center justify-between p-3 bg-gray-50 rounded-md"
-                  >
-                    <div>
-                      <p class="text-sm font-medium text-gray-700">{{ login.location }}</p>
-                      <p class="text-xs text-gray-500">{{ login.device }} • {{ login.ip }}</p>
-                      <p class="text-xs text-gray-500">{{ login.timestamp }}</p>
-                    </div>
-                    <div class="text-right">
-                      <span
-                        :class="[
-                          'inline-flex px-2 py-1 text-xs font-medium rounded-full',
-                          login.status === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                        ]"
-                      >
-                        {{ login.status === 'success' ? 'Success' : 'Failed' }}
-                      </span>
-                    </div>
+                  <div class="text-center">
+                    <div class="w-8 h-8 bg-yellow-400 rounded mx-auto mb-2"></div>
+                    <span class="text-sm font-medium text-foreground">Light</span>
                   </div>
-                </div>
-              </div>
-              
-              <!-- Security Options -->
-              <div class="space-y-4">
-                <h3 class="text-sm font-medium text-gray-700">Security Options</h3>
+                </button>
                 
-                <div class="space-y-3">
-                  <label class="flex items-center">
-                    <input
-                      v-model="settings.loginAlerts"
-                      type="checkbox"
-                      class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span class="ml-2 text-sm text-gray-700">Get notified of new login attempts</span>
-                  </label>
-                  
-                  <label class="flex items-center">
-                    <input
-                      v-model="settings.suspiciousActivity"
-                      type="checkbox"
-                      class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span class="ml-2 text-sm text-gray-700">Alert on suspicious activity</span>
-                  </label>
-                  
-                  <label class="flex items-center">
-                    <input
-                      v-model="settings.autoLogout"
-                      type="checkbox"
-                      class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span class="ml-2 text-sm text-gray-700">Auto-logout after inactivity</span>
-                  </label>
-                </div>
-              </div>
-              
-              <div class="flex justify-end">
                 <button
-                  @click="updateSecuritySettings"
-                  :disabled="updatingSecurity"
-                  class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  @click="setTheme('dark')"
+                  :class="[
+                    'p-4 rounded-lg border-2 transition-all duration-200',
+                    theme === 'dark' 
+                      ? 'border-primary bg-primary/10' 
+                      : 'border-border hover:border-primary/50'
+                  ]"
                 >
-                  {{ updatingSecurity ? 'Updating...' : 'Update Security' }}
+                  <div class="text-center">
+                    <div class="w-8 h-8 bg-slate-800 rounded mx-auto mb-2"></div>
+                    <span class="text-sm font-medium text-foreground">Dark</span>
+                  </div>
+                </button>
+                
+                <button
+                  @click="setTheme('system')"
+                  :class="[
+                    'p-4 rounded-lg border-2 transition-all duration-200',
+                    theme === 'system' 
+                      ? 'border-primary bg-primary/10' 
+                      : 'border-border hover:border-primary/50'
+                  ]"
+                >
+                  <div class="text-center">
+                    <div class="w-8 h-8 bg-gradient-to-r from-yellow-400 to-slate-800 rounded mx-auto mb-2"></div>
+                    <span class="text-sm font-medium text-foreground">System</span>
+                  </div>
                 </button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Data & Storage -->
-        <div class="bg-white rounded-lg shadow-md">
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-medium text-gray-900">Data & Storage</h2>
+        <!-- Danger Zone -->
+        <div class="bg-card rounded-xl shadow-sm border border-destructive/20">
+          <div class="px-6 py-4 border-b border-destructive/20">
+            <h2 class="text-lg font-medium text-destructive">Danger Zone</h2>
           </div>
           
           <div class="p-6">
-            <div class="space-y-6">
-              <!-- Data Usage -->
-              <div>
-                <h3 class="text-sm font-medium text-gray-700 mb-4">Data Usage</h3>
-                <div class="space-y-3">
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-gray-600">Profile Data</span>
-                    <span class="text-sm font-medium text-gray-900">2.3 MB</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-gray-600">Order History</span>
-                    <span class="text-sm font-medium text-gray-900">1.8 MB</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-gray-600">Preferences</span>
-                    <span class="text-sm font-medium text-gray-900">0.5 MB</span>
-                  </div>
-                  <div class="border-t border-gray-200 pt-2">
-                    <div class="flex items-center justify-between">
-                      <span class="text-sm font-medium text-gray-700">Total</span>
-                      <span class="text-sm font-medium text-gray-900">4.6 MB</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Data Actions -->
-              <div class="space-y-4">
-                <h3 class="text-sm font-medium text-gray-700">Data Actions</h3>
-                
-                <div class="space-y-3">
-                  <button
-                    @click="exportData"
-                    :disabled="exporting"
-                    class="w-full text-left px-4 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <div class="flex items-center justify-between">
-                      <div>
-                        <p class="text-sm font-medium text-gray-700">Export My Data</p>
-                        <p class="text-xs text-gray-500">Download a copy of your data</p>
-                      </div>
-                      <span class="text-sm text-gray-400">
-                        {{ exporting ? 'Exporting...' : '→' }}
-                      </span>
-                    </div>
-                  </button>
-                  
-                  <button
-                    @click="clearData"
-                    :disabled="clearing"
-                    class="w-full text-left px-4 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <div class="flex items-center justify-between">
-                      <div>
-                        <p class="text-sm font-medium text-gray-700">Clear All Data</p>
-                        <p class="text-xs text-gray-500">Remove all your data from our servers</p>
-                      </div>
-                      <span class="text-sm text-gray-400">
-                        {{ clearing ? 'Clearing...' : '→' }}
-                      </span>
-                    </div>
-                  </button>
-                </div>
+            <div class="space-y-4">
+              <div class="p-4 bg-destructive/10 rounded-lg">
+                <h3 class="text-sm font-medium text-destructive mb-2">Delete Account</h3>
+                <p class="text-sm text-muted-foreground mb-4">
+                  Once you delete your account, there is no going back. Please be certain.
+                </p>
+                <button
+                  @click="showDeleteAccountModal = true"
+                  class="px-4 py-2 bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 transition-colors duration-200 font-medium"
+                >
+                  Delete Account
+                </button>
               </div>
             </div>
           </div>
@@ -466,63 +278,78 @@
       </div>
     </div>
 
-    <!-- Change Password Modal -->
-    <div
-      v-if="showPasswordModal"
-      class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
-    >
-      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <div class="mt-3">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Change Password</h3>
-          
-          <form @submit.prevent="changePassword" class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
-              <input
-                v-model="passwordForm.currentPassword"
-                type="password"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              />
-            </div>
-            
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
-              <input
-                v-model="passwordForm.newPassword"
-                type="password"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              />
-            </div>
-            
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
-              <input
-                v-model="passwordForm.confirmPassword"
-                type="password"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              />
-            </div>
-            
-            <div class="flex space-x-3 mt-6">
-              <button
-                type="button"
-                @click="showPasswordModal = false"
-                class="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors duration-200"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                :disabled="changingPassword"
-                class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {{ changingPassword ? 'Changing...' : 'Change Password' }}
-              </button>
-            </div>
-          </form>
+    <!-- Password Change Modal -->
+    <div v-if="showPasswordModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-card rounded-lg p-6 max-w-md w-full mx-4">
+        <h3 class="text-lg font-medium text-foreground mb-4">Change Password</h3>
+        <form @submit.prevent="changePassword" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-foreground">Current Password</label>
+            <input
+              v-model="passwordForm.currentPassword"
+              type="password"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary bg-background text-foreground"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-foreground">New Password</label>
+            <input
+              v-model="passwordForm.newPassword"
+              type="password"
+              required
+              minlength="8"
+              class="mt-1 block w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary bg-background text-foreground"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-foreground">Confirm New Password</label>
+            <input
+              v-model="passwordForm.confirmPassword"
+              type="password"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary bg-background text-foreground"
+            />
+          </div>
+          <div class="flex justify-end space-x-3 pt-4">
+            <button
+              type="button"
+              @click="showPasswordModal = false"
+              class="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors duration-200"
+            >
+              Change Password
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div v-if="showDeleteAccountModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-card rounded-lg p-6 max-w-md w-full mx-4">
+        <h3 class="text-lg font-medium text-destructive mb-4">Delete Account</h3>
+        <p class="text-muted-foreground mb-6">
+          Are you sure you want to delete your account? This action cannot be undone.
+        </p>
+        <div class="flex justify-end space-x-3">
+          <button
+            @click="showDeleteAccountModal = false"
+            class="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
+          >
+            Cancel
+          </button>
+          <button
+            @click="deleteAccount"
+            class="px-4 py-2 bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 transition-colors duration-200"
+          >
+            Delete Account
+          </button>
         </div>
       </div>
     </div>
@@ -530,247 +357,123 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+import { ref, reactive } from 'vue'
 
-const authStore = useAuthStore()
+// Types
+interface Settings {
+  emailNotifications: boolean
+  promotionalEmails: boolean
+  newsletterEmails: boolean
+  pushNotifications: boolean
+  orderAlerts: boolean
+  twoFactorEnabled: boolean
+}
 
-// Reactive data
+interface Privacy {
+  allowAnalytics: boolean
+  allowMarketing: boolean
+  publicProfile: boolean
+}
+
+interface PasswordForm {
+  currentPassword: string
+  newPassword: string
+  confirmPassword: string
+}
+
+// Reactive State
 const showPasswordModal = ref(false)
-const updatingNotifications = ref(false)
-const updatingPrivacy = ref(false)
-const updatingLanguage = ref(false)
-const updatingSecurity = ref(false)
-const changingPassword = ref(false)
-const exporting = ref(false)
-const clearing = ref(false)
+const showDeleteAccountModal = ref(false)
+const theme = ref<'light' | 'dark' | 'system'>('system')
 
-const settings = ref({
-  // Notification settings
+const settings = reactive<Settings>({
   emailNotifications: true,
   promotionalEmails: false,
   newsletterEmails: true,
   pushNotifications: true,
-  pushPromotions: false,
-  pushAbandonedCart: true,
-  
-  // Privacy settings
-  shareData: false,
-  analyticsTracking: true,
-  personalizedAds: false,
-  publicProfile: false,
-  showActivity: false,
-  
-  // Language & region
-  language: 'en',
-  region: 'PH',
-  currency: 'PHP',
-  timezone: 'Asia/Manila',
-  
-  // Security settings
-  twoFactorEnabled: false,
-  loginAlerts: true,
-  suspiciousActivity: true,
-  autoLogout: true
+  orderAlerts: true,
+  twoFactorEnabled: false
 })
 
-const passwordForm = ref({
+const privacy = reactive<Privacy>({
+  allowAnalytics: true,
+  allowMarketing: false,
+  publicProfile: true
+})
+
+const passwordForm = reactive<PasswordForm>({
   currentPassword: '',
   newPassword: '',
   confirmPassword: ''
 })
 
-const recentLogins = ref([
-  {
-    id: 1,
-    location: 'Manila, Philippines',
-    device: 'Chrome on Windows',
-    ip: '192.168.1.1',
-    timestamp: '2 hours ago',
-    status: 'success'
-  },
-  {
-    id: 2,
-    location: 'Quezon City, Philippines',
-    device: 'Safari on iPhone',
-    ip: '192.168.1.2',
-    timestamp: '1 day ago',
-    status: 'success'
-  },
-  {
-    id: 3,
-    location: 'Unknown Location',
-    device: 'Unknown Device',
-    ip: '203.123.45.67',
-    timestamp: '3 days ago',
-    status: 'failed'
-  }
-])
-
 // Methods
-const updateNotificationSettings = async () => {
-  updatingNotifications.value = true
-  try {
-    // TODO: Replace with actual API call
-    // await apiService.settings.updateNotifications(settings.value)
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    console.log('Notification settings updated successfully')
-  } catch (error) {
-    console.error('Error updating notification settings:', error)
-  } finally {
-    updatingNotifications.value = false
-  }
+const toggleTwoFactor = () => {
+  settings.twoFactorEnabled = !settings.twoFactorEnabled
+  // TODO: Implement 2FA toggle logic
 }
 
-const updatePrivacySettings = async () => {
-  updatingPrivacy.value = true
-  try {
-    // TODO: Replace with actual API call
-    // await apiService.settings.updatePrivacy(settings.value)
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    console.log('Privacy settings updated successfully')
-  } catch (error) {
-    console.error('Error updating privacy settings:', error)
-  } finally {
-    updatingPrivacy.value = false
-  }
+const updateNotificationSettings = () => {
+  // TODO: Implement notification settings update
+  console.log('Updating notification settings:', settings)
 }
 
-const updateLanguageSettings = async () => {
-  updatingLanguage.value = true
-  try {
-    // TODO: Replace with actual API call
-    // await apiService.settings.updateLanguage(settings.value)
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    console.log('Language settings updated successfully')
-  } catch (error) {
-    console.error('Error updating language settings:', error)
-  } finally {
-    updatingLanguage.value = false
-  }
+const updatePrivacySettings = () => {
+  // TODO: Implement privacy settings update
+  console.log('Updating privacy settings:', privacy)
 }
 
-const updateSecuritySettings = async () => {
-  updatingSecurity.value = true
-  try {
-    // TODO: Replace with actual API call
-    // await apiService.settings.updateSecurity(settings.value)
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    console.log('Security settings updated successfully')
-  } catch (error) {
-    console.error('Error updating security settings:', error)
-  } finally {
-    updatingSecurity.value = false
-  }
+const setTheme = (newTheme: 'light' | 'dark' | 'system') => {
+  theme.value = newTheme
+  // TODO: Implement theme switching logic
+  console.log('Setting theme to:', newTheme)
 }
 
-const changePassword = async () => {
-  if (passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {
+const changePassword = () => {
+  if (passwordForm.newPassword !== passwordForm.confirmPassword) {
     alert('New passwords do not match')
     return
   }
   
-  changingPassword.value = true
-  try {
-    // TODO: Replace with actual API call
-    // await apiService.auth.changePassword({
-    //   currentPassword: passwordForm.value.currentPassword,
-    //   newPassword: passwordForm.value.newPassword
-    // })
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    // Clear form and close modal
-    passwordForm.value = {
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: ''
-    }
-    showPasswordModal.value = false
-    
-    console.log('Password changed successfully')
-  } catch (error) {
-    console.error('Error changing password:', error)
-  } finally {
-    changingPassword.value = false
-  }
-}
-
-const toggleTwoFactor = () => {
-  settings.value.twoFactorEnabled = !settings.value.twoFactorEnabled
-  // TODO: Implement actual 2FA toggle
-  console.log('Two-factor authentication:', settings.value.twoFactorEnabled ? 'enabled' : 'disabled')
-}
-
-const exportData = async () => {
-  exporting.value = true
-  try {
-    // TODO: Replace with actual API call
-    // const response = await apiService.settings.exportData()
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    // TODO: Handle actual file download
-    console.log('Data exported successfully')
-  } catch (error) {
-    console.error('Error exporting data:', error)
-  } finally {
-    exporting.value = false
-  }
-}
-
-const clearData = async () => {
-  if (!confirm('Are you sure you want to clear all your data? This action cannot be undone.')) {
-    return
-  }
+  // TODO: Implement password change logic
+  console.log('Changing password...')
+  showPasswordModal.value = false
   
-  clearing.value = true
-  try {
-    // TODO: Replace with actual API call
-    // await apiService.settings.clearData()
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    // Logout and redirect
-    await authStore.logout()
-    window.location.href = '/login'
-  } catch (error) {
-    console.error('Error clearing data:', error)
-  } finally {
-    clearing.value = false
-  }
+  // Reset form
+  passwordForm.currentPassword = ''
+  passwordForm.newPassword = ''
+  passwordForm.confirmPassword = ''
 }
 
-const loadSettings = async () => {
-  try {
-    // TODO: Replace with actual API call
-    // const response = await apiService.settings.getSettings()
-    // settings.value = response.data
-    
-    // Using default settings for now
-    console.log('Settings loaded successfully')
-  } catch (error) {
-    console.error('Error loading settings:', error)
-  }
+const deleteAccount = () => {
+  // TODO: Implement account deletion logic
+  console.log('Deleting account...')
+  showDeleteAccountModal.value = false
 }
-
-// Lifecycle
-onMounted(() => {
-  loadSettings()
-})
 </script>
+
+<style scoped>
+/* Custom focus styles */
+input:focus {
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
+}
+
+/* Smooth transitions */
+button, input {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover effects */
+.bg-card:hover {
+  box-shadow: 0 4px 6px -1px hsl(var(--foreground) / 0.1);
+}
+
+/* Theme selection buttons */
+button[data-theme] {
+  transition: all 0.2s ease-in-out;
+}
+
+button[data-theme]:hover {
+  transform: translateY(-2px);
+}
+</style>

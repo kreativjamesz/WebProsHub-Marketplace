@@ -1,10 +1,10 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8">
+  <div class="min-h-screen bg-background py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Product Categories</h1>
-        <p class="mt-2 text-gray-600">Browse products by category to find exactly what you're looking for</p>
+        <h1 class="text-3xl font-bold text-foreground">Product Categories</h1>
+        <p class="mt-2 text-muted-foreground">Browse products by category to find exactly what you're looking for</p>
       </div>
 
       <!-- Search -->
@@ -13,7 +13,7 @@
           v-model="searchQuery"
           type="text"
           placeholder="Search categories..."
-          class="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="w-full max-w-md px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground placeholder:text-muted-foreground"
         />
       </div>
 
@@ -22,13 +22,13 @@
         <div
           v-for="category in filteredCategories"
           :key="category.id"
-          class="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer group"
+          class="bg-card rounded-lg shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer group border border-border"
           @click="navigateToCategory(category.id)"
         >
           <div class="p-6">
             <!-- Category Icon -->
-            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200">
-              <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200">
+              <svg class="w-8 h-8 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   v-if="category.name.toLowerCase().includes('electronics')"
                   stroke-linecap="round"
@@ -75,29 +75,29 @@
             </div>
 
             <!-- Category Info -->
-            <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-200">
+            <h3 class="text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors duration-200">
               {{ category.name }}
             </h3>
-            <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ category.description }}</p>
+            <p class="text-muted-foreground text-sm mb-4 line-clamp-2">{{ category.description }}</p>
 
             <!-- Category Stats -->
-            <div class="flex items-center justify-between text-sm text-gray-500">
+            <div class="flex items-center justify-between text-sm text-muted-foreground">
               <span>{{ category.productCount || 0 }} products</span>
               <span>{{ category.storeCount || 0 }} stores</span>
             </div>
 
             <!-- Popular Products Preview -->
-            <div v-if="category.popularProducts && category.popularProducts.length > 0" class="mt-4 pt-4 border-t border-gray-100">
-              <p class="text-xs text-gray-500 mb-2">Popular products:</p>
+            <div v-if="category.popularProducts && category.popularProducts.length > 0" class="mt-4 pt-4 border-t border-border">
+              <p class="text-xs text-muted-foreground mb-2">Popular products:</p>
               <div class="flex flex-wrap gap-1">
                 <span
                   v-for="product in category.popularProducts.slice(0, 3)"
                   :key="product.id"
-                  class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
+                  class="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full"
                 >
                   {{ product.name }}
                 </span>
-                <span v-if="category.popularProducts.length > 3" class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                <span v-if="category.popularProducts.length > 3" class="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full">
                   +{{ category.popularProducts.length - 3 }} more
                 </span>
               </div>
@@ -108,36 +108,36 @@
 
       <!-- Empty State -->
       <div v-if="filteredCategories.length === 0" class="text-center py-12">
-        <div class="text-gray-400 mb-4">
+        <div class="text-muted-foreground mb-4">
           <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
           </svg>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">No categories found</h3>
-        <p class="text-gray-500">Try adjusting your search criteria.</p>
+        <h3 class="text-lg font-medium text-foreground mb-2">No categories found</h3>
+        <p class="text-muted-foreground">Try adjusting your search criteria.</p>
       </div>
 
       <!-- Featured Categories Section -->
       <div v-if="featuredCategories.length > 0" class="mt-16">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6">Featured Categories</h2>
+        <h2 class="text-2xl font-bold text-foreground mb-6">Featured Categories</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div
             v-for="category in featuredCategories"
             :key="category.id"
-            class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 text-white hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+            class="bg-gradient-to-r from-primary to-primary/80 rounded-lg p-6 text-primary-foreground hover:shadow-lg transition-shadow duration-200 cursor-pointer"
             @click="navigateToCategory(category.id)"
           >
             <div class="flex items-center justify-between">
               <div>
                 <h3 class="text-xl font-semibold mb-2">{{ category.name }}</h3>
-                <p class="text-blue-100 text-sm mb-4">{{ category.description }}</p>
-                <div class="flex items-center text-sm text-blue-200">
+                <p class="text-primary-foreground/80 text-sm mb-4">{{ category.description }}</p>
+                <div class="flex items-center text-sm text-primary-foreground/90">
                   <span class="mr-4">{{ category.productCount || 0 }} products</span>
                   <span>{{ category.storeCount || 0 }} stores</span>
                 </div>
               </div>
-              <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div class="w-16 h-16 bg-primary-foreground/20 rounded-full flex items-center justify-center">
+                <svg class="w-8 h-8 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </div>

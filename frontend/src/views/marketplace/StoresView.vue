@@ -1,10 +1,10 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8">
+  <div class="min-h-screen bg-background py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">All Stores</h1>
-        <p class="mt-2 text-gray-600">Discover amazing stores and businesses in our marketplace</p>
+        <h1 class="text-3xl font-bold text-foreground">All Stores</h1>
+        <p class="mt-2 text-muted-foreground">Discover amazing stores and businesses in our marketplace</p>
       </div>
 
       <!-- Search and Filters -->
@@ -14,13 +14,13 @@
             v-model="searchQuery"
             type="text"
             placeholder="Search stores..."
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground placeholder:text-muted-foreground"
           />
         </div>
         <div class="flex gap-2">
           <select
             v-model="selectedCategory"
-            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
           >
             <option value="">All Categories</option>
             <option v-for="category in categories" :key="category.id" :value="category.id">
@@ -29,7 +29,7 @@
           </select>
           <select
             v-model="sortBy"
-            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
           >
             <option value="name">Sort by Name</option>
             <option value="rating">Sort by Rating</option>
@@ -43,10 +43,10 @@
         <div
           v-for="store in filteredStores"
           :key="store.id"
-          class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+          class="bg-card rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer border border-border"
           @click="navigateToStore(store.id)"
         >
-          <div class="aspect-w-16 aspect-h-9 bg-gray-200 rounded-t-lg">
+          <div class="aspect-w-16 aspect-h-9 bg-muted rounded-t-lg">
             <img
               v-if="store.banner"
               :src="store.banner"
@@ -55,23 +55,23 @@
             />
             <div
               v-else
-              class="w-full h-48 bg-gradient-to-br from-blue-400 to-purple-500 rounded-t-lg flex items-center justify-center"
+              class="w-full h-48 bg-gradient-to-br from-primary to-primary/80 rounded-t-lg flex items-center justify-center"
             >
-              <span class="text-white text-2xl font-bold">{{ store.name.charAt(0) }}</span>
+              <span class="text-primary-foreground text-2xl font-bold">{{ store.name.charAt(0) }}</span>
             </div>
           </div>
 
           <div class="p-4">
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ store.name }}</h3>
-            <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ store.description }}</p>
+            <h3 class="text-lg font-semibold text-foreground mb-2">{{ store.name }}</h3>
+            <p class="text-muted-foreground text-sm mb-3 line-clamp-2">{{ store.description }}</p>
 
             <div class="flex items-center justify-between mb-3">
-              <span class="text-sm text-gray-500">{{ store.products?.length || 0 }} products</span>
+              <span class="text-sm text-muted-foreground">{{ store.products?.length || 0 }} products</span>
             </div>
 
             <div class="flex items-center justify-between">
-              <span class="text-sm text-gray-500">Store</span>
-              <span class="text-sm text-gray-500">{{ store.city }}, {{ store.state }}</span>
+              <span class="text-sm text-muted-foreground">Store</span>
+              <span class="text-sm text-muted-foreground">{{ store.city }}, {{ store.state }}</span>
             </div>
           </div>
         </div>
@@ -79,18 +79,18 @@
 
       <!-- Empty State -->
       <div v-if="filteredStores.length === 0" class="text-center py-12">
-        <div class="text-gray-400 mb-4">
+        <div class="text-muted-foreground mb-4">
           <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             />
           </svg>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">No stores found</h3>
-        <p class="text-gray-500">Try adjusting your search or filter criteria.</p>
+        <h3 class="text-lg font-medium text-foreground mb-2">No stores found</h3>
+        <p class="text-muted-foreground">Try adjusting your search or filter criteria.</p>
       </div>
 
       <!-- Pagination -->
@@ -99,7 +99,7 @@
           <button
             @click="currentPage--"
             :disabled="currentPage === 1"
-            class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-md hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Previous
           </button>
@@ -111,8 +111,8 @@
             :class="[
               'px-3 py-2 text-sm font-medium rounded-md',
               currentPage === page
-                ? 'bg-blue-600 text-white'
-                : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50',
+                ? 'bg-primary text-primary-foreground'
+                : 'text-muted-foreground bg-card border border-border hover:bg-accent',
             ]"
           >
             {{ page }}
@@ -121,7 +121,7 @@
           <button
             @click="currentPage++"
             :disabled="currentPage === totalPages"
-            class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-md hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
           </button>

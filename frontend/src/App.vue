@@ -3,6 +3,7 @@ import { onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
+import { useGuestCartStore } from '@/stores/guestCart'
 import {
   DefaultLayout,
   AuthLayout,
@@ -16,6 +17,7 @@ import {
 const route = useRoute()
 const authStore = useAuthStore()
 const cartStore = useCartStore()
+const guestCartStore = useGuestCartStore()
 
 // Determine which layout to use based on route
 const currentLayout = computed(() => {
@@ -73,13 +75,25 @@ onMounted(async () => {
   await authStore.checkAuth()
 })
 
-// Load cart data when user is authenticated
+// Handle cart data when authentication status changes
 watch(() => authStore.isAuthenticated, async (isAuthenticated) => {
   if (isAuthenticated) {
+    // User logged in - migrate guest cart data
+    const guestCartData = guestCartStore.migrateToUserCart()
+    if (guestCartData.length > 0) {
+      // Add guest cart items to user cart
+      for (const item of guestCartData) {
+        await cartStore.addItem(item.product, item.quantity)
+      }
+      console.log(`Migrated ${guestCartData.length} items from guest cart`)
+    }
+    
+    // Load user's cart from backend
     await cartStore.loadCart()
   } else {
-    // Clear cart when user logs out
+    // User logged out - clear user cart and load guest cart
     cartStore.items = []
+    guestCartStore.loadFromLocalStorage()
   }
 }, { immediate: true })
 </script>

@@ -21,18 +21,29 @@ export const useWishlistStore = defineStore('wishlist', () => {
   const isLoading = ref(false)
 
   // Getters
-  const count = computed(() => items.value.length)
+  const itemCount = computed(() => items.value.length)
   
   const isEmpty = computed(() => items.value.length === 0)
 
-  const isInWishlist = (productId: string) => 
+  const hasItem = computed(() => (productId: string) => 
     items.value.some(item => item.product.id === productId)
+  )
 
   // Actions
-  const addItem = (product: WishlistItem['product']) => {
-    if (!isInWishlist(product.id)) {
+  const addItem = (productId: string) => {
+    // For now, we'll create a minimal product object
+    // TODO: This should be updated to accept a full Product object from the API
+    const product = {
+      id: productId,
+      name: 'Product', // This should come from the actual product data
+      price: 0,
+      images: [],
+      seller: { businessName: 'Store' }
+    }
+    
+    if (!hasItem.value(productId)) {
       items.value.push({
-        id: `${product.id}-${Date.now()}`,
+        id: `${productId}-${Date.now()}`,
         product,
         addedAt: new Date()
       })
@@ -46,11 +57,11 @@ export const useWishlistStore = defineStore('wishlist', () => {
     }
   }
 
-  const toggleItem = (product: WishlistItem['product']) => {
-    if (isInWishlist(product.id)) {
-      removeItem(product.id)
+  const toggleItem = (productId: string) => {
+    if (hasItem.value(productId)) {
+      removeItem(productId)
     } else {
-      addItem(product)
+      addItem(productId)
     }
   }
 
@@ -89,9 +100,9 @@ export const useWishlistStore = defineStore('wishlist', () => {
     isLoading,
     
     // Getters
-    count,
+    itemCount,
     isEmpty,
-    isInWishlist,
+    hasItem,
     
     // Actions
     addItem,

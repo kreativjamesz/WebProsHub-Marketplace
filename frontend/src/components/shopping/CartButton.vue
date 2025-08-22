@@ -1,37 +1,43 @@
 <template>
   <button
+    @click="openGlobalCart"
     class="relative p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     aria-label="Shopping cart"
-    @click="openCart"
   >
-    <ShoppingCartIcon class="w-6 h-6" />
+    <ShoppingCartIcon class="h-6 w-6" />
+    
+    <!-- Cart Badge -->
     <span
-      v-if="cartCount > 0"
+      v-if="cartItemCount > 0"
       class="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium"
       aria-label="Cart items count"
     >
-      {{ cartCount > 99 ? '99+' : cartCount }}
+      {{ cartItemCount > 99 ? '99+' : cartItemCount }}
     </span>
   </button>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useCartStore } from '@/stores/cart'
-import { useGlobalCart } from '@/composables/useGlobalCart'
 import { ShoppingCartIcon } from 'lucide-vue-next'
+import { useGlobalCart } from '@/composables/useGlobalCart'
+import { useAuthStore } from '@/stores/auth'
+import { useCartStore } from '@/stores/cart'
+import { useGuestCartStore } from '@/stores/guestCart'
 
-// Stores
-const cartStore = useCartStore()
 const { openGlobalCart } = useGlobalCart()
+const authStore = useAuthStore()
+const cartStore = useCartStore()
+const guestCartStore = useGuestCartStore()
 
-// Computed
-const cartCount = computed(() => cartStore.items.length)
-
-// Methods
-const openCart = () => {
-  openGlobalCart()
-}
+// Show cart count for both authenticated and guest users
+const cartItemCount = computed(() => {
+  if (authStore.isAuthenticated) {
+    return cartStore.itemCount
+  } else {
+    return guestCartStore.itemCount
+  }
+})
 </script>
 
 <style scoped>

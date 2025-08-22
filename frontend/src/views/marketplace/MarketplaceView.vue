@@ -332,9 +332,13 @@ import type { Product, Category } from '@/types/marketplace'
 import SafeImage from '@/components/ui/SafeImage.vue'
 import CartButton from '@/components/shopping/CartButton.vue'
 import { useCartStore } from '@/stores/cart'
+import { useGuestCartStore } from '@/stores/guestCart'
+import { useAuthStore } from '@/stores'
 
 const router = useRouter()
 const cartStore = useCartStore()
+const guestCartStore = useGuestCartStore()
+const authStore = useAuthStore()
 
 // State
 const isLoading = ref(false)
@@ -464,8 +468,14 @@ const addToCart = async (productId: string) => {
       return
     }
     
-    await cartStore.addItem(product, 1)
-    toast.success('Added to cart!')
+    if (authStore.isAuthenticated) {
+      await cartStore.addItem(product, 1)
+      toast.success('Added to cart!')
+    } else {
+      // Guest user - add to guest cart
+      guestCartStore.addItem(product, 1)
+      toast.success('Added to cart! Sign in to save your cart.')
+    }
   } catch (error) {
     console.error('Failed to add to cart:', error)
     if ((error as AxiosError).response?.status === 401) {

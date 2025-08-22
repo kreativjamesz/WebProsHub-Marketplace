@@ -1,5 +1,5 @@
 <template>
-  <Sheet v-model:open="isOpen">
+  <Sheet v-model:open="isGlobalCartOpen">
     <SheetContent class="w-full sm:max-w-lg">
       <SheetHeader>
         <SheetTitle>Shopping Cart</SheetTitle>
@@ -8,21 +8,68 @@
         </SheetDescription>
       </SheetHeader>
 
+      <!-- Guest User Notice -->
+      <div
+        v-if="!isAuthenticated && cartItems.length > 0"
+        class="bg-primary/10 border border-primary/20 rounded-lg p-3 mb-4"
+      >
+        <div class="flex items-start space-x-2">
+          <svg
+            class="w-5 h-5 text-primary mt-0.5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <div class="flex-1">
+            <p class="text-sm text-primary font-medium">Guest User</p>
+            <p class="text-xs text-primary/80 mt-1">
+              Sign in to save your cart and complete your purchase
+            </p>
+            <div class="flex space-x-2 mt-2">
+              <router-link
+                to="/login"
+                class="text-xs bg-primary text-primary-foreground px-2 py-1 rounded hover:bg-primary/90 transition-colors"
+              >
+                Sign In
+              </router-link>
+              <router-link
+                to="/register"
+                class="text-xs border border-primary/30 text-primary px-2 py-1 rounded hover:bg-primary/10 transition-colors"
+              >
+                Sign Up
+              </router-link>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Cart Content -->
       <div class="flex-1 overflow-y-auto py-6">
         <!-- Empty Cart State -->
         <div v-if="cartItems.length === 0" class="text-center py-12">
-          <div class="mx-auto h-24 w-24 text-gray-300 mb-4">
+          <div class="mx-auto h-24 w-24 text-muted-foreground mb-4">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 0 00-2 2v4.01"
+              />
             </svg>
           </div>
-          <h3 class="text-lg font-medium text-gray-900 mb-2">Your cart is empty</h3>
-          <p class="text-gray-500 mb-6">Start shopping to add items to your cart</p>
+          <h3 class="text-lg font-medium text-foreground mb-2">Your cart is empty</h3>
+          <p class="text-muted-foreground mb-6">Start shopping to add items to your cart</p>
           <SheetClose as-child>
             <router-link
               to="/marketplace"
-              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary/90"
             >
               Browse Products
             </router-link>
@@ -34,7 +81,7 @@
           <div
             v-for="item in cartItems"
             :key="item.id"
-            class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg"
+            class="flex items-center space-x-4 p-4 bg-accent rounded-lg"
           >
             <!-- Product Image -->
             <div class="flex-shrink-0">
@@ -48,14 +95,14 @@
 
             <!-- Product Info -->
             <div class="flex-1 min-w-0">
-              <h4 class="text-sm font-medium text-gray-900 truncate">
+              <h4 class="text-sm font-medium text-foreground truncate">
                 {{ item.product.name }}
               </h4>
-              <p class="text-sm text-gray-500">
-                Store: {{ item.product.store?.name || 'Unknown Store' }}
+              <p class="text-sm text-muted-foreground">
+                Store: {{ item.product.seller?.businessName || 'Unknown Store' }}
               </p>
               <div class="flex items-center justify-between mt-2">
-                <span class="text-sm font-medium text-gray-900">
+                <span class="text-sm font-medium text-foreground">
                   ₱{{ formatPrice(item.product.price) }}
                 </span>
                 <div class="flex items-center space-x-2">
@@ -63,20 +110,33 @@
                   <button
                     @click="decreaseQuantity(item.id)"
                     :disabled="item.quantity <= 1"
-                    class="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="w-6 h-6 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M20 12H4"
+                      />
                     </svg>
                   </button>
-                  <span class="text-sm text-gray-900 w-8 text-center">{{ item.quantity }}</span>
+
+                  <span class="text-sm font-medium text-foreground min-w-[2rem] text-center">
+                    {{ item.quantity }}
+                  </span>
+
                   <button
                     @click="increaseQuantity(item.id)"
-                    :disabled="item.quantity >= (item.product.stock || 99)"
-                    class="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="w-6 h-6 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-accent"
                   >
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 4v16m8-8H4"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -86,153 +146,152 @@
             <!-- Remove Button -->
             <button
               @click="removeFromCart(item.id)"
-              class="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50"
-              title="Remove item"
+              class="flex-shrink-0 text-muted-foreground hover:text-destructive transition-colors"
+              aria-label="Remove item"
             >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
               </svg>
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Cart Footer -->
-      <SheetFooter v-if="cartItems.length > 0" class="border-t pt-6">
-        <div class="w-full space-y-4">
-          <!-- Cart Summary -->
-          <div class="space-y-2">
-            <div class="flex justify-between text-sm">
-              <span class="text-gray-600">Subtotal:</span>
-              <span class="font-medium">₱{{ formatPrice(subtotal) }}</span>
-            </div>
-            <div class="flex justify-between text-sm">
-              <span class="text-gray-600">Shipping:</span>
-              <span class="font-medium">{{ shippingCost === 0 ? 'Free' : `₱${formatPrice(shippingCost)}` }}</span>
-            </div>
-            <div class="flex justify-between text-lg font-bold border-t pt-2">
-              <span>Total:</span>
-              <span>₱{{ formatPrice(total) }}</span>
-            </div>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="flex space-x-3">
-            <SheetClose as-child>
-              <button
-                @click="clearCart"
-                class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
-              >
-                Clear Cart
-              </button>
-            </SheetClose>
-            <SheetClose as-child>
-              <router-link
-                to="/buyer/cart"
-                class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-center"
-              >
-                View Cart
-              </router-link>
-            </SheetClose>
-          </div>
-
-          <!-- Checkout Button -->
-          <SheetClose as-child>
-            <router-link
-              to="/buyer/checkout"
-              class="w-full px-4 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-center font-medium"
-            >
-              Proceed to Checkout
-            </router-link>
-          </SheetClose>
+      <!-- Cart Summary -->
+      <div v-if="cartItems.length > 0" class="border-t border-border pt-4 space-y-4">
+        <!-- Subtotal -->
+        <div class="flex justify-between text-sm">
+          <span class="text-muted-foreground">Subtotal:</span>
+          <span class="font-medium text-foreground">₱{{ formatPrice(totalPrice) }}</span>
         </div>
-      </SheetFooter>
+
+        <!-- Actions -->
+        <div class="space-y-2">
+          <!-- Checkout Button -->
+          <button
+            @click="handleCheckout"
+            :disabled="isLoading"
+            class="w-full bg-primary text-primary-foreground py-2 px-4 rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <span v-if="isLoading" class="flex items-center justify-center">
+              <svg class="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24">
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Processing...
+            </span>
+            <span v-else>
+              {{ isAuthenticated ? 'Proceed to Checkout' : 'Sign In to Checkout' }}
+            </span>
+          </button>
+
+          <!-- Clear Cart Button -->
+          <button
+            @click="clearCart"
+            class="w-full border border-border text-foreground py-2 px-4 rounded-md hover:bg-accent transition-colors"
+          >
+            Clear Cart
+          </button>
+        </div>
+      </div>
     </SheetContent>
   </Sheet>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useCartStore } from '@/stores/cart'
 import { useRouter } from 'vue-router'
-import { toast } from 'vue3-toastify'
+import { useAuthStore } from '@/stores/auth'
+import { useCartStore } from '@/stores/cart'
+import { useGuestCartStore } from '@/stores/guestCart'
 import { useGlobalCart } from '@/composables/useGlobalCart'
+import { toast } from 'vue3-toastify'
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
+  SheetClose,
 } from '@/components/ui/sheet'
 
-// Stores
-const cartStore = useCartStore()
 const router = useRouter()
+const authStore = useAuthStore()
+const cartStore = useCartStore()
+const guestCartStore = useGuestCartStore()
 const { isGlobalCartOpen, closeGlobalCart } = useGlobalCart()
 
-// State
-const isOpen = computed({
-  get: () => isGlobalCartOpen.value,
-  set: (value) => {
-    if (!value) {
-      closeGlobalCart()
-    }
-  }
-})
-
-// Computed
-const cartItems = computed(() => cartStore.items)
-const subtotal = computed(() => 
-  cartItems.value.reduce((sum, item) => sum + (item.product.price * item.quantity), 0)
+// Computed properties
+const isAuthenticated = computed(() => authStore.isAuthenticated)
+const cartItems = computed(() => (isAuthenticated.value ? cartStore.items : guestCartStore.items))
+const totalPrice = computed(() =>
+  isAuthenticated.value ? cartStore.total : guestCartStore.totalPrice,
 )
-const shippingCost = computed(() => subtotal.value > 5000 ? 0 : 200) // Free shipping over ₱5000
-const total = computed(() => subtotal.value + shippingCost.value)
+const isLoading = computed(() =>
+  isAuthenticated.value ? cartStore.isLoading : guestCartStore.isLoading,
+)
 
 // Methods
-const openCart = () => {
-  // This is handled by the SheetTrigger
-}
-
 const increaseQuantity = async (itemId: string) => {
-  try {
+  if (isAuthenticated.value) {
     await cartStore.updateQuantity(itemId, 1)
-    toast.success('Quantity updated')
-  } catch (error) {
-    toast.error('Failed to update quantity')
+  } else {
+    guestCartStore.updateQuantity(itemId, 1)
   }
 }
 
 const decreaseQuantity = async (itemId: string) => {
-  try {
+  if (isAuthenticated.value) {
     await cartStore.updateQuantity(itemId, -1)
-    toast.success('Quantity updated')
-  } catch (error) {
-    toast.error('Failed to update quantity')
+  } else {
+    guestCartStore.updateQuantity(itemId, -1)
   }
 }
 
 const removeFromCart = async (itemId: string) => {
-  try {
+  if (isAuthenticated.value) {
     await cartStore.removeItem(itemId)
-    toast.success('Item removed from cart')
-  } catch (error) {
-    toast.error('Failed to remove item')
+  } else {
+    guestCartStore.removeItem(itemId)
   }
 }
 
 const clearCart = async () => {
-  try {
-    if (confirm('Are you sure you want to clear your entire cart?')) {
-      await cartStore.clearCart()
-      toast.success('Cart cleared')
-      closeGlobalCart()
-    }
-  } catch (error) {
-    toast.error('Failed to clear cart')
+  if (isAuthenticated.value) {
+    await cartStore.clearCart()
+  } else {
+    guestCartStore.clearCart()
   }
+}
+
+const handleCheckout = () => {
+  if (!isAuthenticated.value) {
+    toast.info('Please sign in to complete your purchase')
+    router.push('/login')
+    closeGlobalCart()
+    return
+  }
+
+  // For now, redirect to marketplace since checkout page might not exist
+  toast.info('Checkout functionality coming soon!')
+  router.push('/marketplace')
+  closeGlobalCart()
 }
 
 const handleImageError = (event: Event) => {
@@ -241,10 +300,11 @@ const handleImageError = (event: Event) => {
 }
 
 const formatPrice = (price: number) => {
-  return price.toLocaleString('en-PH')
+  return price.toLocaleString('en-PH', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
 }
-
-
 </script>
 
 <style scoped>

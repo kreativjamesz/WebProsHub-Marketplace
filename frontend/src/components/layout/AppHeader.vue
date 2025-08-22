@@ -1,6 +1,6 @@
 <template>
   <header
-    class="bg-background text-foreground shadow-sm border-b border-gray-200 sticky top-0 z-40"
+    class="bg-background text-foreground shadow-sm border-b border-border sticky top-0 z-40"
     role="banner"
   >
     <div class="container mx-auto px-4">
@@ -16,10 +16,11 @@
           @toggle-mobile="showMobileSearch = !showMobileSearch"
         />
 
-        <!-- Right Side Actions -->
+        <!-- User Section -->
         <div class="flex items-center space-x-4">
           <!-- Mobile Search Toggle -->
           <MobileSearchToggle
+            v-if="isMobile"
             :is-active="showMobileSearch"
             @toggle="showMobileSearch = !showMobileSearch"
           />
@@ -39,93 +40,12 @@
             @close-mobile-menu="showMobileMenu = false"
           />
 
-          <!-- Navigation Dropdown Menu -->
-          <DropdownMenu>
-            <DropdownMenuTrigger as-child>
-              <Button
-                variant="ghost"
-                class="hidden md:flex bg-secondary hover:bg-secondary/80 rounded-full"
-              >
-                <MenuIcon class="h-6 w-6 text-foreground" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" class="w-48">
-              <!-- Be a Seller Section -->
-              <DropdownMenuLabel>Menu</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem as-child>
-                <router-link
-                  to="/seller/onboarding"
-                  class="w-full flex items-center justify-between"
-                >
-                  <div class="flex flex-col items-start justify-start">
-                    <h4 class="text-lg font-bold">Be a seller</h4>
-                    <p class="text-sm text-muted-foreground">
-                      Join our marketplace and start selling your products.
-                    </p>
-                  </div>
-                  <ArrowRightIcon class="h-4 w-4" />
-                </router-link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              
-              <!-- Navigation Links -->
-              <DropdownMenuLabel>Navigation</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem as-child>
-                <router-link to="/marketplace" class="w-full">
-                  <StoreIcon class="mr-2 h-4 w-4" />
-                  Marketplace
-                </router-link>
-              </DropdownMenuItem>
-              <DropdownMenuItem as-child>
-                <router-link to="/stores" class="w-full">
-                  <Building2Icon class="mr-2 h-4 w-4" />
-                  Stores
-                </router-link>
-              </DropdownMenuItem>
-              <DropdownMenuItem as-child>
-                <router-link to="/categories" class="w-full">
-                  <FolderIcon class="mr-2 h-4 w-4" />
-                  Categories
-                </router-link>
-              </DropdownMenuItem>
-              <DropdownMenuItem as-child>
-                <router-link to="/deals" class="w-full">
-                  <TagIcon class="mr-2 h-4 w-4" />
-                  Deals
-                </router-link>
-              </DropdownMenuItem>
-              <DropdownMenuItem as-child>
-                <router-link to="/wishlist" class="w-full">
-                  <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                  Wishlist
-                </router-link>
-              </DropdownMenuItem>
-              
-              <!-- Auth Section (only show when not authenticated) -->
-              <template v-if="!authStore.isAuthenticated">
-                <DropdownMenuSeparator />
-                <DropdownMenuItem as-child>
-                  <router-link to="/login" class="w-full">
-                    <LogInIcon class="mr-2 h-4 w-4" />
-                    Login
-                  </router-link>
-                </DropdownMenuItem>
-                <DropdownMenuItem as-child>
-                  <router-link to="/register" class="w-full">
-                    <UserPlusIcon class="mr-2 h-4 w-4" />
-                    Register
-                  </router-link>
-                </DropdownMenuItem>
-              </template>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <!-- Navigation Menu (Desktop Only) -->
+          <NavigationMenu v-if="!isMobile" />
 
-          <!-- Mobile Menu Button -->
+          <!-- Mobile Menu Button (Mobile Only) -->
           <MobileMenuButton
+            v-if="isMobile"
             :is-active="showMobileMenu"
             @toggle="showMobileMenu = !showMobileMenu"
           />
@@ -133,11 +53,15 @@
       </div>
 
       <!-- Mobile Search -->
-      <MobileSearch v-if="showMobileSearch" v-model="searchQuery" @search="handleSearch" />
+      <MobileSearch
+        v-if="showMobileSearch && isMobile"
+        v-model="searchQuery"
+        @search="handleSearch"
+      />
 
       <!-- Mobile Menu -->
       <MobileMenu
-        v-if="showMobileMenu"
+        v-if="showMobileMenu && isMobile"
         :is-authenticated="authStore.isAuthenticated"
         @close="showMobileMenu = false"
       />
@@ -146,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
@@ -163,16 +87,7 @@ import MobileMenuButton from '@/components/layout/MobileMenuButton.vue'
 import MobileSearch from '@/components/layout/MobileSearch.vue'
 import MobileMenu from '@/components/layout/MobileMenu.vue'
 import ColorThemeDropdown from '@/components/ColorThemeDropdown.vue'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { StoreIcon, Building2Icon, FolderIcon, TagIcon, MenuIcon, UserPlusIcon, ArrowRightIcon, LogInIcon } from 'lucide-vue-next'
+import NavigationMenu from './NavigationMenu.vue'
 
 // Composables
 const router = useRouter()
@@ -186,7 +101,16 @@ const showMobileSearch = ref(false)
 const showMobileMenu = ref(false)
 
 // Computed properties for better performance
-const wishlistCount = computed(() => wishlistStore.count)
+const wishlistCount = computed(() => wishlistStore.itemCount)
+
+// Watch for screen size changes and auto-close mobile menus
+watch(isMobile, (newIsMobile) => {
+  if (!newIsMobile) {
+    // Auto-close mobile menus when switching to desktop
+    showMobileMenu.value = false
+    showMobileSearch.value = false
+  }
+})
 
 // Debounced search handler for better performance
 const debouncedSearch = debounce((query: string) => {
@@ -242,7 +166,7 @@ onUnmounted(() => {
 }
 
 .mobile-menu::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.5);
+  background: hsl(var(--muted) / 0.5);
   border-radius: 2px;
 }
 
@@ -253,7 +177,7 @@ onUnmounted(() => {
 
 /* Focus styles for better accessibility */
 .focus-visible:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
 }
 </style>
