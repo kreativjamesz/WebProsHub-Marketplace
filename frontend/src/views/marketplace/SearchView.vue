@@ -273,278 +273,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import type { Product, Category, Store } from '@/types/marketplace'
+import { useMarketplace } from '@/composables'
 
 const router = useRouter()
 const route = useRoute()
 
-// Reactive data
-const searchQuery = ref('')
-const results = ref<Product[]>([])
-const categories = ref<Category[]>([])
-const stores = ref<Store[]>([])
-const selectedCategories = ref<string[]>([])
-const selectedStores = ref<string[]>([])
-const minPrice = ref<number | null>(null)
-const maxPrice = ref<number | null>(null)
-const minRating = ref<number | null>(null)
-const sortBy = ref('relevance')
-const currentPage = ref(1)
-const totalPages = ref(1)
-const totalResults = ref(0)
-const loading = ref(false)
-
-// Mock data for now
-const mockCategories: Category[] = [
-  {
-    id: '1',
-    name: 'Electronics',
-    description: 'Electronic devices and accessories',
-    isActive: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    name: 'Fashion',
-    description: 'Clothing and accessories',
-    isActive: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    name: 'Home & Garden',
-    description: 'Home improvement and garden supplies',
-    isActive: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '4',
-    name: 'Sports',
-    description: 'Sports equipment and athletic wear',
-    isActive: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '5',
-    name: 'Books',
-    description: 'Books, magazines, and educational materials',
-    isActive: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-]
-
-const mockStores: Store[] = [
-  {
-    id: '1',
-    name: 'Tech Gadgets Store',
-    description: 'Tech store',
-    address: '123 Tech Street',
-    city: 'Manila',
-    state: 'Metro Manila',
-    country: 'Philippines',
-    postalCode: '1000',
-    latitude: 14.5995,
-    longitude: 120.9842,
-    phone: '+63 2 1234 5678',
-    email: 'info@techgadgets.com',
-    website: 'https://techgadgets.com',
-    sellerId: 'seller1',
-    isActive: true,
-    createdAt: '2024-01-15T00:00:00Z',
-    updatedAt: '2024-01-15T00:00:00Z',
-  },
-  {
-    id: '2',
-    name: 'Fashion Boutique',
-    description: 'Fashion store',
-    address: '456 Fashion Ave',
-    city: 'Quezon City',
-    state: 'Metro Manila',
-    country: 'Philippines',
-    postalCode: '1100',
-    latitude: 14.676,
-    longitude: 121.0437,
-    phone: '+63 2 2345 6789',
-    email: 'info@fashionboutique.com',
-    website: 'https://fashionboutique.com',
-    sellerId: 'seller2',
-    isActive: true,
-    createdAt: '2024-01-15T00:00:00Z',
-    updatedAt: '2024-01-15T00:00:00Z',
-  },
-]
-
-const mockResults: Product[] = [
-  {
-    id: '1',
-    name: 'iPhone 15 Pro',
-    description: 'Latest iPhone with advanced camera system and A17 Pro chip',
-    price: 89999.0,
-    stock: 25,
-    images: [],
-    categoryId: '1',
-    storeId: '1',
-    sellerId: 'seller1',
-    isActive: true,
-    isFeatured: false,
-    minStock: 5,
-    createdAt: '2024-01-15T00:00:00Z',
-    updatedAt: '2024-01-15T00:00:00Z',
-    store: mockStores[0],
-    category: mockCategories[0],
-  },
-  {
-    id: '2',
-    name: 'MacBook Air M2',
-    description: 'Ultra-thin laptop with M2 chip for incredible performance',
-    price: 129999.0,
-    stock: 15,
-    images: [],
-    categoryId: '1',
-    storeId: '1',
-    sellerId: 'seller1',
-    isActive: true,
-    isFeatured: false,
-    minStock: 3,
-    createdAt: '2024-01-15T00:00:00Z',
-    updatedAt: '2024-01-15T00:00:00Z',
-    store: mockStores[0],
-    category: mockCategories[0],
-  },
-  {
-    id: '3',
-    name: 'AirPods Pro',
-    description: 'Active noise cancellation with spatial audio',
-    price: 24999.0,
-    stock: 50,
-    images: [],
-    categoryId: '1',
-    storeId: '1',
-    sellerId: 'seller1',
-    isActive: true,
-    isFeatured: false,
-    minStock: 10,
-    createdAt: '2024-01-15T00:00:00Z',
-    updatedAt: '2024-01-15T00:00:00Z',
-    store: mockStores[0],
-    category: mockCategories[0],
-  },
-]
-
-// Computed properties
-const visiblePages = computed(() => {
-  const pages = []
-  const start = Math.max(1, currentPage.value - 2)
-  const end = Math.min(totalPages.value, currentPage.value + 2)
-
-  for (let i = start; i <= end; i++) {
-    pages.push(i)
-  }
-
-  return pages
-})
+// Use the marketplace composable - all logic is here!
+const {
+  // State
+  searchQuery,
+  selectedCategories,
+  selectedStores,
+  minPrice,
+  maxPrice,
+  minRating,
+  sortBy,
+  currentPage,
+  
+  // Computed from store
+  stores,
+  categories,
+  searchResults: results,
+  loading,
+  errors,
+  totalPages,
+  totalResults,
+  visiblePages,
+  
+  // Methods
+  performSearch,
+  clearFilters,
+  initialize
+} = useMarketplace()
 
 // Methods
-const performSearch = async () => {
-  if (!searchQuery.value.trim()) return
-
-  loading.value = true
-  currentPage.value = 1
-
-  try {
-    // TODO: Replace with actual API call
-    // const response = await apiService.marketplace.search({
-    //   query: searchQuery.value,
-    //   page: currentPage.value,
-    //   categories: selectedCategories.value,
-    //   stores: selectedStores.value,
-    //   minPrice: minPrice.value,
-    //   maxPrice: maxPrice.value,
-    //   minRating: minRating.value,
-    //   sortBy: sortBy.value
-    // })
-    // results.value = response.data
-    // totalResults.value = response.meta.total
-    // totalPages.value = response.meta.totalPages
-
-    // Using mock data for now
-    results.value = mockResults.filter(
-      (product) =>
-        product.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        (product.description || '').toLowerCase().includes(searchQuery.value.toLowerCase()),
-    )
-    totalResults.value = results.value.length
-    totalPages.value = 1
-
-    // Update URL
-    router.push({
-      query: {
-        q: searchQuery.value,
-        page: currentPage.value.toString(),
-      },
-    })
-  } catch (error) {
-    console.error('Error performing search:', error)
-  } finally {
-    loading.value = false
-  }
-}
-
-const navigateToResult = (result: Product) => {
+const navigateToResult = (result: any) => {
   router.push(`/products/${result.id}`)
 }
 
-const clearFilters = () => {
-  selectedCategories.value = []
-  selectedStores.value = []
-  minPrice.value = null
-  maxPrice.value = null
-  minRating.value = null
-  performSearch()
-}
-
-const loadInitialData = async () => {
-  try {
-    // TODO: Replace with actual API calls
-    // const [categoriesResponse, storesResponse] = await Promise.all([
-    //   apiService.marketplace.getCategories(),
-    //   apiService.marketplace.getStores()
-    // ])
-    // categories.value = categoriesResponse.data
-    // stores.value = storesResponse.data
-
-    // Using mock data for now
-    categories.value = mockCategories
-    stores.value = mockStores
-  } catch (error) {
-    console.error('Error loading initial data:', error)
-  }
-}
-
-// Watchers
-watch([selectedCategories, selectedStores, minPrice, maxPrice, minRating, sortBy], () => {
-  if (searchQuery.value) {
-    performSearch()
-  }
-})
-
-watch(currentPage, () => {
-  if (searchQuery.value) {
-    performSearch()
-  }
-})
-
 // Lifecycle
-onMounted(() => {
-  // Load initial data
-  loadInitialData()
+onMounted(async () => {
+  // Initialize marketplace data
+  await initialize()
 
   // Check if there's a search query in the URL
   const query = route.query.q as string

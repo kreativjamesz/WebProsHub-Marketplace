@@ -262,9 +262,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+
+// Import mocks from centralized location
+import { 
+  mockSellerStats, 
+  mockRecentOrders, 
+  mockLowStockProducts, 
+  mockChartPeriods 
+} from '@/mocks'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -272,84 +280,11 @@ const authStore = useAuthStore()
 // Reactive data
 const selectedPeriod = ref('7d')
 
-// Mock data
-const stats = ref({
-  totalSales: 125000,
-  salesGrowth: 12.5,
-  totalOrders: 156,
-  ordersGrowth: 8.3,
-  activeProducts: 89,
-  lowStockProducts: 5,
-  newCustomers: 23,
-  customersGrowth: 15.2
-})
-
-const recentOrders = ref([
-  {
-    id: 1,
-    orderNumber: 'ORD-001',
-    customerName: 'John Doe',
-    date: '2 hours ago',
-    items: 3,
-    total: 2500,
-    status: 'Pending'
-  },
-  {
-    id: 2,
-    orderNumber: 'ORD-002',
-    customerName: 'Jane Smith',
-    date: '4 hours ago',
-    items: 1,
-    total: 1200,
-    status: 'Processing'
-  },
-  {
-    id: 3,
-    orderNumber: 'ORD-003',
-    customerName: 'Mike Johnson',
-    date: '6 hours ago',
-    items: 2,
-    total: 1800,
-    status: 'Shipped'
-  },
-  {
-    id: 4,
-    orderNumber: 'ORD-004',
-    customerName: 'Sarah Wilson',
-    date: '1 day ago',
-    items: 4,
-    total: 3200,
-    status: 'Delivered'
-  }
-])
-
-const lowStockProducts = ref([
-  {
-    id: 1,
-    name: 'Wireless Headphones',
-    sku: 'WH-001',
-    stock: 3
-  },
-  {
-    id: 2,
-    name: 'Smart Watch',
-    sku: 'SW-002',
-    stock: 2
-  },
-  {
-    id: 3,
-    name: 'Bluetooth Speaker',
-    sku: 'BS-003',
-    stock: 1
-  }
-])
-
-const chartPeriods = ref([
-  { label: '7 Days', value: '7d' },
-  { label: '30 Days', value: '30d' },
-  { label: '3 Months', value: '3m' },
-  { label: '1 Year', value: '1y' }
-])
+// Use centralized mocks instead of local declarations
+const stats = ref(mockSellerStats)
+const recentOrders = ref(mockRecentOrders)
+const lowStockProducts = ref(mockLowStockProducts)
+const chartPeriods = ref(mockChartPeriods)
 
 // Computed properties
 const user = computed(() => authStore.user)
@@ -395,10 +330,36 @@ const loadDashboardData = async () => {
 }
 
 // Lifecycle
-onMounted(() => {
+onMounted(async () => {
+  // Layer 3: Component-level protection
+  await checkSellerAccess()
+  
   loadDashboardData()
   
   // Set page title
   document.title = 'Seller Dashboard - WebProsHub Marketplace'
 })
+
+// Seller access validation (Layer 3: Component Protection)
+const checkSellerAccess = async () => {
+  try {
+    const sellerStatus = await authStore.checkSellerStatus()
+    
+    if (sellerStatus === 'pending-approval') {
+      router.push('/seller/pending-approval')
+      return
+    }
+    
+    if (sellerStatus === 'no-store') {
+      router.push('/seller/onboarding')
+      return
+    }
+    
+    // If we get here, seller is ready
+    console.log('✅ Seller access validated - ready to proceed')
+  } catch (error) {
+    console.error('Error checking seller access:', error)
+    // Fallback: allow access but log the error
+  }
+}
 </script>

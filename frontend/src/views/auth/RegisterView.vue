@@ -298,12 +298,12 @@ const handleRegister = async () => {
     })
 
     if (result.success) {
-      toast.success('Account created successfully!')
-
-      // Redirect based on account type
       if (form.accountType === 'SELLER') {
-        router.push('/seller/onboarding')
+        toast.success('Seller account created! Pending admin approval.')
+        // Redirect to seller pending approval page
+        router.push('/seller/pending-approval')
       } else {
+        toast.success('Account created successfully!')
         router.push('/')
       }
     }

@@ -58,6 +58,7 @@ const navigationItems = [
   { path: '/marketplace', label: 'Marketplace' },
   { path: '/stores', label: 'Stores' },
   { path: '/categories', label: 'Categories' },
-  { path: '/deals', label: 'Deals' }
+  { path: '/deals', label: 'Deals' },
+  { path: '/wishlist', label: 'Wishlist' }
 ] as const
 </script>

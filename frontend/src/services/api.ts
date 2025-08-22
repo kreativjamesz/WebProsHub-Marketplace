@@ -129,6 +129,9 @@ export const apiService = {
     getUsers: (params?: any) => api.get('/admin/users', { params }),
     updateUser: (id: string, data: any) => api.put(`/admin/users/${id}`, data),
     getSellers: (params?: any) => api.get('/admin/sellers', { params }),
+    getPendingSellers: () => api.get('/admin/sellers/pending'),
+    approveSeller: (id: string, data: { isApproved: boolean; notes?: string }) =>
+      api.put(`/admin/sellers/${id}/approve`, data),
     verifySeller: (id: string, data: { isVerified: boolean }) =>
       api.put(`/admin/sellers/${id}/verify`, data),
     getProducts: (params?: any) => api.get('/admin/products', { params }),

@@ -358,7 +358,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import type { User } from '@/types/auth'
+import type { AuthUser } from '@/types/auth' // Import AuthUser type
 import ColorThemeDropdown from '@/components/ColorThemeDropdown.vue'
 
 const router = useRouter()
@@ -375,7 +375,7 @@ const userInitials = computed(() => {
   if (!user.value?.name) return 'A'
   return user.value.name
     .split(' ')
-    .map((name) => name.charAt(0))
+    .map((name: string) => name.charAt(0))
     .join('')
     .toUpperCase()
     .slice(0, 2)

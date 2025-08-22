@@ -11,6 +11,8 @@ export * from './wishlist'
 // Specialized mock data
 export * from './buyer'
 export * from './profile'
+export * from './seller'
+export * from './admin'
 export * from './search'
 export * from './store-detail'
 export * from './product-detail'

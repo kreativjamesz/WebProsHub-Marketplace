@@ -206,6 +206,45 @@ export const useAuthStore = defineStore('auth', () => {
     return false
   }
 
+  // Seller status checking (Layer 2: Store Logic)
+  const checkSellerStatus = async (): Promise<'pending-approval' | 'no-store' | 'ready'> => {
+    if (!isAuthenticated.value || userRole.value !== 'SELLER') {
+      return 'ready'
+    }
+
+    try {
+      // Get seller profile from API
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sellers/profile`, {
+        headers: {
+          'Authorization': `Bearer ${token.value}`,
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (!response.ok) {
+        console.error('Failed to fetch seller profile')
+        return 'ready' // Fallback to allow access
+      }
+
+      const sellerProfile = await response.json()
+      
+      // Check approval status first
+      if (!sellerProfile.isApproved) {
+        return 'pending-approval'
+      }
+      
+      // Check if seller has stores
+      if (!sellerProfile.stores || sellerProfile.stores.length === 0) {
+        return 'no-store'
+      }
+      
+      return 'ready'
+    } catch (error) {
+      console.error('Error checking seller status:', error)
+      return 'ready' // Fallback to allow access
+    }
+  }
+
   return {
     // State
     user,
@@ -232,5 +271,6 @@ export const useAuthStore = defineStore('auth', () => {
     updateProfile,
     clearError,
     hasPermission,
+    checkSellerStatus,
   }
 })

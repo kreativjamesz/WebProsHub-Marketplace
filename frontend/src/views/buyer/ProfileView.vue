@@ -14,7 +14,7 @@
           <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-medium text-gray-900">Personal Information</h2>
           </div>
-          
+
           <div class="p-6">
             <form @submit.prevent="updateProfile" class="space-y-6">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -27,7 +27,7 @@
                     required
                   />
                 </div>
-                
+
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
                   <input
@@ -38,7 +38,7 @@
                   />
                 </div>
               </div>
-              
+
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                 <input
@@ -50,7 +50,7 @@
                 />
                 <p class="mt-1 text-sm text-gray-500">Email cannot be changed</p>
               </div>
-              
+
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
                 <input
@@ -60,7 +60,7 @@
                   placeholder="+63 912 345 6789"
                 />
               </div>
-              
+
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
                 <input
@@ -69,7 +69,7 @@
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
-              
+
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
                 <select
@@ -83,7 +83,7 @@
                   <option value="prefer-not-to-say">Prefer not to say</option>
                 </select>
               </div>
-              
+
               <div class="flex justify-end">
                 <button
                   type="submit"
@@ -102,7 +102,7 @@
           <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-medium text-gray-900">Address Information</h2>
           </div>
-          
+
           <div class="p-6">
             <form @submit.prevent="updateAddress" class="space-y-6">
               <div>
@@ -115,7 +115,7 @@
                   required
                 />
               </div>
-              
+
               <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">City</label>
@@ -127,7 +127,7 @@
                     required
                   />
                 </div>
-                
+
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">Province</label>
                   <input
@@ -138,7 +138,7 @@
                     required
                   />
                 </div>
-                
+
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">Postal Code</label>
                   <input
@@ -150,7 +150,7 @@
                   />
                 </div>
               </div>
-              
+
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Country</label>
                 <select
@@ -166,7 +166,7 @@
                   <option value="Australia">Australia</option>
                 </select>
               </div>
-              
+
               <div class="flex justify-end">
                 <button
                   type="submit"
@@ -185,7 +185,7 @@
           <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-medium text-gray-900">Preferences</h2>
           </div>
-          
+
           <div class="p-6">
             <form @submit.prevent="updatePreferences" class="space-y-6">
               <div>
@@ -199,7 +199,7 @@
                   <option value="es">Spanish</option>
                 </select>
               </div>
-              
+
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Currency</label>
                 <select
@@ -212,10 +212,10 @@
                   <option value="GBP">British Pound (£)</option>
                 </select>
               </div>
-              
+
               <div class="space-y-4">
                 <h3 class="text-sm font-medium text-gray-700">Notifications</h3>
-                
+
                 <div class="space-y-3">
                   <label class="flex items-center">
                     <input
@@ -225,7 +225,7 @@
                     />
                     <span class="ml-2 text-sm text-gray-700">Email notifications</span>
                   </label>
-                  
+
                   <label class="flex items-center">
                     <input
                       v-model="preferences.smsNotifications"
@@ -234,7 +234,7 @@
                     />
                     <span class="ml-2 text-sm text-gray-700">SMS notifications</span>
                   </label>
-                  
+
                   <label class="flex items-center">
                     <input
                       v-model="preferences.pushNotifications"
@@ -243,7 +243,7 @@
                     />
                     <span class="ml-2 text-sm text-gray-700">Push notifications</span>
                   </label>
-                  
+
                   <label class="flex items-center">
                     <input
                       v-model="preferences.marketingEmails"
@@ -254,7 +254,7 @@
                   </label>
                 </div>
               </div>
-              
+
               <div class="flex justify-end">
                 <button
                   type="submit"
@@ -273,7 +273,7 @@
           <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-medium text-gray-900">Security</h2>
           </div>
-          
+
           <div class="p-6">
             <div class="space-y-6">
               <!-- Change Password -->
@@ -281,7 +281,9 @@
                 <h3 class="text-sm font-medium text-gray-700 mb-4">Change Password</h3>
                 <form @submit.prevent="changePassword" class="space-y-4">
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Current Password</label
+                    >
                     <input
                       v-model="passwordForm.currentPassword"
                       type="password"
@@ -289,7 +291,7 @@
                       required
                     />
                   </div>
-                  
+
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
                     <input
@@ -299,9 +301,11 @@
                       required
                     />
                   </div>
-                  
+
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Confirm New Password</label
+                    >
                     <input
                       v-model="passwordForm.confirmPassword"
                       type="password"
@@ -309,7 +313,7 @@
                       required
                     />
                   </div>
-                  
+
                   <div class="flex justify-end">
                     <button
                       type="submit"
@@ -321,13 +325,15 @@
                   </div>
                 </form>
               </div>
-              
+
               <!-- Two-Factor Authentication -->
               <div class="border-t border-gray-200 pt-6">
                 <div class="flex items-center justify-between">
                   <div>
                     <h3 class="text-sm font-medium text-gray-700">Two-Factor Authentication</h3>
-                    <p class="text-sm text-gray-500">Add an extra layer of security to your account</p>
+                    <p class="text-sm text-gray-500">
+                      Add an extra layer of security to your account
+                    </p>
                   </div>
                   <button
                     @click="toggleTwoFactor"
@@ -346,7 +352,7 @@
           <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-medium text-gray-900">Account Actions</h2>
           </div>
-          
+
           <div class="p-6">
             <div class="space-y-4">
               <div class="flex items-center justify-between">
@@ -376,7 +382,12 @@
         <div class="mt-3 text-center">
           <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
             <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"
+              />
             </svg>
           </div>
           <h3 class="text-lg font-medium text-gray-900 mt-4">Delete Account</h3>
@@ -408,6 +419,9 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
+// Import mocks from centralized location
+import { mockProfile, mockAddress, mockPreferences } from '@/mocks'
+
 const router = useRouter()
 const authStore = useAuthStore()
 
@@ -424,7 +438,7 @@ const profile = ref({
   email: '',
   phone: '',
   dateOfBirth: '',
-  gender: ''
+  gender: '',
 })
 
 const address = ref({
@@ -432,7 +446,7 @@ const address = ref({
   city: '',
   province: '',
   postalCode: '',
-  country: ''
+  country: '',
 })
 
 const preferences = ref({
@@ -442,42 +456,14 @@ const preferences = ref({
   smsNotifications: false,
   pushNotifications: true,
   marketingEmails: false,
-  twoFactorEnabled: false
+  twoFactorEnabled: false,
 })
 
 const passwordForm = ref({
   currentPassword: '',
   newPassword: '',
-  confirmPassword: ''
+  confirmPassword: '',
 })
-
-// Mock data for now
-const mockProfile = {
-  firstName: 'John',
-  lastName: 'Doe',
-  email: 'john.doe@example.com',
-  phone: '+63 912 345 6789',
-  dateOfBirth: '1990-01-01',
-  gender: 'male'
-}
-
-const mockAddress = {
-  street: '123 Main Street',
-  city: 'Manila',
-  province: 'Metro Manila',
-  postalCode: '1000',
-  country: 'Philippines'
-}
-
-const mockPreferences = {
-  language: 'en',
-  currency: 'PHP',
-  emailNotifications: true,
-  smsNotifications: false,
-  pushNotifications: true,
-  marketingEmails: false,
-  twoFactorEnabled: false
-}
 
 // Methods
 const updateProfile = async () => {
@@ -485,10 +471,10 @@ const updateProfile = async () => {
   try {
     // TODO: Replace with actual API call
     // await apiService.buyers.updateProfile(profile.value)
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
     // Show success message
     console.log('Profile updated successfully')
   } catch (error) {
@@ -503,10 +489,10 @@ const updateAddress = async () => {
   try {
     // TODO: Replace with actual API call
     // await apiService.buyers.updateAddress(address.value)
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
     // Show success message
     console.log('Address updated successfully')
   } catch (error) {
@@ -521,10 +507,10 @@ const updatePreferences = async () => {
   try {
     // TODO: Replace with actual API call
     // await apiService.buyers.updatePreferences(preferences.value)
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
     // Show success message
     console.log('Preferences updated successfully')
   } catch (error) {
@@ -539,7 +525,7 @@ const changePassword = async () => {
     alert('New passwords do not match')
     return
   }
-  
+
   changingPassword.value = true
   try {
     // TODO: Replace with actual API call
@@ -547,17 +533,17 @@ const changePassword = async () => {
     //   currentPassword: passwordForm.value.currentPassword,
     //   newPassword: passwordForm.value.newPassword
     // })
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
     // Clear form
     passwordForm.value = {
       currentPassword: '',
       newPassword: '',
-      confirmPassword: ''
+      confirmPassword: '',
     }
-    
+
     // Show success message
     console.log('Password changed successfully')
   } catch (error) {
@@ -570,17 +556,20 @@ const changePassword = async () => {
 const toggleTwoFactor = () => {
   preferences.value.twoFactorEnabled = !preferences.value.twoFactorEnabled
   // TODO: Implement actual 2FA toggle
-  console.log('Two-factor authentication:', preferences.value.twoFactorEnabled ? 'enabled' : 'disabled')
+  console.log(
+    'Two-factor authentication:',
+    preferences.value.twoFactorEnabled ? 'enabled' : 'disabled',
+  )
 }
 
 const deleteAccount = async () => {
   try {
     // TODO: Replace with actual API call
     // await apiService.buyers.deleteAccount()
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
     // Logout and redirect
     await authStore.logout()
     router.push('/login')
@@ -598,7 +587,7 @@ const loadProfileData = async () => {
     // profile.value = response.data.profile
     // address.value = response.data.address
     // preferences.value = response.data.preferences
-    
+
     // Using mock data for now
     profile.value = { ...mockProfile }
     address.value = { ...mockAddress }

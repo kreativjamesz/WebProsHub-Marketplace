@@ -6,7 +6,7 @@
       class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
     >
       <div
-        class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center"
+        class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center"
       >
         <span class="text-white text-sm font-medium">
           {{ userInitials }}

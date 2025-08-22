@@ -132,128 +132,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import type { Store, Category } from '@/types/marketplace'
+import { useMarketplace } from '@/composables'
 
 const router = useRouter()
 
-// Reactive data
-const stores = ref<Store[]>([])
-const categories = ref<Category[]>([])
-const searchQuery = ref('')
+// Use the marketplace composable - all logic is here!
+const {
+  // State
+  searchQuery,
+  currentPage,
+  
+  // Computed from store
+  stores,
+  categories,
+  loading,
+  errors,
+  totalPages,
+  
+  // Methods
+  loadStores,
+  loadCategories,
+  initialize
+} = useMarketplace()
+
+// Component-specific state
 const selectedCategory = ref('')
 const sortBy = ref('name')
-const currentPage = ref(1)
-const totalPages = ref(1)
-const loading = ref(false)
-
-// Mock data for now
-const mockStores: Store[] = [
-  {
-    id: '1',
-    name: 'Tech Gadgets Store',
-    description:
-      'Your one-stop shop for all things tech. From smartphones to laptops, we have it all.',
-    address: '123 Tech Street',
-    city: 'Manila',
-    state: 'Metro Manila',
-    country: 'Philippines',
-    postalCode: '1000',
-    latitude: 14.5995,
-    longitude: 120.9842,
-    phone: '+63 2 1234 5678',
-    email: 'info@techgadgets.com',
-    website: 'https://techgadgets.com',
-    sellerId: 'seller1',
-    isActive: true,
-    createdAt: '2024-01-15T00:00:00Z',
-    updatedAt: '2024-01-15T00:00:00Z',
-  },
-  {
-    id: '2',
-    name: 'Fashion Boutique',
-    description:
-      'Trendy fashion items for men and women. Stay stylish with our latest collections.',
-    address: '456 Fashion Ave',
-    city: 'Quezon City',
-    state: 'Metro Manila',
-    country: 'Philippines',
-    postalCode: '1100',
-    latitude: 14.676,
-    longitude: 121.0437,
-    phone: '+63 2 2345 6789',
-    email: 'info@fashionboutique.com',
-    website: 'https://fashionboutique.com',
-    sellerId: 'seller2',
-    isActive: true,
-    createdAt: '2024-01-15T00:00:00Z',
-    updatedAt: '2024-01-15T00:00:00Z',
-  },
-  {
-    id: '3',
-    name: 'Home & Garden',
-    description:
-      'Everything you need to make your home beautiful. Furniture, decor, and garden supplies.',
-    address: '789 Home Street',
-    city: 'Makati',
-    state: 'Metro Manila',
-    country: 'Philippines',
-    postalCode: '1200',
-    latitude: 14.5547,
-    longitude: 121.0244,
-    phone: '+63 2 3456 7890',
-    email: 'info@homegarden.com',
-    website: 'https://homegarden.com',
-    sellerId: 'seller3',
-    isActive: true,
-    createdAt: '2024-01-15T00:00:00Z',
-    updatedAt: '2024-01-15T00:00:00Z',
-  },
-]
-
-const mockCategories: Category[] = [
-  {
-    id: '1',
-    name: 'Electronics',
-    description: 'Electronic devices and accessories',
-    isActive: true,
-    createdAt: '2024-01-15T00:00:00Z',
-    updatedAt: '2024-01-15T00:00:00Z',
-  },
-  {
-    id: '2',
-    name: 'Fashion',
-    description: 'Clothing and accessories',
-    isActive: true,
-    createdAt: '2024-01-15T00:00:00Z',
-    updatedAt: '2024-01-15T00:00:00Z',
-  },
-  {
-    id: '3',
-    name: 'Home & Garden',
-    description: 'Home improvement and garden supplies',
-    isActive: true,
-    createdAt: '2024-01-15T00:00:00Z',
-    updatedAt: '2024-01-15T00:00:00Z',
-  },
-  {
-    id: '4',
-    name: 'Sports',
-    description: 'Sports equipment and athletic wear',
-    isActive: true,
-    createdAt: '2024-01-15T00:00:00Z',
-    updatedAt: '2024-01-15T00:00:00Z',
-  },
-  {
-    id: '5',
-    name: 'Books',
-    description: 'Books, magazines, and educational materials',
-    isActive: true,
-    createdAt: '2024-01-15T00:00:00Z',
-    updatedAt: '2024-01-15T00:00:00Z',
-  },
-]
 
 // Computed properties
 const filteredStores = computed(() => {
@@ -305,46 +211,19 @@ const navigateToStore = (storeId: string) => {
   router.push(`/stores/${storeId}`)
 }
 
-const loadStores = async () => {
-  loading.value = true
-  try {
-    // TODO: Replace with actual API call
-    // const response = await apiService.marketplace.getStores({
-    //   page: currentPage.value,
-    //   search: searchQuery.value,
-    //   category: selectedCategory.value,
-    //   sortBy: sortBy.value
-    // })
-    // stores.value = response.data
-    // totalPages.value = response.meta.totalPages
-
-    // Using mock data for now
-    stores.value = mockStores
-    totalPages.value = 1
-  } catch (error) {
-    console.error('Error loading stores:', error)
-  } finally {
-    loading.value = false
-  }
-}
-
-const loadCategories = async () => {
-  try {
-    // TODO: Replace with actual API call
-    // const response = await apiService.marketplace.getCategories()
-    // categories.value = response.data
-
-    // Using mock data for now
-    categories.value = mockCategories
-  } catch (error) {
-    console.error('Error loading categories:', error)
-  }
-}
+// Watchers for automatic reloading
+watch([searchQuery, selectedCategory, sortBy, currentPage], () => {
+  loadStores({
+    page: currentPage.value,
+    search: searchQuery.value,
+    category: selectedCategory.value,
+    sortBy: sortBy.value
+  })
+})
 
 // Lifecycle
-onMounted(() => {
-  loadStores()
-  loadCategories()
+onMounted(async () => {
+  await initialize()
 })
 </script>
 

@@ -8,33 +8,25 @@ export const marketplaceRoutes: RouteRecordRaw[] = [
     meta: { title: 'Marketplace - WebProsHubMarketplace' }
   },
   {
-    path: '/stores',
-    name: 'stores',
-    component: () => import('@/views/marketplace/StoresView.vue'),
-    meta: { title: 'Stores - WebProsHubMarketplace' }
-  },
-  {
-    path: '/stores/:id',
-    name: 'store-detail',
-    component: () => import('@/views/marketplace/StoreDetailView.vue'),
-    meta: { title: 'Store Details - WebProsHubMarketplace' }
-  },
-  {
-    path: '/categories',
+    path: '/marketplace/categories',
     name: 'categories',
     component: () => import('@/views/marketplace/CategoriesView.vue'),
     meta: { title: 'Categories - WebProsHubMarketplace' }
   },
   {
-    path: '/products/:id',
+    path: '/marketplace/product/:id',
     name: 'product-detail',
     component: () => import('@/views/marketplace/ProductDetailView.vue'),
     meta: { title: 'Product Details - WebProsHubMarketplace' }
   },
   {
-    path: '/search',
-    name: 'search',
-    component: () => import('@/views/marketplace/SearchView.vue'),
-    meta: { title: 'Search Results - WebProsHubMarketplace' }
+    path: '/wishlist',
+    name: 'public-wishlist',
+    component: () => import('@/views/marketplace/PublicWishlistView.vue'),
+    meta: { 
+      title: 'Wishlist - WebProsHubMarketplace',
+      requiresAuth: true,
+      redirectToLogin: true
+    }
   }
 ]

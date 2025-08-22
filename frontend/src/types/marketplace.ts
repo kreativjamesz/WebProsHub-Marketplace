@@ -92,6 +92,9 @@ export interface SellerProfile {
   theme?: StoreTheme
   isVerified: boolean
   isActive: boolean
+  isApproved: boolean
+  approvalDate?: string
+  approvedBy?: string
   createdAt: string
   updatedAt: string
   stores?: Store[]

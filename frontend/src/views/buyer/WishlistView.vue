@@ -1,309 +1,311 @@
 <template>
-  <div class="py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Header -->
-      <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">My Wishlist</h1>
-        <p class="mt-2 text-gray-600">{{ wishlistItems.length }} items saved for later</p>
-      </div>
-
-      <!-- Wishlist Content -->
-      <div v-if="wishlistItems.length > 0" class="space-y-6">
-        <!-- Wishlist Items -->
-        <div
-          v-for="item in wishlistItems"
-          :key="item.id"
-          class="bg-white rounded-lg shadow-md p-6"
-        >
-          <div class="flex items-start space-x-6">
-            <!-- Product Image -->
-            <div class="flex-shrink-0">
-              <div class="w-24 h-24 bg-gray-200 rounded-lg overflow-hidden">
-                <SafeImage
-                  v-if="item.product.images && item.product.images.length > 0"
-                  :src="item.product.images[0]"
-                  :alt="item.product.name"
-                  class="w-full h-full"
-                  object-fit="cover"
-                />
-                <div
-                  v-else
-                  class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center"
-                >
-                  <svg class="w-8 h-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <!-- Product Info -->
-            <div class="flex-1 min-w-0">
-              <div class="flex items-start justify-between">
-                <div class="flex-1">
-                  <h3 class="text-lg font-medium text-gray-900 mb-2">{{ item.product.name }}</h3>
-                  <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ item.product.description }}</p>
-                  
-                  <div class="flex items-center space-x-4 text-sm text-gray-500 mb-3">
-                    <span>Store: {{ item.product.store?.name || 'Unknown Store' }}</span>
-                    <span>•</span>
-                    <span>{{ item.product.stock }} in stock</span>
-                  </div>
-
-                  <div class="flex items-center space-x-4">
-                    <span class="text-2xl font-bold text-blue-600">₱{{ item.product.price.toFixed(2) }}</span>
-                    <span class="text-sm text-gray-500">Added {{ formatDate(new Date(item.createdAt)) }}</span>
-                  </div>
-                </div>
-
-                <!-- Actions -->
-                <div class="flex flex-col space-y-2 ml-4">
-                  <button
-                    @click="addToCart(item.product)"
-                    :disabled="item.product.stock === 0"
-                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {{ item.product.stock === 0 ? 'Out of Stock' : 'Add to Cart' }}
-                  </button>
-                  
-                  <button
-                    @click="removeFromWishlist(item.id)"
-                    class="px-4 py-2 text-red-600 border border-red-600 rounded-md hover:bg-red-50 transition-colors duration-200 font-medium"
-                  >
-                    Remove
-                  </button>
-                </div>
-              </div>
-            </div>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow-sm border-b">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">My Wishlist</h1>
+            <p class="mt-2 text-gray-600">Save products you love for later</p>
           </div>
-        </div>
-
-        <!-- Bulk Actions -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-              <button
-                @click="selectAll"
-                class="text-blue-600 hover:text-blue-800 text-sm font-medium"
-              >
-                Select All
-              </button>
-              <button
-                @click="clearSelection"
-                class="text-gray-600 hover:text-gray-800 text-sm font-medium"
-              >
-                Clear Selection
-              </button>
-            </div>
-            
-            <div class="flex space-x-3">
-              <button
-                @click="addSelectedToCart"
-                :disabled="selectedItems.length === 0"
-                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Add Selected to Cart ({{ selectedItems.length }})
-              </button>
-              
-              <button
-                @click="removeSelected"
-                :disabled="selectedItems.length === 0"
-                class="px-4 py-2 text-red-600 border border-red-600 rounded-md hover:bg-red-50 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Remove Selected
-              </button>
-            </div>
+          <div class="flex items-center space-x-4">
+            <span class="text-sm text-gray-500">
+              {{ wishlistItems.length }} item{{ wishlistItems.length !== 1 ? 's' : '' }}
+            </span>
+            <button
+              v-if="wishlistItems.length > 0"
+              @click="clearWishlist"
+              class="text-red-600 hover:text-red-700 text-sm font-medium"
+            >
+              Clear All
+            </button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Empty Wishlist State -->
-      <div v-else class="text-center py-12">
-        <div class="text-gray-400 mb-4">
-          <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <!-- Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Empty State -->
+      <div v-if="wishlistItems.length === 0" class="text-center py-16">
+        <div class="mx-auto h-24 w-24 text-gray-300">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">Your wishlist is empty</h3>
-        <p class="text-gray-500 mb-6">Start adding products you love to your wishlist!</p>
-        <router-link
-          to="/marketplace"
-          class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium"
-        >
-          Browse Products
-        </router-link>
+        <h3 class="mt-4 text-lg font-medium text-gray-900">Your wishlist is empty</h3>
+        <p class="mt-2 text-gray-500">Start adding products you love to your wishlist</p>
+        <div class="mt-6">
+          <router-link
+            to="/marketplace"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+          >
+            Browse Products
+          </router-link>
+        </div>
       </div>
 
-      <!-- Recommendations -->
-      <div v-if="recommendations.length > 0" class="mt-16">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6">You might also like</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div
-            v-for="product in recommendations"
-            :key="product.id"
-            class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200 cursor-pointer"
-            @click="navigateToProduct(product.id)"
-          >
-            <div class="aspect-w-1 aspect-h-1 bg-gray-200">
-              <SafeImage
-                v-if="product.images && product.images.length > 0"
-                :src="product.images[0]"
-                :alt="product.name"
-                class="w-full h-32"
-                object-fit="cover"
-              />
-              <div
-                v-else
-                class="w-full h-32 bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center"
-              >
-                <svg class="w-8 h-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-            </div>
+      <!-- Wishlist Items -->
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div
+          v-for="item in wishlistItems"
+          :key="item.id"
+          class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200"
+        >
+          <!-- Product Image -->
+          <div class="aspect-w-1 aspect-h-1 w-full">
+            <img
+              :src="item.product.images[0] || '/placeholder-product.jpg'"
+              :alt="item.product.name"
+              class="w-full h-48 object-cover"
+              @error="handleImageError"
+            />
+          </div>
+
+          <!-- Product Info -->
+          <div class="p-4">
+            <h3 class="text-lg font-medium text-gray-900 line-clamp-2 mb-2">
+              {{ item.product.name }}
+            </h3>
             
-            <div class="p-3">
-              <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-2">{{ product.name }}</h3>
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-blue-600 font-semibold">₱{{ product.price.toFixed(2) }}</span>
-                <div class="flex text-yellow-400">
-                  <span v-for="i in 5" :key="i" class="text-xs">
-                    <svg
-                      class="w-3 h-3 fill-current text-gray-300"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                    </svg>
-                  </span>
-                </div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center space-x-2">
+                <span class="text-2xl font-bold text-gray-900">
+                  ₱{{ formatPrice(item.product.price) }}
+                </span>
+                <span v-if="item.product.comparePrice" class="text-sm text-gray-500 line-through">
+                  ₱{{ formatPrice(item.product.comparePrice) }}
+                </span>
               </div>
               
-              <div class="flex space-x-2">
-                <button
-                  @click.stop="addToCart(product)"
-                  :disabled="product.stock === 0"
-                  class="flex-1 px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {{ product.stock === 0 ? 'Out of Stock' : 'Add to Cart' }}
-                </button>
-                <button
-                  @click.stop="addToWishlist(product)"
-                  class="px-3 py-1 text-red-600 border border-red-600 text-xs rounded hover:bg-red-50 transition-colors duration-200"
-                >
-                  <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </button>
-              </div>
+              <!-- Remove from Wishlist -->
+              <button
+                @click="removeFromWishlist(item.id)"
+                class="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50"
+                title="Remove from wishlist"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Store Info -->
+            <div class="text-sm text-gray-600 mb-3">
+              <span class="font-medium">{{ item.product.store?.name || 'Store' }}</span>
+            </div>
+
+            <!-- Stock Status -->
+            <div class="mb-4">
+              <span
+                v-if="item.product.stock > 0"
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+              >
+                In Stock ({{ item.product.stock }})
+              </span>
+              <span
+                v-else
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
+              >
+                Out of Stock
+              </span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex space-x-2">
+              <button
+                @click="addToCart(item.product.id)"
+                :disabled="item.product.stock === 0"
+                class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Add to Cart
+              </button>
+              
+              <router-link
+                :to="`/marketplace/product/${item.product.id}`"
+                class="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200 text-center"
+              >
+                View Details
+              </router-link>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Load More (if pagination is needed) -->
+      <div v-if="hasMoreItems" class="text-center mt-8">
+        <button
+          @click="loadMore"
+          :disabled="isLoading"
+          class="bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-md text-sm font-medium hover:bg-gray-50 disabled:opacity-50"
+        >
+          {{ isLoading ? 'Loading...' : 'Load More' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div v-if="isLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
+        <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+        <span class="text-gray-700">Loading wishlist...</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import type { WishlistItem, Product } from '@/types/marketplace'
-import { mockWishlistItems, mockRecommendations } from '@/mocks'
-import SafeImage from '@/components/ui/SafeImage.vue'
+import { useAuthStore } from '@/stores/auth'
+import { toast } from 'vue3-toastify'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
-// Reactive data
-const wishlistItems = ref<WishlistItem[]>([])
-const selectedItems = ref<string[]>([])
-const recommendations = ref<Product[]>([])
+// State
+const wishlistItems = ref<any[]>([])
+const isLoading = ref(false)
+const hasMoreItems = ref(false)
 
-// Use centralized mock data
+// Computed
+const isAuthenticated = computed(() => authStore.isAuthenticated)
 
 // Methods
-const addToCart = (product: Product) => {
-  // TODO: Implement add to cart logic
-  console.log('Adding to cart:', product)
-}
-
-const removeFromWishlist = (itemId: string) => {
-  wishlistItems.value = wishlistItems.value.filter(item => item.id !== itemId)
-  selectedItems.value = selectedItems.value.filter(id => id !== itemId)
-  // TODO: Remove from wishlist in backend
-}
-
-const selectAll = () => {
-  selectedItems.value = wishlistItems.value.map(item => item.id)
-}
-
-const clearSelection = () => {
-  selectedItems.value = []
-}
-
-const addSelectedToCart = () => {
-  const selectedProducts = wishlistItems.value
-    .filter(item => selectedItems.value.includes(item.id))
-    .map(item => item.product)
-  
-  selectedProducts.forEach(product => {
-    if (product.stock > 0) {
-      addToCart(product)
-    }
-  })
-  
-  // TODO: Show success message
-  console.log('Added selected items to cart')
-}
-
-const removeSelected = () => {
-  selectedItems.value.forEach(itemId => {
-    removeFromWishlist(itemId)
-  })
-  selectedItems.value = []
-}
-
-const navigateToProduct = (productId: string) => {
-  router.push(`/products/${productId}`)
-}
-
-const addToWishlist = (product: Product) => {
-  // TODO: Implement add to wishlist logic
-  console.log('Adding to wishlist:', product)
-}
-
-const formatDate = (date: Date) => {
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  }).format(date)
-}
-
-const loadWishlistData = async () => {
+const loadWishlist = async () => {
   try {
-    // TODO: Replace with actual API call
-    // const response = await apiService.buyers.getWishlist()
-    // wishlistItems.value = response.data
+    isLoading.value = true
     
-    // Using mock data for now
+    // Mock data for now - replace with actual API call
+    const mockWishlistItems = [
+      {
+        id: '1',
+        product: {
+          id: '1',
+          name: 'iPhone 15 Pro Max',
+          price: 89999,
+          comparePrice: 99999,
+          stock: 25,
+          images: ['https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400'],
+          store: { name: 'TechStore Pro' }
+        }
+      },
+      {
+        id: '2',
+        product: {
+          id: '2',
+          name: 'MacBook Air M3',
+          price: 129999,
+          comparePrice: 149999,
+          stock: 15,
+          images: ['https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400'],
+          store: { name: 'TechStore Pro' }
+        }
+      },
+      {
+        id: '3',
+        product: {
+          id: '3',
+          name: 'Premium Running Shoes',
+          price: 8500,
+          comparePrice: 12000,
+          stock: 0,
+          images: ['https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400'],
+          store: { name: 'FashionHub Elite' }
+        }
+      }
+    ]
+    
     wishlistItems.value = mockWishlistItems
-    recommendations.value = mockRecommendations
+    hasMoreItems.value = false
+    
   } catch (error) {
-    console.error('Error loading wishlist data:', error)
+    console.error('Error loading wishlist:', error)
+    toast.error('Failed to load wishlist')
+  } finally {
+    isLoading.value = false
   }
+}
+
+const removeFromWishlist = async (itemId: string) => {
+  try {
+    // Mock API call - replace with actual API
+    wishlistItems.value = wishlistItems.value.filter(item => item.id !== itemId)
+    toast.success('Removed from wishlist')
+  } catch (error) {
+    console.error('Error removing item:', error)
+    toast.error('Failed to remove item')
+  }
+}
+
+const addToCart = async (productId: string) => {
+  try {
+    // Mock API call - replace with actual API
+    toast.success('Added to cart')
+  } catch (error) {
+    console.error('Error adding to cart:', error)
+    toast.error('Failed to add to cart')
+  }
+}
+
+const clearWishlist = async () => {
+  try {
+    if (confirm('Are you sure you want to clear your entire wishlist?')) {
+      // Mock API call - replace with actual API
+      wishlistItems.value = []
+      toast.success('Wishlist cleared')
+    }
+  } catch (error) {
+    console.error('Error clearing wishlist:', error)
+    toast.error('Failed to clear wishlist')
+  }
+}
+
+const loadMore = async () => {
+  // Implement pagination if needed
+  console.log('Loading more items...')
+}
+
+const handleImageError = (event: Event) => {
+  const target = event.target as HTMLImageElement
+  target.src = '/placeholder-product.jpg'
+}
+
+const formatPrice = (price: number) => {
+  return price.toLocaleString('en-PH')
 }
 
 // Lifecycle
 onMounted(() => {
-  loadWishlistData()
+  if (!isAuthenticated.value) {
+    router.push('/login')
+    return
+  }
+  
+  loadWishlist()
 })
 </script>
 
 <style scoped>
 .line-clamp-2 {
   display: -webkit-box;
-  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.aspect-w-1 {
+  position: relative;
+  padding-bottom: 100%;
+}
+
+.aspect-w-1 > * {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 </style>

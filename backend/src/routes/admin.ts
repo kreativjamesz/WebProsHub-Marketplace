@@ -364,6 +364,134 @@ router.get('/sellers', authenticateToken, requireAdmin, async (req: Request, res
   }
 })
 
+/**
+ * @swagger
+ * /api/admin/sellers/pending:
+ *   get:
+ *     summary: Get pending seller approvals
+ *     description: Retrieve all sellers waiting for admin approval
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of pending sellers
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Admin access required
+ */
+router.get('/sellers/pending', authenticateToken, requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const pendingSellers = await prisma.sellerProfile.findMany({
+      where: {
+        isApproved: false,
+        isActive: false,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            createdAt: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    })
+
+    res.json({
+      success: true,
+      sellers: pendingSellers,
+      count: pendingSellers.length,
+    })
+  } catch (error) {
+    console.error('Error fetching pending sellers:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+/**
+ * @swagger
+ * /api/admin/sellers/{id}/approve:
+ *   put:
+ *     summary: Approve seller
+ *     description: Approve a seller account and activate their profile
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Seller profile ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               isApproved:
+ *                 type: boolean
+ *                 description: Whether to approve the seller
+ *               notes:
+ *                 type: string
+ *                 description: Admin notes about the approval
+ *     responses:
+ *       200:
+ *         description: Seller approval status updated
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Admin access required
+ *       404:
+ *         description: Seller not found
+ */
+router.put('/sellers/:id/approve', authenticateToken, requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const { isApproved, notes } = req.body
+
+    const sellerProfile = await prisma.sellerProfile.findUnique({
+      where: { id },
+      include: { user: true },
+    })
+
+    if (!sellerProfile) {
+      return res.status(404).json({ error: 'Seller profile not found' })
+    }
+
+    // Update seller approval status
+    const updatedSeller = await prisma.sellerProfile.update({
+      where: { id },
+      data: {
+        isApproved: isApproved,
+        isActive: isApproved, // Auto-activate if approved
+        approvalDate: isApproved ? new Date() : null,
+        approvedBy: isApproved ? req.user?.userId : null,
+      },
+      include: { user: true },
+    })
+
+    console.log(`✅ Seller ${updatedSeller.user.name} ${isApproved ? 'approved' : 'rejected'} by admin`)
+
+    res.json({
+      success: true,
+      message: `Seller ${isApproved ? 'approved' : 'rejected'} successfully`,
+      seller: updatedSeller,
+    })
+  } catch (error) {
+    console.error('Error updating seller approval:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
 // Verify seller
 router.put('/sellers/:id/verify', authenticateToken, requireAdmin, async (req: Request, res: Response) => {
   try {
