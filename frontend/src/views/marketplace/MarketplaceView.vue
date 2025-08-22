@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-background">
     <!-- Hero Section -->
-    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+    <div class="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground">
       <div class="container mx-auto px-4 py-16">
         <div class="text-center">
           <h1 class="text-4xl md:text-6xl font-bold mb-4">Discover Amazing Products</h1>
@@ -16,16 +16,22 @@
                 v-model="searchQuery"
                 type="text"
                 placeholder="Search for products, stores, or categories..."
-                class="w-full px-6 py-4 text-gray-900 rounded-lg text-lg focus:outline-none focus:ring-4 focus:ring-white/20"
+                class="w-full px-6 py-4 text-foreground rounded-lg text-lg focus:outline-none focus:ring-4 focus:ring-primary-foreground/20 bg-background/90"
                 @keyup.enter="handleSearch"
               />
               <button
                 @click="handleSearch"
-                class="absolute right-2 top-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors"
+                class="absolute right-2 top-2 bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-md transition-colors"
               >
                 Search
               </button>
             </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="flex justify-center items-center space-x-4 mt-6">
+            <CartButton />
+            <span class="text-primary-foreground/80">Quick access to your cart</span>
           </div>
         </div>
       </div>
@@ -36,7 +42,7 @@
       <div class="flex flex-col lg:flex-row gap-8">
         <!-- Sidebar Filters -->
         <div class="lg:w-1/4">
-          <div class="bg-white rounded-lg shadow-sm p-6 sticky top-4">
+          <div class="card sticky top-4">
             <h3 class="text-lg font-semibold mb-4">Filters</h3>
 
             <!-- Categories -->
@@ -48,9 +54,9 @@
                     v-model="selectedCategories"
                     type="checkbox"
                     :value="category.id"
-                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    class="h-4 w-4 text-primary focus:ring-primary border-input rounded bg-background"
                   />
-                  <span class="ml-2 text-sm text-gray-700">{{ category.name }}</span>
+                  <span class="ml-2 text-sm text-foreground">{{ category.name }}</span>
                 </label>
               </div>
             </div>
@@ -60,21 +66,21 @@
               <h4 class="font-medium mb-3">Price Range</h4>
               <div class="space-y-3">
                 <div>
-                  <label class="block text-sm text-gray-600 mb-1">Min Price</label>
+                  <label class="block text-sm text-muted-foreground mb-1">Min Price</label>
                   <input
                     v-model="priceRange.min"
                     type="number"
                     placeholder="0"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    class="form-input"
                   />
                 </div>
                 <div>
-                  <label class="block text-sm text-gray-600 mb-1">Max Price</label>
+                  <label class="block text-sm text-muted-foreground mb-1">Max Price</label>
                   <input
                     v-model="priceRange.max"
                     type="number"
                     placeholder="1000"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    class="form-input"
                   />
                 </div>
               </div>
@@ -85,14 +91,14 @@
               <h4 class="font-medium mb-3">Minimum Rating</h4>
               <div class="flex items-center space-x-2">
                 <input v-model="minRating" type="range" min="0" max="5" step="0.5" class="flex-1" />
-                <span class="text-sm text-gray-600">{{ minRating }}+</span>
+                <span class="text-sm text-muted-foreground">{{ minRating }}+</span>
               </div>
             </div>
 
             <!-- Apply Filters -->
             <button
               @click="applyFilters"
-              class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+              class="btn-primary w-full"
             >
               Apply Filters
             </button>
@@ -100,7 +106,7 @@
             <!-- Clear Filters -->
             <button
               @click="clearFilters"
-              class="w-full mt-2 bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors"
+              class="btn-secondary w-full mt-2"
             >
               Clear All
             </button>
@@ -112,14 +118,14 @@
           <!-- Sort and View Options -->
           <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
             <div class="flex items-center space-x-4 mb-4 sm:mb-0">
-              <span class="text-sm text-gray-600"> {{ totalProducts }} products found </span>
+              <span class="text-sm text-muted-foreground"> {{ totalProducts }} products found </span>
             </div>
 
             <div class="flex items-center space-x-4">
               <select
                 v-model="sortBy"
                 @change="handleSort"
-                class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring bg-background text-foreground"
               >
                 <option value="relevance">Relevance</option>
                 <option value="price-low">Price: Low to High</option>
@@ -131,8 +137,8 @@
               <div class="flex items-center space-x-2">
                 <button
                   @click="viewMode = 'grid'"
-                  :class="viewMode === 'grid' ? 'text-blue-600' : 'text-gray-400'"
-                  class="p-2 hover:text-blue-600 transition-colors"
+                  :class="viewMode === 'grid' ? 'text-primary' : 'text-muted-foreground'"
+                  class="p-2 hover:text-primary transition-colors"
                 >
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path
@@ -142,8 +148,8 @@
                 </button>
                 <button
                   @click="viewMode = 'list'"
-                  :class="viewMode === 'list' ? 'text-blue-600' : 'text-gray-400'"
-                  class="p-2 hover:text-blue-600 transition-colors"
+                  :class="viewMode === 'list' ? 'text-primary' : 'text-muted-foreground'"
+                  class="p-2 hover:text-primary transition-colors"
                 >
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path
@@ -160,9 +166,9 @@
           <!-- Loading State -->
           <div v-if="isLoading" class="text-center py-12">
             <div
-              class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"
+              class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"
             ></div>
-            <p class="mt-4 text-gray-600">Loading products...</p>
+            <p class="mt-4 text-muted-foreground">Loading products...</p>
           </div>
 
           <!-- Products Grid -->
@@ -173,7 +179,7 @@
             <div
               v-for="product in products"
               :key="product.id"
-              class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+              class="card-hover cursor-pointer"
               @click="viewProduct(product.id)"
             >
               <!-- Product Image -->
@@ -187,8 +193,8 @@
                 <div class="absolute top-2 right-2">
                   <button
                     @click.stop="toggleWishlist(product.id)"
-                    :class="isInWishlist(product.id) ? 'text-red-500' : 'text-gray-400'"
-                    class="p-2 bg-white rounded-full shadow-sm hover:shadow-md transition-all"
+                    :class="isInWishlist(product.id) ? 'text-destructive' : 'text-muted-foreground'"
+                    class="p-2 bg-background rounded-full shadow-sm hover:shadow-md transition-all"
                   >
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                       <path
@@ -203,20 +209,20 @@
 
               <!-- Product Info -->
               <div class="p-4">
-                <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">
+                <h3 class="font-semibold text-foreground mb-2 line-clamp-2">
                   {{ product.name }}
                 </h3>
-                <p class="text-sm text-gray-600 mb-3 line-clamp-2">
+                <p class="text-sm text-muted-foreground mb-3 line-clamp-2">
                   {{ product.description }}
                 </p>
 
                 <!-- Price -->
                 <div class="flex items-center justify-between mb-3">
                   <div class="flex items-center space-x-2">
-                    <span class="text-lg font-bold text-gray-900">
+                    <span class="text-lg font-bold text-foreground">
                       ${{ product.price.toFixed(2) }}
                     </span>
-                    <span v-if="product.comparePrice" class="text-sm text-gray-500 line-through">
+                    <span v-if="product.comparePrice" class="text-sm text-muted-foreground line-through">
                       ${{ product.comparePrice.toFixed(2) }}
                     </span>
                   </div>
@@ -227,22 +233,22 @@
                       <svg
                         v-for="star in 5"
                         :key="star"
-                        :class="star <= (product.rating || 0) ? 'text-yellow-400' : 'text-gray-300'"
+                        :class="star <= (product.rating || 0) ? 'text-yellow-400' : 'text-muted'"
                         class="w-4 h-4"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
                         <path
-                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07-3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
                         />
                       </svg>
                     </div>
-                    <span class="text-sm text-gray-600">({{ product._count?.reviews || 0 }})</span>
+                    <span class="text-sm text-muted-foreground">({{ product._count?.reviews || 0 }})</span>
                   </div>
                 </div>
 
                 <!-- Store Info -->
-                <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
+                <div class="flex items-center justify-between text-sm text-muted-foreground mb-3">
                   <span>{{ product.seller?.businessName || 'Unknown Store' }}</span>
                   <span>{{ product.store?.city || 'Unknown Location' }}</span>
                 </div>
@@ -250,7 +256,7 @@
                 <!-- Add to Cart Button -->
                 <button
                   @click.stop="addToCart(product.id)"
-                  class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+                  class="btn-primary w-full"
                 >
                   Add to Cart
                 </button>
@@ -261,7 +267,7 @@
           <!-- Empty State -->
           <div v-else class="text-center py-12">
             <svg
-              class="mx-auto h-12 w-12 text-gray-400"
+              class="mx-auto h-12 w-12 text-muted-foreground"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -273,8 +279,8 @@
                 d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
               />
             </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900">No products found</h3>
-            <p class="mt-1 text-sm text-gray-500">Try adjusting your search or filter criteria.</p>
+            <h3 class="mt-2 text-sm font-medium text-foreground">No products found</h3>
+            <p class="mt-1 text-sm text-muted-foreground">Try adjusting your search or filter criteria.</p>
           </div>
 
           <!-- Pagination -->
@@ -283,7 +289,7 @@
               <button
                 @click="changePage(currentPage - 1)"
                 :disabled="currentPage === 1"
-                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-md hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Previous
               </button>
@@ -294,10 +300,10 @@
                 @click="changePage(page)"
                 :class="
                   page === currentPage
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-500 bg-white hover:bg-gray-50'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground bg-card hover:bg-accent'
                 "
-                class="px-3 py-2 text-sm font-medium border border-gray-300 rounded-md"
+                class="px-3 py-2 text-sm font-medium border border-border rounded-md"
               >
                 {{ page }}
               </button>
@@ -305,7 +311,7 @@
               <button
                 @click="changePage(currentPage + 1)"
                 :disabled="currentPage === totalPages"
-                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-md hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next
               </button>
@@ -321,10 +327,14 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
+import type { AxiosError } from 'axios'
 import type { Product, Category } from '@/types/marketplace'
 import SafeImage from '@/components/ui/SafeImage.vue'
+import CartButton from '@/components/shopping/CartButton.vue'
+import { useCartStore } from '@/stores/cart'
 
 const router = useRouter()
+const cartStore = useCartStore()
 
 // State
 const isLoading = ref(false)
@@ -446,9 +456,24 @@ const toggleWishlist = (productId: string) => {
   toast.success('Added to wishlist!')
 }
 
-const addToCart = (productId: string) => {
-  // TODO: Implement add to cart
-  toast.success('Added to cart!')
+const addToCart = async (productId: string) => {
+  try {
+    const product = products.value.find(p => p.id === productId)
+    if (!product) {
+      toast.error('Product not found')
+      return
+    }
+    
+    await cartStore.addItem(product, 1)
+    toast.success('Added to cart!')
+  } catch (error) {
+    console.error('Failed to add to cart:', error)
+    if ((error as AxiosError).response?.status === 401) {
+      toast.error('Please login to add items to cart')
+    } else {
+      toast.error('Failed to add to cart')
+    }
+  }
 }
 
 const isInWishlist = (productId: string) => {

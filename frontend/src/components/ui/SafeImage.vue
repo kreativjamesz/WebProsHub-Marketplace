@@ -184,8 +184,10 @@ defineExpose({
   background-color: #f3f4f6;
   border: 2px dashed #d1d5db;
   border-radius: v-bind(borderRadius);
-  min-height: 100px;
-  min-width: 100px;
+  /* min-height: 100px;
+  min-width: 100px; */
+  width: 100%;
+  height: 100%;
 }
 
 .fallback-svg {

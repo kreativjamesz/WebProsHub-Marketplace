@@ -1,7 +1,7 @@
 <template>
   <router-link
     to="/wishlist"
-    class="p-2 text-gray-600 hover:text-gray-900 transition-colors relative rounded-lg hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+    class="p-2 text-muted-foreground hover:text-foreground transition-colors relative rounded-lg hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     aria-label="Go to wishlist"
   >
     <svg 
@@ -20,7 +20,7 @@
     </svg>
     <span
       v-if="count > 0"
-      class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium"
+      class="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium"
       aria-label="Wishlist items count"
     >
       {{ count > 99 ? '99+' : count }}

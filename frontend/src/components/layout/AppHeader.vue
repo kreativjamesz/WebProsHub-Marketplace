@@ -31,7 +31,7 @@
           <WishlistButton :count="wishlistCount" />
 
           <!-- Shopping Cart -->
-          <GlobalCartSheet />
+          <CartButton />
 
           <!-- User Menu or Auth Buttons -->
           <UserSection
@@ -44,7 +44,7 @@
             <DropdownMenuTrigger as-child>
               <Button
                 variant="ghost"
-                class="hidden md:flex bg-neutral-100 hover:bg-neutral-200 rounded-full"
+                class="hidden md:flex bg-secondary hover:bg-secondary/80 rounded-full"
               >
                 <MenuIcon class="h-6 w-6 text-foreground" />
               </Button>
@@ -60,7 +60,7 @@
                 >
                   <div class="flex flex-col items-start justify-start">
                     <h4 class="text-lg font-bold">Be a seller</h4>
-                    <p class="text-sm text-gray-500">
+                    <p class="text-sm text-muted-foreground">
                       Join our marketplace and start selling your products.
                     </p>
                   </div>
@@ -157,7 +157,7 @@ import AppLogo from '@/components/layout/AppLogo.vue'
 import SearchBar from '@/components/layout/SearchBar.vue'
 import MobileSearchToggle from '@/components/layout/MobileSearchToggle.vue'
 import WishlistButton from '@/components/layout/WishlistButton.vue'
-import GlobalCartSheet from '@/components/shopping/GlobalCartSheet.vue'
+import CartButton from '@/components/shopping/CartButton.vue'
 import UserSection from '@/components/layout/UserSection.vue'
 import MobileMenuButton from '@/components/layout/MobileMenuButton.vue'
 import MobileSearch from '@/components/layout/MobileSearch.vue'

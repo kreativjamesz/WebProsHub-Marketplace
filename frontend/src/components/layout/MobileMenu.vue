@@ -1,36 +1,35 @@
 <template>
-  <div class="md:hidden border-t border-gray-200 py-4 mobile-menu">
+  <div class="md:hidden border-t border-border py-4 mobile-menu">
     <div class="space-y-1">
       <router-link
         v-for="item in navigationItems"
         :key="item.path"
         :to="item.path"
-        class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+        class="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         @click="$emit('close')"
       >
         {{ item.label }}
       </router-link>
       
       <!-- Mobile Theme Toggle -->
-      <div class="pt-4 border-t border-gray-200">
+      <div class="pt-4 border-t border-border">
         <div class="px-3 py-2">
           <ColorThemeDropdown />
         </div>
       </div>
       
       <!-- Mobile Auth -->
-      <div v-if="!isAuthenticated" class="pt-4 border-t border-gray-200">
+      <div v-if="!isAuthenticated" class="pt-4 border-t border-border">
         <router-link
           to="/login"
-          class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+          class="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           @click="$emit('close')"
         >
           Sign In
         </router-link>
         <router-link
           to="/register"
-          class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-          @click="$emit('close')"
+          class="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           Sign Up
         </router-link>
@@ -59,6 +58,7 @@ const navigationItems = [
   { path: '/stores', label: 'Stores' },
   { path: '/categories', label: 'Categories' },
   { path: '/deals', label: 'Deals' },
-  { path: '/wishlist', label: 'Wishlist' }
+  { path: '/wishlist', label: 'Wishlist' },
+  { path: '/buyer/cart', label: 'Shopping Cart' }
 ] as const
 </script>

@@ -123,6 +123,9 @@ const currentYear = computed(() => new Date().getFullYear())
   background: #1f2937;
   color: #f9fafb;
   margin-top: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .footer-content {

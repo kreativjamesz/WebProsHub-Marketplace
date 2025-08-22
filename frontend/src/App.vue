@@ -1,37 +1,102 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, watch, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import AppHeader from '@/components/layout/AppHeader.vue'
-import AppFooter from '@/components/layout/AppFooter.vue'
+import { useCartStore } from '@/stores/cart'
+import {
+  DefaultLayout,
+  AuthLayout,
+  AdminLayout,
+  SellerLayout,
+  BuyerLayout,
+  BlankLayout,
+  GuestLayout
+} from '@/layouts'
 
+const route = useRoute()
 const authStore = useAuthStore()
+const cartStore = useCartStore()
+
+// Determine which layout to use based on route
+const currentLayout = computed(() => {
+  if (route.meta.layout) {
+    switch (route.meta.layout) {
+      case 'auth':
+        return AuthLayout
+      case 'admin':
+        return AdminLayout
+      case 'seller':
+        return SellerLayout
+      case 'buyer':
+        return BuyerLayout
+      case 'blank':
+        return BlankLayout
+      case 'guest':
+        return GuestLayout
+      default:
+        return DefaultLayout
+    }
+  }
+  
+  // Auto-detect layout based on route path
+  if (route.path.startsWith('/admin')) {
+    return AdminLayout
+  } else if (route.path.startsWith('/seller')) {
+    return SellerLayout
+  } else if (route.path.startsWith('/buyer')) {
+    return BuyerLayout
+  } else if (route.path.startsWith('/login') || route.path.startsWith('/register')) {
+    return AuthLayout
+  } else if (!authStore.isAuthenticated && isGuestRoute(route.path)) {
+    return GuestLayout
+  }
+  
+  return DefaultLayout
+})
+
+// Check if route should use guest layout
+const isGuestRoute = (path: string) => {
+  const guestRoutes = [
+    '/',
+    '/marketplace',
+    '/stores', 
+    '/categories',
+    '/deals',
+    '/about',
+    '/contact',
+    '/help'
+  ]
+  return guestRoutes.includes(path) || path.startsWith('/marketplace/')
+}
+
 onMounted(async () => {
   await authStore.checkAuth()
 })
+
+// Load cart data when user is authenticated
+watch(() => authStore.isAuthenticated, async (isAuthenticated) => {
+  if (isAuthenticated) {
+    await cartStore.loadCart()
+  } else {
+    // Clear cart when user logs out
+    cartStore.items = []
+  }
+}, { immediate: true })
 </script>
 
 <template>
-  <div id="app" class="min-h-screen bg-gray-50">
+  <div id="app" class="min-h-screen">
     <!-- Loading overlay -->
-    <div v-if="!authStore.isInitialized" class="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
+    <div v-if="!authStore.isInitialized" class="fixed inset-0 bg-background/90 flex items-center justify-center z-50">
       <div class="text-center">
         <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto mb-4"></div>
-        <p class="text-lg font-medium text-gray-700">Loading WebProsHubMarketplace...</p>
+        <p class="text-lg font-medium text-foreground">Loading WebProsHubMarketplace...</p>
       </div>
     </div>
 
-    <!-- Main app -->
-    <div v-else class="flex flex-col min-h-screen">
-      <!-- Navigation Header -->
-      <AppHeader />
-
-      <!-- Main Content -->
-      <main class="flex-1">
-        <router-view />
-      </main>
-
-      <!-- Footer -->
-      <AppFooter />
-    </div>
+    <!-- Dynamic Layout -->
+    <component :is="currentLayout" v-else>
+      <router-view />
+    </component>
   </div>
 </template>

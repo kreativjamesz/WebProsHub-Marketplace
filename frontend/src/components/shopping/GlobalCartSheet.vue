@@ -1,35 +1,5 @@
 <template>
   <Sheet v-model:open="isOpen">
-    <SheetTrigger as-child>
-      <button
-        class="relative p-2 text-gray-600 hover:text-gray-900 transition-colors rounded-lg hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-        aria-label="Shopping cart"
-        @click="openCart"
-      >
-        <svg 
-          class="w-6 h-6" 
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path 
-            stroke-linecap="round" 
-            stroke-linejoin="round" 
-            stroke-width="2" 
-            d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" 
-          />
-        </svg>
-        <span
-          v-if="cartItems.length > 0"
-          class="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium"
-          aria-label="Cart items count"
-        >
-          {{ cartItems.length > 99 ? '99+' : cartItems.length }}
-        </span>
-      </button>
-    </SheetTrigger>
-
     <SheetContent class="w-full sm:max-w-lg">
       <SheetHeader>
         <SheetTitle>Shopping Cart</SheetTitle>
@@ -182,10 +152,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { computed } from 'vue'
 import { useCartStore } from '@/stores/cart'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
+import { useGlobalCart } from '@/composables/useGlobalCart'
 import {
   Sheet,
   SheetClose,
@@ -197,28 +168,20 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 
-// Props
-interface Props {
-  open?: boolean
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  open: false
-})
-
-// Emits
-interface Emits {
-  (e: 'update:open', value: boolean): void
-}
-
-const emit = defineEmits<Emits>()
-
 // Stores
 const cartStore = useCartStore()
 const router = useRouter()
+const { isGlobalCartOpen, closeGlobalCart } = useGlobalCart()
 
 // State
-const isOpen = ref(props.open)
+const isOpen = computed({
+  get: () => isGlobalCartOpen.value,
+  set: (value) => {
+    if (!value) {
+      closeGlobalCart()
+    }
+  }
+})
 
 // Computed
 const cartItems = computed(() => cartStore.items)
@@ -230,48 +193,42 @@ const total = computed(() => subtotal.value + shippingCost.value)
 
 // Methods
 const openCart = () => {
-  isOpen.value = true
-  emit('update:open', true)
+  // This is handled by the SheetTrigger
 }
 
-const closeCart = () => {
-  isOpen.value = false
-  emit('update:open', false)
-}
-
-const increaseQuantity = (itemId: string) => {
+const increaseQuantity = async (itemId: string) => {
   try {
-    cartStore.updateQuantity(itemId, 1)
+    await cartStore.updateQuantity(itemId, 1)
     toast.success('Quantity updated')
   } catch (error) {
     toast.error('Failed to update quantity')
   }
 }
 
-const decreaseQuantity = (itemId: string) => {
+const decreaseQuantity = async (itemId: string) => {
   try {
-    cartStore.updateQuantity(itemId, -1)
+    await cartStore.updateQuantity(itemId, -1)
     toast.success('Quantity updated')
   } catch (error) {
     toast.error('Failed to update quantity')
   }
 }
 
-const removeFromCart = (itemId: string) => {
+const removeFromCart = async (itemId: string) => {
   try {
-    cartStore.removeItem(itemId)
+    await cartStore.removeItem(itemId)
     toast.success('Item removed from cart')
   } catch (error) {
     toast.error('Failed to remove item')
   }
 }
 
-const clearCart = () => {
+const clearCart = async () => {
   try {
     if (confirm('Are you sure you want to clear your entire cart?')) {
-      cartStore.clearCart()
+      await cartStore.clearCart()
       toast.success('Cart cleared')
-      closeCart()
+      closeGlobalCart()
     }
   } catch (error) {
     toast.error('Failed to clear cart')
@@ -287,14 +244,7 @@ const formatPrice = (price: number) => {
   return price.toLocaleString('en-PH')
 }
 
-// Watchers
-watch(() => props.open, (newValue) => {
-  isOpen.value = newValue
-})
 
-watch(isOpen, (newValue) => {
-  emit('update:open', newValue)
-})
 </script>
 
 <style scoped>

@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen flex items-center justify-center bg-accent py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
       <!-- Header -->
       <div class="text-center">
         <div
-          class="mx-auto h-12 w-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center"
+          class="mx-auto h-12 w-12 bg-gradient-to-r from-primary to-primary/80 rounded-lg flex items-center justify-center"
         >
-          <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-8 w-8 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -15,8 +15,8 @@
             />
           </svg>
         </div>
-        <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Join WebProsHub</h2>
-        <p class="mt-2 text-sm text-gray-600">Create your account to start selling or shopping</p>
+        <h2 class="mt-6 text-3xl font-extrabold text-foreground">Join WebProsHub</h2>
+        <p class="mt-2 text-sm text-muted-foreground">Create your account to start selling or shopping</p>
       </div>
 
       <!-- Registration Form -->
@@ -24,20 +24,20 @@
         <div class="space-y-4">
           <!-- Full Name Field -->
           <div>
-            <label for="name" class="block text-sm font-medium text-gray-700"> Full Name </label>
+            <label for="name" class="block text-sm font-medium text-foreground"> Full Name </label>
             <input
               id="name"
               v-model="form.name"
               type="text"
               required
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              class="mt-1 block w-full px-3 py-2 border border-border rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-ring focus:border-ring sm:text-sm"
               placeholder="Enter your full name"
             />
           </div>
 
           <!-- Email Field -->
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">
+            <label for="email" class="block text-sm font-medium text-foreground">
               Email address
             </label>
             <input
@@ -45,28 +45,28 @@
               v-model="form.email"
               type="email"
               required
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              class="mt-1 block w-full px-3 py-2 border border-border rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-ring focus:border-ring sm:text-sm"
               placeholder="Enter your email"
             />
           </div>
 
           <!-- Password Field -->
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-700"> Password </label>
+            <label for="password" class="block text-sm font-medium text-foreground"> Password </label>
             <input
               id="password"
               v-model="form.password"
               type="password"
               required
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              class="mt-1 block w-full px-3 py-2 border border-border rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-ring focus:border-ring sm:text-sm"
               placeholder="Create a password"
             />
-            <p class="mt-1 text-xs text-gray-500">Must be at least 8 characters long</p>
+            <p class="mt-1 text-xs text-muted-foreground">Must be at least 8 characters long</p>
           </div>
 
           <!-- Confirm Password Field -->
           <div>
-            <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
+            <label for="confirmPassword" class="block text-sm font-medium text-foreground">
               Confirm Password
             </label>
             <input
@@ -74,32 +74,32 @@
               v-model="form.confirmPassword"
               type="password"
               required
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              class="mt-1 block w-full px-3 py-2 border border-border rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-ring focus:border-ring sm:text-sm"
               placeholder="Confirm your password"
             />
           </div>
 
           <!-- Account Type Selection -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2"> I want to: </label>
+            <label class="block text-sm font-medium text-foreground mb-2"> I want to: </label>
             <div class="space-y-2">
               <label class="flex items-center">
                 <input
                   v-model="form.accountType"
                   type="radio"
                   value="BUYER"
-                  class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                  class="h-4 w-4 text-primary focus:ring-ring border-border"
                 />
-                <span class="ml-2 text-sm text-gray-700">Shop and buy products</span>
+                <span class="ml-2 text-sm text-foreground">Shop and buy products</span>
               </label>
               <label class="flex items-center">
                 <input
                   v-model="form.accountType"
                   type="radio"
                   value="SELLER"
-                  class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                  class="h-4 w-4 text-primary focus:ring-ring border-border"
                 />
-                <span class="ml-2 text-sm text-gray-700">Sell products and manage stores</span>
+                <span class="ml-2 text-sm text-foreground">Sell products and manage stores</span>
               </label>
             </div>
           </div>
@@ -111,15 +111,15 @@
               v-model="form.acceptTerms"
               type="checkbox"
               required
-              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              class="h-4 w-4 text-primary focus:ring-ring border-border rounded"
             />
-            <label for="terms" class="ml-2 block text-sm text-gray-900">
+            <label for="terms" class="ml-2 block text-sm text-foreground">
               I agree to the
-              <router-link to="/terms" class="text-blue-600 hover:text-blue-500">
+              <router-link to="/terms" class="text-primary hover:text-primary/80">
                 Terms of Service
               </router-link>
               and
-              <router-link to="/privacy" class="text-blue-600 hover:text-blue-500">
+              <router-link to="/privacy" class="text-primary hover:text-primary/80">
                 Privacy Policy
               </router-link>
             </label>
@@ -131,9 +131,9 @@
               id="newsletter"
               v-model="form.subscribeNewsletter"
               type="checkbox"
-              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              class="h-4 w-4 text-primary focus:ring-ring border-border rounded"
             />
-            <label for="newsletter" class="ml-2 block text-sm text-gray-900">
+            <label for="newsletter" class="ml-2 block text-sm text-foreground">
               Subscribe to our newsletter for updates and offers
             </label>
           </div>
@@ -144,11 +144,11 @@
           <button
             type="submit"
             :disabled="isLoading || !isFormValid"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-primary-foreground bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span v-if="isLoading" class="absolute left-0 inset-y-0 flex items-center pl-3">
               <svg
-                class="animate-spin h-5 w-5 text-white"
+                class="animate-spin h-5 w-5 text-primary-foreground"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -173,16 +173,16 @@
         </div>
 
         <!-- Error Message -->
-        <div v-if="error" class="text-red-600 text-sm text-center">
+        <div v-if="error" class="text-destructive text-sm text-center">
           {{ error }}
         </div>
       </form>
 
       <!-- Sign In Link -->
       <div class="text-center">
-        <p class="text-sm text-gray-600">
+        <p class="text-sm text-muted-foreground">
           Already have an account?
-          <router-link to="/login" class="font-medium text-blue-600 hover:text-blue-500">
+          <router-link to="/login" class="font-medium text-primary hover:text-primary/80">
             Sign in here
           </router-link>
         </p>
@@ -191,10 +191,10 @@
       <!-- Divider -->
       <div class="relative">
         <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-gray-300" />
+          <div class="w-full border-t border-border" />
         </div>
         <div class="relative flex justify-center text-sm">
-          <span class="px-2 bg-gray-50 text-gray-500">Or continue with</span>
+          <span class="px-2 bg-accent text-muted-foreground">Or continue with</span>
         </div>
       </div>
 
@@ -202,7 +202,7 @@
       <div class="grid grid-cols-2 gap-3">
         <button
           type="button"
-          class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+          class="w-full inline-flex justify-center py-2 px-4 border border-border rounded-md shadow-sm bg-card text-sm font-medium text-muted-foreground hover:bg-accent"
         >
           <svg class="h-5 w-5" viewBox="0 0 24 24">
             <path
@@ -227,7 +227,7 @@
 
         <button
           type="button"
-          class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+          class="w-full inline-flex justify-center py-2 px-4 border border-border rounded-md shadow-sm bg-card text-sm font-medium text-muted-foreground hover:bg-accent"
         >
           <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
             <path
@@ -319,14 +319,14 @@ const handleRegister = async () => {
 <style scoped>
 /* Custom styles for the gradient background */
 .bg-gradient-to-r {
-  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  background: linear-gradient(to right, oklch(var(--primary)), oklch(var(--primary)/0.8));
 }
 
-.hover\:from-blue-700:hover {
-  background: linear-gradient(to right, #1d4ed8, #7c3aed);
+.hover\:from-primary\/90:hover {
+  background: linear-gradient(to right, oklch(var(--primary)/0.9), oklch(var(--primary)/0.7));
 }
 
-.hover\:to-purple-700:hover {
-  background: linear-gradient(to right, #1d4ed8, #7c3aed);
+.hover\:to-primary\/70:hover {
+  background: linear-gradient(to right, oklch(var(--primary)/0.9), oklch(var(--primary)/0.7));
 }
 </style>
