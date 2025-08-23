@@ -79,8 +79,7 @@ router.get('/profile', authenticateToken, requireSeller, async (req: Request, re
           select: { id: true, email: true, name: true, phone: true, avatar: true }
         },
         theme: true,
-        stores: true,
-        categories: true
+        stores: true
       }
     })
 

@@ -120,7 +120,12 @@ export const apiService = {
     getProducts: (params?: any) => api.get('/marketplace/products', { params }),
     getProduct: (id: string) => api.get(`/marketplace/products/${id}`),
     getCategories: () => api.get('/marketplace/categories'),
+    getMainCategories: () => api.get('/marketplace/categories/main'),
+    getCategoriesByMain: (mainCategoryId: number) => api.get(`/marketplace/categories/main/${mainCategoryId}`),
+    getSubcategoriesByCategory: (categoryId: number) => api.get(`/marketplace/categories/${categoryId}/subcategories`),
     search: (params: any) => api.get('/marketplace/search', { params }),
+    getFeaturedProducts: (limit?: number) => api.get('/marketplace/products/featured', { params: { limit } }),
+    getProductsByStore: (storeId: string, params?: any) => api.get(`/marketplace/stores/${storeId}/products`, { params }),
   },
 
   // Admin

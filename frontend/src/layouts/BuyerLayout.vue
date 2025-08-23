@@ -15,7 +15,7 @@
               class="block px-3 py-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md transition-colors"
               active-class="bg-sidebar-primary text-sidebar-primary-foreground"
             >
-              Dashboard
+              My Dashboard
             </router-link>
             <router-link 
               to="/buyer/orders" 
@@ -29,28 +29,28 @@
               class="block px-3 py-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md transition-colors"
               active-class="bg-sidebar-primary text-sidebar-primary-foreground"
             >
-              Shopping Cart
+              My Shopping Cart
             </router-link>
             <router-link 
               to="/wishlist" 
               class="block px-3 py-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md transition-colors"
               active-class="bg-sidebar-primary text-sidebar-primary-foreground"
             >
-              Wishlist
+              My Wishlist
             </router-link>
             <router-link 
               to="/buyer/addresses" 
               class="block px-3 py-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md transition-colors"
               active-class="bg-sidebar-primary text-sidebar-primary-foreground"
             >
-              Addresses
+              My Addresses
             </router-link>
             <router-link 
               to="/buyer/reviews" 
               class="block px-3 py-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md transition-colors"
               active-class="bg-sidebar-primary text-sidebar-primary-foreground"
             >
-              My Reviews
+              My Reviews & Ratings
             </router-link>
           </nav>
         </div>

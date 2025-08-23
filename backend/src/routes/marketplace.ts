@@ -300,17 +300,23 @@ router.get('/products', async (req: Request, res: Response) => {
       page = 1,
       limit = 20,
       category,
+      mainCategory,
+      subcategory,
       seller,
       search,
       minPrice,
       maxPrice,
       sortBy = 'createdAt',
       sortOrder = 'desc',
+      featured,
     } = req.query
 
     const where: any = { isActive: true }
-    if (category) where.category = { name: { contains: category as string } }
+    if (category) where.categoryId = parseInt(category as string)
+    if (mainCategory) where.mainCategoryId = parseInt(mainCategory as string)
+    if (subcategory) where.subcategoryId = parseInt(subcategory as string)
     if (seller) where.seller = { businessName: { contains: seller as string } }
+    if (featured) where.isFeatured = featured === 'true'
     if (search) {
       where.OR = [
         { name: { contains: search as string } },
@@ -324,6 +330,8 @@ router.get('/products', async (req: Request, res: Response) => {
       where,
       include: {
         category: true,
+        mainCategory: true,
+        subcategory: true,
         seller: { select: { businessName: true, logo: true } },
         store: { select: { name: true, city: true } },
         reviews: { select: { rating: true } },
@@ -350,6 +358,35 @@ router.get('/products', async (req: Request, res: Response) => {
   }
 })
 
+// Get featured products
+router.get('/products/featured', async (req: Request, res: Response) => {
+  try {
+    const { limit = 8 } = req.query
+
+    const products = await prisma.product.findMany({
+      where: { 
+        isActive: true,
+        isFeatured: true
+      },
+      include: {
+        category: true,
+        mainCategory: true,
+        subcategory: true,
+        seller: { select: { businessName: true, logo: true } },
+        store: { select: { name: true, city: true } },
+        reviews: { select: { rating: true } },
+      },
+      take: Number(limit),
+      orderBy: { createdAt: 'desc' },
+    })
+
+    res.json({ products })
+  } catch (error) {
+    console.error('Get featured products error:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
 // Get product by ID
 router.get('/products/:id', async (req: Request, res: Response) => {
   try {
@@ -359,6 +396,8 @@ router.get('/products/:id', async (req: Request, res: Response) => {
       where: { id, isActive: true },
       include: {
         category: true,
+        mainCategory: true,
+        subcategory: true,
         seller: { select: { businessName: true, logo: true, description: true } },
         store: { select: { name: true, address: true, city: true, phone: true } },
         reviews: {
@@ -384,17 +423,151 @@ router.get('/products/:id', async (req: Request, res: Response) => {
 // Get categories
 router.get('/categories', async (req: Request, res: Response) => {
   try {
-    const categories = await prisma.category.findMany({
-      where: { isActive: true, parentId: null },
+    // Get all 3 levels of categories
+    const [mainCategories, categories, subcategories] = await Promise.all([
+      prisma.mainCategory.findMany({
+        where: { isActive: true },
+        include: {
+          _count: { select: { products: true } },
+        },
+        orderBy: { name: 'asc' },
+      }),
+      prisma.category.findMany({
+        where: { isActive: true },
+        include: {
+          mainCategory: { select: { id: true, name: true } },
+          _count: { select: { products: true } },
+        },
+        orderBy: { name: 'asc' },
+      }),
+      prisma.subcategory.findMany({
+        where: { isActive: true },
+        include: {
+          category: { select: { id: true, name: true } },
+          _count: { select: { products: true } },
+        },
+        orderBy: { name: 'asc' },
+      }),
+    ])
+
+    res.json({
+      mainCategories,
+      categories,
+      subcategories,
+    })
+  } catch (error) {
+    console.error('Get categories error:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+// Get main categories only
+router.get('/categories/main', async (req: Request, res: Response) => {
+  try {
+    const mainCategories = await prisma.mainCategory.findMany({
+      where: { isActive: true },
       include: {
-        children: { where: { isActive: true } },
         _count: { select: { products: true } },
       },
+      orderBy: { name: 'asc' },
+    })
+
+    res.json({ mainCategories })
+  } catch (error) {
+    console.error('Get main categories error:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+// Get categories by main category
+router.get('/categories/main/:mainCategoryId', async (req: Request, res: Response) => {
+  try {
+    const { mainCategoryId } = req.params
+    const categories = await prisma.category.findMany({
+      where: { 
+        isActive: true,
+        mainCategoryId: parseInt(mainCategoryId)
+      },
+      include: {
+        mainCategory: { select: { id: true, name: true } },
+        _count: { select: { products: true } },
+      },
+      orderBy: { name: 'asc' },
     })
 
     res.json({ categories })
   } catch (error) {
-    console.error('Get categories error:', error)
+    console.error('Get categories by main error:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+// Get subcategories by category
+router.get('/categories/:categoryId/subcategories', async (req: Request, res: Response) => {
+  try {
+    const { categoryId } = req.params
+    const subcategories = await prisma.subcategory.findMany({
+      where: { 
+        isActive: true,
+        categoryId: parseInt(categoryId)
+      },
+      include: {
+        category: { select: { id: true, name: true } },
+        _count: { select: { products: true } },
+      },
+      orderBy: { name: 'asc' },
+    })
+
+    res.json({ subcategories })
+  } catch (error) {
+    console.error('Get subcategories by category error:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+// Get products by store
+router.get('/stores/:storeId/products', async (req: Request, res: Response) => {
+  try {
+    const { storeId } = req.params
+    const { page = 1, limit = 20, category, mainCategory, subcategory } = req.query
+
+    const where: any = { 
+      isActive: true,
+      storeId: storeId
+    }
+    
+    if (category) where.categoryId = parseInt(category as string)
+    if (mainCategory) where.mainCategoryId = parseInt(mainCategory as string)
+    if (subcategory) where.subcategoryId = parseInt(subcategory as string)
+
+    const products = await prisma.product.findMany({
+      where,
+      include: {
+        category: true,
+        mainCategory: true,
+        subcategory: true,
+        seller: { select: { businessName: true, logo: true } },
+        store: { select: { name: true, city: true } },
+        reviews: { select: { rating: true } },
+      },
+      skip: (Number(page) - 1) * Number(limit),
+      take: Number(limit),
+      orderBy: { createdAt: 'desc' },
+    })
+
+    const total = await prisma.product.count({ where })
+
+    res.json({
+      products,
+      pagination: {
+        page: Number(page),
+        limit: Number(limit),
+        total,
+        pages: Math.ceil(total / Number(limit)),
+      },
+    })
+  } catch (error) {
+    console.error('Get store products error:', error)
     res.status(500).json({ error: 'Internal server error' })
   }
 })

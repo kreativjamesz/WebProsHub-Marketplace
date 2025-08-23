@@ -374,12 +374,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import type { AuthUser } from '@/types/auth'
 import type { Order, Product } from '@/types/marketplace'
-import { mockOrders, mockProducts, mockBuyerStats, mockRecentOrders, mockRecommendedProducts } from '@/mocks'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -401,7 +400,6 @@ const recommendedProducts = ref<Product[]>([])
 const user = computed<AuthUser | null>(() => authStore.user)
 
 // Use centralized mock data
-const mockStats = mockBuyerStats
 
 // Methods
 const navigateToProduct = (productId: string) => {
@@ -444,9 +442,16 @@ const loadDashboardData = async () => {
     // recommendedProducts.value = productsResponse.data
 
     // Using mock data for now
-    stats.value = mockStats
-    recentOrders.value = mockRecentOrders
-    recommendedProducts.value = mockRecommendedProducts
+    stats.value = {
+      totalOrders: 0,
+      totalSpent: 0,
+      savedAmount: 0,
+      favoriteStores: 0,
+      wishlistItems: 0,
+      cartItems: 0,
+    }
+    recentOrders.value = []
+    recommendedProducts.value = []
   } catch (error) {
     console.error('Error loading dashboard data:', error)
   }

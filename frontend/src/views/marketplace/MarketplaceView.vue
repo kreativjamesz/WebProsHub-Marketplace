@@ -1,403 +1,236 @@
 <template>
   <div class="min-h-screen bg-background">
     <!-- Hero Section -->
-    <div class="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground">
-      <div class="container mx-auto px-4 py-16">
-        <div class="text-center">
-          <h1 class="text-4xl md:text-6xl font-bold mb-4">Discover Amazing Products</h1>
-          <p class="text-xl md:text-2xl mb-8 opacity-90">
-            Shop from thousands of local businesses and sellers
-          </p>
-
-          <!-- Search Bar -->
-          <div class="max-w-2xl mx-auto">
-            <div class="relative">
-              <input
-                v-model="searchQuery"
-                type="text"
-                placeholder="Search for products, stores, or categories..."
-                class="w-full px-6 py-4 text-foreground rounded-lg text-lg focus:outline-none focus:ring-4 focus:ring-primary-foreground/20 bg-background/90"
-                @keyup.enter="handleSearch"
-              />
-              <button
-                @click="handleSearch"
-                class="absolute right-2 top-2 bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-md transition-colors"
-              >
-                Search
-              </button>
-            </div>
-          </div>
-
-          <!-- Quick Actions -->
-          <div class="flex justify-center items-center space-x-4 mt-6">
-            <CartButton />
-            <span class="text-primary-foreground/80">Quick access to your cart</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <MarketplaceHero :title="heroTitle" :subtitle="heroSubtitle" @search="handleSearch" />
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-8">
+      <!-- Breadcrumb Navigation -->
+      <MarketplaceBreadcrumb
+        :main-category-id="mainCategoryId"
+        :category-id="categoryId"
+        :subcategory-id="subcategoryId"
+      />
+
       <div class="flex flex-col lg:flex-row gap-8">
         <!-- Sidebar Filters -->
-        <div class="lg:w-1/4">
-          <div class="card sticky top-4">
-            <h3 class="text-lg font-semibold mb-4">Filters</h3>
-
-            <!-- Categories -->
-            <div class="mb-6">
-              <h4 class="font-medium mb-3">Categories</h4>
-              <div class="space-y-2">
-                <label v-for="category in categories" :key="category.id" class="flex items-center">
-                  <input
-                    v-model="selectedCategories"
-                    type="checkbox"
-                    :value="category.id"
-                    class="h-4 w-4 text-primary focus:ring-primary border-input rounded bg-background"
-                  />
-                  <span class="ml-2 text-sm text-foreground">{{ category.name }}</span>
-                </label>
-              </div>
-            </div>
-
-            <!-- Price Range -->
-            <div class="mb-6">
-              <h4 class="font-medium mb-3">Price Range</h4>
-              <div class="space-y-3">
-                <div>
-                  <label class="block text-sm text-muted-foreground mb-1">Min Price</label>
-                  <input
-                    v-model="priceRange.min"
-                    type="number"
-                    placeholder="0"
-                    class="form-input"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm text-muted-foreground mb-1">Max Price</label>
-                  <input
-                    v-model="priceRange.max"
-                    type="number"
-                    placeholder="1000"
-                    class="form-input"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <!-- Rating -->
-            <div class="mb-6">
-              <h4 class="font-medium mb-3">Minimum Rating</h4>
-              <div class="flex items-center space-x-2">
-                <input v-model="minRating" type="range" min="0" max="5" step="0.5" class="flex-1" />
-                <span class="text-sm text-muted-foreground">{{ minRating }}+</span>
-              </div>
-            </div>
-
-            <!-- Apply Filters -->
-            <button
-              @click="applyFilters"
-              class="btn-primary w-full"
-            >
-              Apply Filters
-            </button>
-
-            <!-- Clear Filters -->
-            <button
-              @click="clearFilters"
-              class="btn-secondary w-full mt-2"
-            >
-              Clear All
-            </button>
-          </div>
-        </div>
+        <MarketplaceFilters
+          :categories="filteredCategories"
+          :products="products"
+          @filters-changed="handleFiltersChanged"
+        />
 
         <!-- Products Grid -->
-        <div class="lg:w-3/4">
-          <!-- Sort and View Options -->
-          <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
-            <div class="flex items-center space-x-4 mb-4 sm:mb-0">
-              <span class="text-sm text-muted-foreground"> {{ totalProducts }} products found </span>
-            </div>
-
-            <div class="flex items-center space-x-4">
-              <select
-                v-model="sortBy"
-                @change="handleSort"
-                class="px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring bg-background text-foreground"
-              >
-                <option value="relevance">Relevance</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Highest Rated</option>
-                <option value="newest">Newest First</option>
-              </select>
-
-              <div class="flex items-center space-x-2">
-                <button
-                  @click="viewMode = 'grid'"
-                  :class="viewMode === 'grid' ? 'text-primary' : 'text-muted-foreground'"
-                  class="p-2 hover:text-primary transition-colors"
-                >
-                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                    />
-                  </svg>
-                </button>
-                <button
-                  @click="viewMode = 'list'"
-                  :class="viewMode === 'list' ? 'text-primary' : 'text-muted-foreground'"
-                  class="p-2 hover:text-primary transition-colors"
-                >
-                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fill-rule="evenodd"
-                      d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Loading State -->
-          <div v-if="isLoading" class="text-center py-12">
-            <div
-              class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"
-            ></div>
-            <p class="mt-4 text-muted-foreground">Loading products...</p>
-          </div>
-
-          <!-- Products Grid -->
-          <div
-            v-else-if="products.length > 0"
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            <div
-              v-for="product in products"
-              :key="product.id"
-              class="card-hover cursor-pointer"
-              @click="viewProduct(product.id)"
-            >
-              <!-- Product Image -->
-              <div class="relative">
-                <SafeImage
-                  :src="product.images[0] || '/placeholder-product.jpg'"
-                  :alt="product.name"
-                  class="w-full h-48 rounded-t-lg"
-                  object-fit="cover"
-                />
-                <div class="absolute top-2 right-2">
-                  <button
-                    @click.stop="toggleWishlist(product.id)"
-                    :class="isInWishlist(product.id) ? 'text-destructive' : 'text-muted-foreground'"
-                    class="p-2 bg-background rounded-full shadow-sm hover:shadow-md transition-all"
-                  >
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fill-rule="evenodd"
-                        d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Product Info -->
-              <div class="p-4">
-                <h3 class="font-semibold text-foreground mb-2 line-clamp-2">
-                  {{ product.name }}
-                </h3>
-                <p class="text-sm text-muted-foreground mb-3 line-clamp-2">
-                  {{ product.description }}
-                </p>
-
-                <!-- Price -->
-                <div class="flex items-center justify-between mb-3">
-                  <div class="flex items-center space-x-2">
-                    <span class="text-lg font-bold text-foreground">
-                      ${{ product.price.toFixed(2) }}
-                    </span>
-                    <span v-if="product.comparePrice" class="text-sm text-muted-foreground line-through">
-                      ${{ product.comparePrice.toFixed(2) }}
-                    </span>
-                  </div>
-
-                  <!-- Rating -->
-                  <div class="flex items-center space-x-1">
-                    <div class="flex items-center">
-                      <svg
-                        v-for="star in 5"
-                        :key="star"
-                        :class="star <= (product.rating || 0) ? 'text-yellow-400' : 'text-muted'"
-                        class="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07-3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                        />
-                      </svg>
-                    </div>
-                    <span class="text-sm text-muted-foreground">({{ product._count?.reviews || 0 }})</span>
-                  </div>
-                </div>
-
-                <!-- Store Info -->
-                <div class="flex items-center justify-between text-sm text-muted-foreground mb-3">
-                  <span>{{ product.seller?.businessName || 'Unknown Store' }}</span>
-                  <span>{{ product.store?.city || 'Unknown Location' }}</span>
-                </div>
-
-                <!-- Add to Cart Button -->
-                <button
-                  @click.stop="addToCart(product.id)"
-                  class="btn-primary w-full"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Empty State -->
-          <div v-else class="text-center py-12">
-            <svg
-              class="mx-auto h-12 w-12 text-muted-foreground"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-              />
-            </svg>
-            <h3 class="mt-2 text-sm font-medium text-foreground">No products found</h3>
-            <p class="mt-1 text-sm text-muted-foreground">Try adjusting your search or filter criteria.</p>
-          </div>
-
-          <!-- Pagination -->
-          <div v-if="totalPages > 1" class="mt-8 flex justify-center">
-            <nav class="flex items-center space-x-2">
-              <button
-                @click="changePage(currentPage - 1)"
-                :disabled="currentPage === 1"
-                class="px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-md hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Previous
-              </button>
-
-              <button
-                v-for="page in visiblePages"
-                :key="page"
-                @click="changePage(page)"
-                :class="
-                  page === currentPage
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground bg-card hover:bg-accent'
-                "
-                class="px-3 py-2 text-sm font-medium border border-border rounded-md"
-              >
-                {{ page }}
-              </button>
-
-              <button
-                @click="changePage(currentPage + 1)"
-                :disabled="currentPage === totalPages"
-                class="px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-md hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next
-              </button>
-            </nav>
-          </div>
-        </div>
+        <ProductGrid
+          :products="products"
+          :is-loading="isLoading"
+          :total-products="totalProducts"
+          :total-pages="totalPages"
+          :current-page="currentPage"
+          @view-product="viewProduct"
+          @toggle-wishlist="toggleWishlist"
+          @add-to-cart="addToCart"
+          @sort-changed="handleSort"
+          @page-changed="changePage"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { toast } from 'vue3-toastify'
 import type { AxiosError } from 'axios'
 import type { Product, Category } from '@/types/marketplace'
-import SafeImage from '@/components/ui/SafeImage.vue'
-import CartButton from '@/components/shopping/CartButton.vue'
 import { useCartStore } from '@/stores/cart'
 import { useGuestCartStore } from '@/stores/guestCart'
 import { useAuthStore } from '@/stores'
+import { useMarketplaceStore } from '@/stores/marketplace'
+
+// Import components
+import MarketplaceHero from '@/components/marketplace/MarketplaceHero.vue'
+import MarketplaceFilters from '@/components/marketplace/MarketplaceFilters.vue'
+import ProductGrid from '@/components/marketplace/ProductGrid.vue'
+import MarketplaceBreadcrumb from '@/components/marketplace/MarketplaceBreadcrumb.vue'
 
 const router = useRouter()
+const route = useRoute()
 const cartStore = useCartStore()
 const guestCartStore = useGuestCartStore()
 const authStore = useAuthStore()
+const marketplaceStore = useMarketplaceStore()
 
 // State
 const isLoading = ref(false)
 const searchQuery = ref('')
-const viewMode = ref<'grid' | 'list'>('grid')
-const sortBy = ref('relevance')
-const minRating = ref(0)
-const selectedCategories = ref<string[]>([])
 const currentPage = ref(1)
 const totalProducts = ref(0)
 const totalPages = ref(1)
+const filters = ref<{
+  categories: number[]
+  priceRange: { min: string; max: string }
+  minRating: number
+}>({
+  categories: [],
+  priceRange: { min: '', max: '' },
+  minRating: 0
+})
+const sortBy = ref('relevance')
 
-// Mock data (replace with API calls)
-const products = ref<Product[]>([])
-const categories = ref<Category[]>([])
+// Real data from store
+const products = computed(() => marketplaceStore.products)
+const categories = computed(() => marketplaceStore.categories)
+const subcategories = computed(() => marketplaceStore.subcategories)
 
-// Price range
-const priceRange = reactive({
-  min: '',
-  max: '',
+// Get URL parameters
+const mainCategoryId = computed(() => {
+  const id = route.query.mainCategory
+  return id ? Number(id) : undefined
 })
 
-// Computed
-const visiblePages = computed(() => {
-  const pages = []
-  const start = Math.max(1, currentPage.value - 2)
-  const end = Math.min(totalPages.value, currentPage.value + 2)
+const categoryId = computed(() => {
+  const id = route.query.category
+  return id ? Number(id) : undefined
+})
 
-  for (let i = start; i <= end; i++) {
-    pages.push(i)
+const subcategoryId = computed(() => {
+  const id = route.query.subcategory
+  return id ? Number(id) : undefined
+})
+
+// Filter categories based on selected main category
+const filteredCategories = computed(() => {
+  if (mainCategoryId.value) {
+    return categories.value.filter((cat) => cat.mainCategoryId === mainCategoryId.value)
   }
-  return pages
+  return categories.value
+})
+
+// Hero content based on context
+const heroTitle = computed(() => {
+  if (mainCategoryId.value) {
+    const mainCat = marketplaceStore.mainCategories.find((c) => c.id === mainCategoryId.value)
+    return `Shop ${mainCat?.name || 'Category'}`
+  }
+  return 'Discover Amazing Products'
+})
+
+const heroSubtitle = computed(() => {
+  if (mainCategoryId.value) {
+    const mainCat = marketplaceStore.mainCategories.find((c) => c.id === mainCategoryId.value)
+    return `Find the best ${mainCat?.name?.toLowerCase() || 'products'} from local businesses`
+  }
+  return 'Shop from thousands of local businesses and sellers'
 })
 
 // Methods
-const handleSearch = () => {
-  if (searchQuery.value.trim()) {
-    currentPage.value = 1
-    loadProducts()
+const loadProducts = async () => {
+  try {
+    isLoading.value = true
+
+    // Build API parameters
+    const params: any = {
+      page: currentPage.value,
+      limit: 20,
+    }
+
+    // Add search query
+    if (searchQuery.value.trim()) {
+      params.search = searchQuery.value.trim()
+    }
+
+    // Add category filters
+    if (mainCategoryId.value) {
+      params.mainCategory = mainCategoryId.value
+    }
+    if (categoryId.value) {
+      params.category = categoryId.value
+    }
+    if (subcategoryId.value) {
+      params.subcategory = subcategoryId.value
+    }
+    if (filters.value.categories.length > 0) {
+      params.category = filters.value.categories[0] // For now, use first selected
+    }
+
+    // Add price filters
+    if (filters.value.priceRange.min) {
+      params.minPrice = Number(filters.value.priceRange.min)
+    }
+    if (filters.value.priceRange.max) {
+      params.maxPrice = Number(filters.value.priceRange.max)
+    }
+
+    // Add rating filter
+    if (filters.value.minRating && filters.value.minRating > 0) {
+      params.rating = filters.value.minRating
+    }
+
+    // Add sorting
+    if (sortBy.value !== 'relevance') {
+      switch (sortBy.value) {
+        case 'price-low':
+          params.sortBy = 'price'
+          params.sortOrder = 'asc'
+          break
+        case 'price-high':
+          params.sortBy = 'price'
+          params.sortOrder = 'desc'
+          break
+        case 'rating':
+          params.sortBy = 'rating'
+          params.sortOrder = 'desc'
+          break
+        case 'newest':
+          params.sortBy = 'createdAt'
+          params.sortOrder = 'desc'
+          break
+      }
+    }
+
+    // Fetch products from API
+    await marketplaceStore.fetchProducts(params)
+
+    // Update pagination from store
+    totalProducts.value = marketplaceStore.pagination.products.total
+    totalPages.value = marketplaceStore.pagination.products.pages
+  } catch (error) {
+    console.error('Failed to load products:', error)
+    toast.error('Failed to load products')
+  } finally {
+    isLoading.value = false
   }
 }
 
-const applyFilters = () => {
+const loadCategories = async () => {
+  try {
+    await marketplaceStore.fetchCategories()
+  } catch (error) {
+    console.error('Failed to load categories:', error)
+    toast.error('Failed to load categories')
+  }
+}
+
+const handleSearch = (query: string) => {
+  searchQuery.value = query
   currentPage.value = 1
   loadProducts()
 }
 
-const clearFilters = () => {
-  searchQuery.value = ''
-  selectedCategories.value = []
-  priceRange.min = ''
-  priceRange.max = ''
-  minRating.value = 0
-  sortBy.value = 'relevance'
+const handleFiltersChanged = (newFilters: {
+  categories: number[]
+  priceRange: { min: string; max: string }
+  minRating: number
+}) => {
+  filters.value = newFilters
   currentPage.value = 1
   loadProducts()
 }
 
-const handleSort = () => {
+const handleSort = (newSortBy: string) => {
+  sortBy.value = newSortBy
   loadProducts()
 }
 
@@ -408,48 +241,15 @@ const changePage = (page: number) => {
   }
 }
 
-const loadProducts = async () => {
-  try {
-    isLoading.value = true
-
-    // TODO: Replace with actual API call
-    // const response = await apiService.marketplace.getProducts({
-    //   page: currentPage.value,
-    //   search: searchQuery.value,
-    //   categories: selectedCategories.value,
-    //   minPrice: priceRange.min ? Number(priceRange.min) : undefined,
-    //   maxPrice: priceRange.max ? Number(priceRange.max) : undefined,
-    //   minRating: minRating.value,
-    //   sortBy: sortBy.value
-    // })
-
-    // Mock data for now
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    products.value = [
-      {
-        id: '1',
-        name: 'Premium Wireless Headphones',
-        description: 'High-quality wireless headphones with noise cancellation',
-        price: 199.99,
-        comparePrice: 249.99,
-        rating: 4.5,
-        images: ['/placeholder-product.jpg'],
-        seller: { businessName: 'TechStore' },
-        store: { city: 'Manila' },
-        _count: { reviews: 128 },
-      } as Product,
-      // Add more mock products...
-    ]
-
-    totalProducts.value = 150
-    totalPages.value = 8
-  } catch (error) {
-    toast.error('Failed to load products')
-  } finally {
-    isLoading.value = false
-  }
-}
+// Watch for route changes
+watch(
+  [mainCategoryId, categoryId, subcategoryId],
+  () => {
+    currentPage.value = 1
+    loadProducts()
+  },
+  { immediate: true },
+)
 
 const viewProduct = (productId: string) => {
   router.push(`/products/${productId}`)
@@ -462,12 +262,12 @@ const toggleWishlist = (productId: string) => {
 
 const addToCart = async (productId: string) => {
   try {
-    const product = products.value.find(p => p.id === productId)
+    const product = products.value.find((p) => p.id === productId)
     if (!product) {
       toast.error('Product not found')
       return
     }
-    
+
     if (authStore.isAuthenticated) {
       await cartStore.addItem(product, 1)
       toast.success('Added to cart!')
@@ -486,53 +286,13 @@ const addToCart = async (productId: string) => {
   }
 }
 
-const isInWishlist = (productId: string) => {
-  // TODO: Check if product is in wishlist
-  return false
-}
-
 // Lifecycle
-onMounted(() => {
-  loadProducts()
+onMounted(async () => {
+  // Load categories first
+  await loadCategories()
 
-  // Load categories
-  categories.value = [
-    {
-      id: '1',
-      name: 'Electronics',
-      isActive: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      id: '2',
-      name: 'Fashion',
-      isActive: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      id: '3',
-      name: 'Home & Garden',
-      isActive: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      id: '4',
-      name: 'Sports',
-      isActive: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      id: '5',
-      name: 'Books',
-      isActive: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-  ]
+  // Then load products (this will respect URL parameters)
+  await loadProducts()
 })
 </script>
 

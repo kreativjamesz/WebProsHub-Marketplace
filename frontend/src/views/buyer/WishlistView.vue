@@ -176,47 +176,9 @@ const loadWishlist = async () => {
   try {
     isLoading.value = true
     
-    // Mock data for now - replace with actual API call
-    const mockWishlistItems = [
-      {
-        id: '1',
-        product: {
-          id: '1',
-          name: 'iPhone 15 Pro Max',
-          price: 89999,
-          comparePrice: 99999,
-          stock: 25,
-          images: ['https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400'],
-          store: { name: 'TechStore Pro' }
-        }
-      },
-      {
-        id: '2',
-        product: {
-          id: '2',
-          name: 'MacBook Air M3',
-          price: 129999,
-          comparePrice: 149999,
-          stock: 15,
-          images: ['https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400'],
-          store: { name: 'TechStore Pro' }
-        }
-      },
-      {
-        id: '3',
-        product: {
-          id: '3',
-          name: 'Premium Running Shoes',
-          price: 8500,
-          comparePrice: 12000,
-          stock: 0,
-          images: ['https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400'],
-          store: { name: 'FashionHub Elite' }
-        }
-      }
-    ]
-    
-    wishlistItems.value = mockWishlistItems
+    // API call to get wishlist items
+    // wishlistItems.value = response.data
+    wishlistItems.value = []
     hasMoreItems.value = false
     
   } catch (error) {
@@ -289,6 +251,7 @@ onMounted(() => {
 <style scoped>
 .line-clamp-2 {
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;

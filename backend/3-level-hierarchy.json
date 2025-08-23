@@ -1,0 +1,305 @@
+[
+  {
+    "name": "Electronics",
+    "children": [
+      {
+        "name": "Smartphones & Mobile",
+        "children": [
+          { "name": "Smartphones" },
+          { "name": "Mobile Accessories" },
+          { "name": "Phone Cases & Covers" },
+          { "name": "Screen Protectors" },
+          { "name": "Chargers & Cables" },
+          { "name": "Power Banks" }
+        ]
+      },
+      {
+        "name": "Computers & Laptops",
+        "children": [
+          { "name": "Laptops" },
+          { "name": "Desktop Computers" },
+          { "name": "Computer Accessories" },
+          { "name": "Keyboards & Mice" },
+          { "name": "Monitors & Displays" },
+          { "name": "Storage Devices" }
+        ]
+      },
+      {
+        "name": "Audio & Music",
+        "children": [
+          { "name": "Headphones & Earbuds" },
+          { "name": "Speakers & Sound Systems" },
+          { "name": "Microphones" },
+          { "name": "Audio Cables" },
+          { "name": "DJ Equipment" }
+        ]
+      },
+      {
+        "name": "Gaming",
+        "children": [
+          { "name": "Gaming Consoles" },
+          { "name": "Gaming Accessories" },
+          { "name": "Gaming Headsets" },
+          { "name": "Gaming Mice & Keyboards" },
+          { "name": "Gaming Controllers" }
+        ]
+      },
+      {
+        "name": "Cameras & Photography",
+        "children": [
+          { "name": "Digital Cameras" },
+          { "name": "DSLR Cameras" },
+          { "name": "Camera Lenses" },
+          { "name": "Tripods & Stands" },
+          { "name": "Camera Bags" }
+        ]
+      },
+      {
+        "name": "Home Electronics",
+        "children": [
+          { "name": "Smart Home Devices" },
+          { "name": "TVs & Home Theater" },
+          { "name": "Kitchen Appliances" },
+          { "name": "Security Cameras" },
+          { "name": "Smart Speakers" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Fashion",
+    "children": [
+      {
+        "name": "Men's Clothing",
+        "children": [
+          { "name": "T-Shirts & Polos" },
+          { "name": "Shirts & Button-Ups" },
+          { "name": "Pants & Jeans" },
+          { "name": "Jackets & Coats" },
+          { "name": "Suits & Formal Wear" },
+          { "name": "Activewear" }
+        ]
+      },
+      {
+        "name": "Women's Clothing",
+        "children": [
+          { "name": "Dresses" },
+          { "name": "Tops & Blouses" },
+          { "name": "Pants & Jeans" },
+          { "name": "Skirts" },
+          { "name": "Jackets & Coats" },
+          { "name": "Activewear" }
+        ]
+      },
+      {
+        "name": "Accessories",
+        "children": [
+          { "name": "Bags & Handbags" },
+          { "name": "Wallets & Purses" },
+          { "name": "Belts" },
+          { "name": "Scarves & Wraps" },
+          { "name": "Sunglasses" },
+          { "name": "Jewelry" }
+        ]
+      },
+      {
+        "name": "Footwear",
+        "children": [
+          { "name": "Sneakers & Athletic Shoes" },
+          { "name": "Formal Shoes" },
+          { "name": "Boots" },
+          { "name": "Sandals & Flip-Flops" },
+          { "name": "Heels & Pumps" }
+        ]
+      },
+      {
+        "name": "Kids & Baby",
+        "children": [
+          { "name": "Baby Clothing" },
+          { "name": "Kids' Apparel" },
+          { "name": "School Uniforms" },
+          { "name": "Kids' Shoes" },
+          { "name": "Baby Accessories" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Home & Garden",
+    "children": [
+      {
+        "name": "Furniture",
+        "children": [
+          { "name": "Living Room Furniture" },
+          { "name": "Bedroom Furniture" },
+          { "name": "Kitchen & Dining" },
+          { "name": "Office Furniture" },
+          { "name": "Outdoor Furniture" },
+          { "name": "Storage Solutions" }
+        ]
+      },
+      {
+        "name": "Home Decor",
+        "children": [
+          { "name": "Wall Art & Paintings" },
+          { "name": "Mirrors & Frames" },
+          { "name": "Rugs & Carpets" },
+          { "name": "Curtains & Drapes" },
+          { "name": "Pillows & Cushions" },
+          { "name": "Vases & Planters" }
+        ]
+      },
+      {
+        "name": "Kitchen & Dining",
+        "children": [
+          { "name": "Cookware & Bakeware" },
+          { "name": "Kitchen Appliances" },
+          { "name": "Tableware & Serveware" },
+          { "name": "Kitchen Storage" },
+          { "name": "Kitchen Gadgets" }
+        ]
+      },
+      {
+        "name": "Garden & Outdoor",
+        "children": [
+          { "name": "Garden Tools" },
+          { "name": "Plants & Seeds" },
+          { "name": "Garden Decor" },
+          { "name": "Outdoor Lighting" },
+          { "name": "BBQ & Grilling" },
+          { "name": "Pool & Spa" }
+        ]
+      },
+      {
+        "name": "Home Improvement",
+        "children": [
+          { "name": "Tools & Hardware" },
+          { "name": "Paint & Supplies" },
+          { "name": "Lighting & Electrical" },
+          { "name": "Plumbing" },
+          { "name": "Flooring" },
+          { "name": "Security Systems" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Sports",
+    "children": [
+      {
+        "name": "Team Sports",
+        "children": [
+          { "name": "Basketball" },
+          { "name": "Football/Soccer" },
+          { "name": "Volleyball" },
+          { "name": "Baseball/Softball" },
+          { "name": "Tennis" },
+          { "name": "Badminton" }
+        ]
+      },
+      {
+        "name": "Individual Sports",
+        "children": [
+          { "name": "Running" },
+          { "name": "Swimming" },
+          { "name": "Cycling" },
+          { "name": "Golf" },
+          { "name": "Martial Arts" },
+          { "name": "Yoga & Pilates" }
+        ]
+      },
+      {
+        "name": "Fitness & Training",
+        "children": [
+          { "name": "Gym Equipment" },
+          { "name": "Cardio Machines" },
+          { "name": "Strength Training" },
+          { "name": "Fitness Accessories" },
+          { "name": "Workout Clothing" },
+          { "name": "Nutrition & Supplements" }
+        ]
+      },
+      {
+        "name": "Outdoor & Adventure",
+        "children": [
+          { "name": "Hiking & Camping" },
+          { "name": "Rock Climbing" },
+          { "name": "Water Sports" },
+          { "name": "Winter Sports" },
+          { "name": "Fishing" },
+          { "name": "Hunting" }
+        ]
+      },
+      {
+        "name": "Sports Equipment",
+        "children": [
+          { "name": "Balls & Equipment" },
+          { "name": "Protective Gear" },
+          { "name": "Sports Bags" },
+          { "name": "Training Aids" },
+          { "name": "Scoreboards & Timers" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Books",
+    "children": [
+      {
+        "name": "Fiction",
+        "children": [
+          { "name": "Romance" },
+          { "name": "Mystery & Thriller" },
+          { "name": "Science Fiction" },
+          { "name": "Fantasy" },
+          { "name": "Historical Fiction" },
+          { "name": "Contemporary Fiction" }
+        ]
+      },
+      {
+        "name": "Non-Fiction",
+        "children": [
+          { "name": "Self-Help & Personal Development" },
+          { "name": "Business & Economics" },
+          { "name": "History & Politics" },
+          { "name": "Science & Technology" },
+          { "name": "Health & Wellness" },
+          { "name": "Travel & Geography" }
+        ]
+      },
+      {
+        "name": "Academic & Educational",
+        "children": [
+          { "name": "Textbooks" },
+          { "name": "Reference Books" },
+          { "name": "Study Guides" },
+          { "name": "Language Learning" },
+          { "name": "Professional Development" },
+          { "name": "Research Materials" }
+        ]
+      },
+      {
+        "name": "Children's Books",
+        "children": [
+          { "name": "Picture Books" },
+          { "name": "Early Readers" },
+          { "name": "Chapter Books" },
+          { "name": "Educational Books" },
+          { "name": "Activity Books" },
+          { "name": "Teen Fiction" }
+        ]
+      },
+      {
+        "name": "Specialty Books",
+        "children": [
+          { "name": "Cookbooks" },
+          { "name": "Art & Photography" },
+          { "name": "Religion & Spirituality" },
+          { "name": "Philosophy" },
+          { "name": "Poetry" },
+          { "name": "Biographies & Memoirs" }
+        ]
+      }
+    ]
+  }
+]

@@ -1,136 +1,58 @@
 <template>
-  <div class="safe-image-container" :class="containerClass">
-    <img
-      v-if="!hasError && imageSrc"
-      :src="imageSrc"
-      :alt="alt"
-      :class="imageClass"
-      @error="handleImageError"
-      @load="handleImageLoad"
-      @click="$emit('click', $event)"
-    />
-    
-    <!-- Fallback SVG when image fails to load -->
-    <div
-      v-else
-      class="fallback-container"
-      :class="fallbackClass"
-      @click="$emit('click', $event)"
-    >
-      <svg
-        width="100%"
-        height="100%"
-        viewBox="0 0 200 200"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        class="fallback-svg"
-      >
-        <rect width="200" height="200" rx="20" fill="#1E40AF"/>
-        <circle cx="100" cy="80" r="25" fill="#FBBF24"/>
-        <path d="M60 120 Q100 100 140 120" stroke="#FBBF24" stroke-width="8" stroke-linecap="round"/>
-        <text x="100" y="170" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">WebProSHub</text>
-      </svg>
-    </div>
-    
-    <!-- Loading skeleton -->
-    <div
-      v-if="isLoading"
-      class="loading-skeleton"
-      :class="skeletonClass"
-    >
-      <div class="skeleton-content"></div>
-    </div>
-  </div>
+  <img
+    :src="imageSrc"
+    :alt="alt"
+    :class="imageClass"
+    @error="handleImageError"
+    @load="handleImageLoad"
+  />
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue'
-import { useImageFallback, type UseImageFallbackOptions } from '@/composables/useImageFallback'
+import { ref, computed, watch } from 'vue'
 
-interface Props extends UseImageFallbackOptions {
+interface Props {
   src: string
-  width?: string | number
-  height?: string | number
-  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down'
-  borderRadius?: string
-}
-
-interface Emits {
-  (e: 'click', event: MouseEvent): void
-  (e: 'error'): void
-  (e: 'load'): void
+  alt: string
+  fallback?: string
+  class?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  objectFit: 'cover',
-  borderRadius: '0',
-  width: 'auto',
-  height: 'auto'
+  fallback: '/placeholder-image.svg',
+  class: ''
 })
 
-const emit = defineEmits<Emits>()
+const hasError = ref(false)
+const hasLoaded = ref(false)
 
-const {
-  imageSrc,
-  hasError,
-  isLoading,
-  handleImageError,
-  handleImageLoad,
-  setImageSrc,
-  reset
-} = useImageFallback({
-  fallbackSrc: props.fallbackSrc,
-  alt: props.alt,
-  className: props.className
-})
-
-// Watch for src changes
-watch(() => props.src, (newSrc) => {
-  if (newSrc !== imageSrc.value) {
-    setImageSrc(newSrc)
+const imageSrc = computed(() => {
+  if (hasError.value) {
+    return props.fallback
   }
-}, { immediate: true })
+  return props.src
+})
 
-// Computed classes
-const containerClass = computed(() => ({
-  'safe-image-container': true,
-  'has-error': hasError.value,
-  'is-loading': isLoading.value
-}))
+const imageClass = computed(() => {
+  const baseClasses = props.class
+  if (!hasLoaded.value && !hasError.value) {
+    return `${baseClasses} animate-pulse bg-muted`
+  }
+  return baseClasses
+})
 
-const imageClass = computed(() => ({
-  'safe-image': true,
-  [`object-${props.objectFit}`]: true
-}))
-
-const fallbackClass = computed(() => ({
-  'fallback-container': true,
-  'custom-fallback': !!props.fallbackSrc
-}))
-
-const skeletonClass = computed(() => ({
-  'loading-skeleton': true,
-  'custom-skeleton': !!props.className
-}))
-
-// Enhanced error handling
-const handleImageErrorWithEmit = () => {
-  handleImageError()
-  emit('error')
+const handleImageError = () => {
+  hasError.value = true
 }
 
-// Enhanced load handling
-const handleImageLoadWithEmit = () => {
-  handleImageLoad()
-  emit('load')
+const handleImageLoad = () => {
+  hasLoaded.value = true
 }
 
-// Expose methods for external use
-defineExpose({
-  reset,
-  setImageSrc,
-  hasError,
-  isLoading
+// Reset error state when src changes
+watch(() => props.src, () => {
+  hasError.value = false
+  hasLoaded.value = false
 })
 </script>
 
@@ -139,12 +61,32 @@ defineExpose({
   position: relative;
   display: inline-block;
   overflow: hidden;
+  border-radius: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #f8fafc;
+}
+
+.safe-image-container:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
 .safe-image {
   display: block;
   max-width: 100%;
   height: auto;
+  transition: all 0.3s ease;
+}
+
+.safe-image.lazy {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.safe-image.lazy.loaded {
+  opacity: 1;
 }
 
 .safe-image.object-cover {
@@ -177,55 +119,334 @@ defineExpose({
   height: 100%;
 }
 
+/* Modern Fallback Container */
 .fallback-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border: 2px dashed #cbd5e1;
+  border-radius: 1rem;
+  width: 100%;
+  height: 100%;
+  transition: all 0.3s ease;
+  gap: 1rem;
+}
+
+.fallback-container:hover {
+  border-color: #94a3b8;
+  background: linear-gradient(135deg, #f1f5f9 0%, #dbeafe 100%);
+}
+
+/* WebProsHub Logo Fallback */
+.fallback-logo {
+  position: relative;
+  width: 4rem;
+  height: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f3f4f6;
-  border: 2px dashed #d1d5db;
-  border-radius: v-bind(borderRadius);
-  /* min-height: 100px;
-  min-width: 100px; */
+}
+
+.logo-background {
   width: 100%;
   height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
 }
 
-.fallback-svg {
+.logo-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  animation: shine 3s ease-in-out infinite;
+}
+
+.logo-svg {
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.lightning-bolt {
+  animation: lightning 2s ease-in-out infinite;
+}
+
+.w-letter {
+  animation: wFloat 3s ease-in-out infinite;
+}
+
+.lightning-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Sparkle animations */
+.sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #FFD700;
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.sparkle-1 {
+  top: 15%;
+  left: 25%;
+  animation: sparkle 2s ease-in-out infinite 0.5s;
+}
+
+.sparkle-2 {
+  top: 65%;
+  right: 20%;
+  animation: sparkle 2s ease-in-out infinite 1s;
+}
+
+.sparkle-3 {
+  bottom: 25%;
+  left: 55%;
+  animation: sparkle 2s ease-in-out infinite 1.5s;
+}
+
+.fallback-text {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
+  text-align: center;
   max-width: 80%;
-  max-height: 80%;
 }
 
+/* Enhanced Loading Skeleton */
 .loading-skeleton {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  border-radius: v-bind(borderRadius);
+  background: #f8fafc;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.skeleton-shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s infinite;
 }
 
 .skeleton-content {
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@keyframes loading {
+.skeleton-placeholder {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeleton-icon {
+  width: 100%;
+  height: 100%;
+  background: #94a3b8;
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+/* Image Overlay */
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.safe-image-container:hover .image-overlay {
+  opacity: 1;
+}
+
+.overlay-content {
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* Animations */
+@keyframes shimmer {
   0% {
-    background-position: 200% 0;
+    transform: translateX(-100%);
   }
   100% {
-    background-position: -200% 0;
+    transform: translateX(100%);
   }
 }
 
-/* Responsive adjustments */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Logo animations */
+@keyframes lightning {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.05) rotate(1deg);
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes wFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(180deg);
+  }
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
+  .fallback-container {
+    min-height: 100px;
+    min-width: 100px;
+    gap: 0.75rem;
+  }
+  
+  .fallback-logo {
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .fallback-text {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
   .fallback-container {
     min-height: 80px;
     min-width: 80px;
+    gap: 0.5rem;
+  }
+  
+  .fallback-logo {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  
+  .logo-background {
+    border-radius: 0.75rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .safe-image-container {
+    background: #1e293b;
+  }
+  
+  .fallback-container {
+    background: linear-gradient(135deg, #334155 0%, #475569 100%);
+    border-color: #64748b;
+  }
+  
+  .fallback-container:hover {
+    background: linear-gradient(135deg, #475569 0%, #64748b 100%);
+    border-color: #94a3b8;
+  }
+  
+  .fallback-text {
+    color: #cbd5e1;
+  }
+  
+  .logo-background {
+    background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 100%);
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.3),
+      0 2px 4px -1px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  
+  .loading-skeleton {
+    background: #334155;
+  }
+  
+  .skeleton-placeholder {
+    background: linear-gradient(135deg, #475569 0%, #64748b 100%);
   }
 }
 </style>

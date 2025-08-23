@@ -1,15 +1,27 @@
-export interface Category {
-  id: string
+export interface MainCategory {
+  id: number
   name: string
   description?: string
   image?: string
-  parentId?: string
-  parent?: Category
-  children?: Category[]
-  sellerId?: string
   isActive: boolean
   createdAt: string
   updatedAt: string
+  categories?: Category[]
+  products?: Product[]
+}
+
+export interface Category {
+  id: number
+  name: string
+  description?: string
+  image?: string
+  mainCategoryId: number
+  mainCategory?: MainCategory
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+  subcategories?: Subcategory[]
+  products?: Product[]
   _count?: {
     products: number
   }
@@ -22,9 +34,22 @@ export interface Category {
   }>
 }
 
+export interface Subcategory {
+  id: number
+  name: string
+  description?: string
+  image?: string
+  categoryId: number
+  category?: Category
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+  products?: Product[]
+}
+
 export interface Store {
   id: string
-  sellerId: string
+  sellerId?: string
   seller?: SellerProfile
   name: string
   description?: string
@@ -48,12 +73,16 @@ export interface Store {
 
 export interface Product {
   id: string
-  sellerId: string
+  sellerId?: string
   seller?: SellerProfile
-  storeId?: string
+  storeId: string
   store?: Store
-  categoryId: string
-  category: Category
+  mainCategoryId?: number
+  mainCategory?: MainCategory
+  categoryId?: number
+  category?: Category
+  subcategoryId?: number
+  subcategory?: Subcategory
   name: string
   description?: string
   price: number
@@ -88,7 +117,7 @@ export interface SellerProfile {
   description?: string
   logo?: string
   banner?: string
-  themeId?: string
+  themeId?: number
   theme?: StoreTheme
   isVerified: boolean
   isActive: boolean
@@ -107,7 +136,7 @@ export interface SellerProfile {
 }
 
 export interface StoreTheme {
-  id: string
+  id: number
   name: string
   description?: string
   preview?: string
@@ -237,7 +266,9 @@ export interface SearchParams {
   type?: 'all' | 'products' | 'stores'
   page?: number
   limit?: number
-  category?: string
+  mainCategory?: number
+  category?: number
+  subcategory?: number
   seller?: string
   minPrice?: number
   maxPrice?: number

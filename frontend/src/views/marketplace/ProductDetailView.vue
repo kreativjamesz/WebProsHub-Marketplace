@@ -16,7 +16,11 @@
             <li><span class="mx-2">/</span></li>
             <li><a href="/marketplace" class="hover:text-blue-600">Marketplace</a></li>
             <li><span class="mx-2">/</span></li>
-            <li><a :href="`/stores/${product.storeId}`" class="hover:text-blue-600">{{ product.store?.name || 'Store' }}</a></li>
+            <li>
+              <a :href="`/stores/${product.storeId}`" class="hover:text-blue-600">{{
+                product.store?.name || 'Store'
+              }}</a>
+            </li>
             <li><span class="mx-2">/</span></li>
             <li class="text-gray-900">{{ product.name }}</li>
           </ol>
@@ -39,8 +43,18 @@
                   v-else
                   class="w-full h-96 bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center"
                 >
-                  <svg class="w-24 h-24 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <svg
+                    class="w-24 h-24 text-gray-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
                   </svg>
                 </div>
               </div>
@@ -55,7 +69,7 @@
                     'w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors duration-200',
                     selectedImage === image
                       ? 'border-blue-500'
-                      : 'border-gray-200 hover:border-gray-300'
+                      : 'border-gray-200 hover:border-gray-300',
                   ]"
                 >
                   <SafeImage
@@ -94,7 +108,12 @@
                       class="px-3 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M20 12H4"
+                        />
                       </svg>
                     </button>
                     <input
@@ -110,7 +129,12 @@
                       class="px-3 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -127,8 +151,18 @@
                     @click="addToWishlist"
                     class="px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
                   >
-                    <svg class="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    <svg
+                      class="w-5 h-5 text-gray-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -138,9 +172,21 @@
               <div class="border-t border-gray-200 pt-6">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    <div
+                      class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-5 h-5 text-blue-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                        />
                       </svg>
                     </div>
                     <div>
@@ -156,7 +202,9 @@
                   <div class="text-right">
                     <div class="flex items-center text-yellow-400">
                       <span class="text-sm text-gray-600">Store Information</span>
-                      <span class="text-sm text-gray-600">{{ product.store?.name || 'Store' }}</span>
+                      <span class="text-sm text-gray-600">{{
+                        product.store?.name || 'Store'
+                      }}</span>
                     </div>
                   </div>
                 </div>
@@ -177,7 +225,7 @@
                   'py-4 px-1 border-b-2 font-medium text-sm',
                   activeTab === tab.id
                     ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
                 ]"
               >
                 {{ tab.name }}
@@ -190,7 +238,7 @@
             <div v-if="activeTab === 'description'" class="space-y-4">
               <h3 class="text-lg font-semibold text-gray-900">Product Description</h3>
               <p class="text-gray-700 leading-relaxed">{{ product.description }}</p>
-              
+
               <div class="mt-6">
                 <h4 class="font-medium text-gray-900 mb-3">Product Information</h4>
                 <p class="text-gray-700 leading-relaxed">{{ product.description }}</p>
@@ -228,8 +276,8 @@
               <div class="bg-gray-50 rounded-lg p-6">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div class="text-center">
-                                      <div class="text-3xl font-bold text-gray-900">Reviews</div>
-                  <p class="text-sm text-gray-600">Customer feedback</p>
+                    <div class="text-3xl font-bold text-gray-900">Reviews</div>
+                    <p class="text-sm text-gray-600">Customer feedback</p>
                   </div>
                 </div>
               </div>
@@ -243,12 +291,18 @@
                 >
                   <div class="flex items-start justify-between mb-3">
                     <div class="flex items-center">
-                      <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-3">
-                        <span class="text-gray-600 font-semibold">{{ review.buyer?.name?.charAt(0) || 'U' }}</span>
+                      <div
+                        class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-3"
+                      >
+                        <span class="text-gray-600 font-semibold">{{
+                          review.buyer?.name?.charAt(0) || 'U'
+                        }}</span>
                       </div>
                       <div>
                         <p class="font-medium text-gray-900">{{ review.buyer?.name || 'User' }}</p>
-                        <p class="text-sm text-gray-500">{{ formatDate(new Date(review.createdAt)) }}</p>
+                        <p class="text-sm text-gray-500">
+                          {{ formatDate(new Date(review.createdAt)) }}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -259,8 +313,18 @@
               <!-- Empty Reviews State -->
               <div v-else class="text-center py-12">
                 <div class="text-gray-400 mb-4">
-                  <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  <svg
+                    class="mx-auto h-12 w-12"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                    />
                   </svg>
                 </div>
                 <h3 class="text-lg font-medium text-gray-900 mb-2">No reviews yet</h3>
@@ -292,24 +356,37 @@
                   v-else
                   class="w-full h-32 bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center"
                 >
-                  <svg class="w-8 h-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <svg
+                    class="w-8 h-8 text-gray-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
                   </svg>
                 </div>
               </div>
-              
+
               <div class="p-3">
-                <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-2">{{ relatedProduct.name }}</h3>
+                <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-2">
+                  {{ relatedProduct.name }}
+                </h3>
                 <div class="flex items-center justify-between">
-                  <span class="text-blue-600 font-semibold">₱{{ relatedProduct.price.toFixed(2) }}</span>
+                  <span class="text-blue-600 font-semibold"
+                    >₱{{ relatedProduct.price.toFixed(2) }}</span
+                  >
                   <div class="flex text-yellow-400">
                     <span v-for="i in 5" :key="i" class="text-xs">
-                                          <svg
-                      class="w-3 h-3 fill-current text-gray-300"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                    </svg>
+                      <svg class="w-3 h-3 fill-current text-gray-300" viewBox="0 0 20 20">
+                        <path
+                          d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                        />
+                      </svg>
                     </span>
                   </div>
                 </div>
@@ -320,14 +397,49 @@
       </div>
 
       <!-- Error State -->
+      <div v-else-if="error" class="text-center py-12">
+        <div class="text-red-400 mb-4">
+          <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Error Loading Product</h3>
+        <p class="text-gray-500 mb-4">{{ error }}</p>
+        <button
+          @click="loadProductDetails"
+          class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 mr-2"
+        >
+          Try Again
+        </button>
+        <button
+          @click="router.push('/marketplace')"
+          class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+        >
+          Back to Marketplace
+        </button>
+      </div>
+
+      <!-- Product Not Found State -->
       <div v-else class="text-center py-12">
         <div class="text-red-400 mb-4">
           <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"
+            />
           </svg>
         </div>
         <h3 class="text-lg font-medium text-gray-900 mb-2">Product not found</h3>
-        <p class="text-gray-500">The product you're looking for doesn't exist or has been removed.</p>
+        <p class="text-gray-500">
+          The product you're looking for doesn't exist or has been removed.
+        </p>
         <button
           @click="router.push('/marketplace')"
           class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
@@ -343,8 +455,9 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import type { Product, Review } from '@/types/marketplace'
-import { mockProducts, mockReviews } from '@/mocks'
 import SafeImage from '@/components/ui/SafeImage.vue'
+import { apiService } from '@/services/api'
+import { AxiosError } from 'axios'
 
 const router = useRouter()
 const route = useRoute()
@@ -358,18 +471,16 @@ const quantity = ref(1)
 const activeTab = ref('description')
 const showReviewForm = ref(false)
 const loading = ref(true)
+const error = ref<string | null>(null)
 
 // Tabs configuration
 const tabs = [
   { id: 'description', name: 'Description' },
   { id: 'specifications', name: 'Specifications' },
-  { id: 'reviews', name: 'Reviews' }
+  { id: 'reviews', name: 'Reviews' },
 ]
 
 // Use centralized mock data
-const mockProduct = mockProducts[0] // iPhone 15 Pro
-
-const mockRelatedProducts = mockProducts.slice(1, 3) // MacBook Air M2 and AirPods Pro
 
 // Methods
 const navigateToProduct = (productId: string) => {
@@ -390,7 +501,7 @@ const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
   }).format(date)
 }
 
@@ -398,23 +509,21 @@ const loadProductDetails = async () => {
   loading.value = true
   try {
     const productId = route.params.id as string
-    
-    // TODO: Replace with actual API call
-    // const response = await apiService.marketplace.getProduct(productId)
-    // product.value = response.data
-    // reviews.value = response.reviews
-    // relatedProducts.value = response.relatedProducts
-    
-    // Using mock data for now
-    product.value = mockProduct
-    reviews.value = mockReviews
-    relatedProducts.value = mockRelatedProducts
-    
-    // Set first image as selected if available
-    if (product.value.images && product.value.images.length > 0) {
-      selectedImage.value = product.value.images[0]
+    const response = await apiService.marketplace.getProduct(productId)
+    product.value = response.data.product
+    reviews.value = response.data.product.reviews
+    relatedProducts.value = response.data.product.relatedProducts
+    selectedImage.value = response.data.product.images[0]
+    quantity.value = 1
+    activeTab.value = 'description'
+    showReviewForm.value = false
+    error.value = null
+  } catch (error: unknown) {
+    if (error instanceof AxiosError && error.response?.status === 404) {
+      error = 'Product not found'
+    } else {
+      error = 'Failed to load product details. Please try again.'
     }
-  } catch (error) {
     console.error('Error loading product details:', error)
   } finally {
     loading.value = false

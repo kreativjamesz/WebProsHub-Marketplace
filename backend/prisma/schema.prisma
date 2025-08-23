@@ -10,392 +10,420 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Seed configuration
 /// @seed = "tsx prisma/seed.ts"
 
-// User Management - Core user accounts with role-based access control
+// ============================================================================
+// USER MODELS
+// ============================================================================
+
 model User {
-  id        String   @id @default(cuid())                    // Unique identifier for each user
-  email     String   @unique                                 // User's email address (unique across system)
-  password  String                                           // Hashed password for authentication
-  name      String                                           // User's full name
-  role      UserRole @default(BUYER)                         // User's role: BUYER, SELLER, ADMIN, or STAFF
-  phone     String?                                          // Optional phone number
-  avatar    String?                                          // Optional profile picture URL
-  isActive  Boolean  @default(true)                          // Whether user account is active
-  createdAt DateTime @default(now())                         // When user account was created
-  updatedAt DateTime @updatedAt                              // When user account was last updated
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      UserRole @default(BUYER)
+  phone     String?
+  avatar    String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  // Relations - One-to-one relationships with profile models
-  buyerProfile  BuyerProfile?                                // Buyer-specific profile (if role is BUYER)
-  sellerProfile SellerProfile?                               // Seller-specific profile (if role is SELLER)
-  adminProfile  AdminProfile?                                // Admin-specific profile (if role is ADMIN)
-  staffProfile  StaffProfile?                                // Staff-specific profile (if role is STAFF)
-  
-  // Relations - One-to-many relationships
-  orders        Order[]                                       // All orders placed by this user
-  reviews       Review[]                                      // All product reviews written by this user
-  addresses     Address[]                                     // All shipping/billing addresses for this user
-  notifications Notification[]                                 // All notifications sent to this user
-  storeMemberships StoreMember[]                              // All store memberships (co-ownership roles)
+  buyerProfile  BuyerProfile?
+  sellerProfile SellerProfile?
+  adminProfile  AdminProfile?
+  staffProfile  StaffProfile?
 
-  @@map("users")                                             // Database table name
+  orders           Order[]
+  reviews          Review[]
+  addresses        Address[]
+  notifications    Notification[]
+  storeMemberships StoreMember[]
+
+  @@map("users")
 }
 
-// User roles for access control and permissions
 enum UserRole {
-  BUYER                                                      // Can browse, purchase, review products
-  SELLER                                                      // Can sell products, manage stores
-  ADMIN                                                       // Full system access, manage users/sellers
-  STAFF                                                       // Limited admin access, support users
+  BUYER
+  SELLER
+  ADMIN
+  STAFF
 }
 
-// Buyer Profile - Extended information for customers
 model BuyerProfile {
-  id          String    @id @default(cuid())                 // Unique identifier for buyer profile
-  userId      String    @unique                              // Links to User model (one-to-one)
+  id          String    @id @default(cuid())
+  userId      String    @unique
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  birthDate   DateTime?                                       // Optional birth date for age verification
-  preferences Json?                                           // Shopping preferences, favorite categories
-  createdAt   DateTime  @default(now())                      // When profile was created
-  updatedAt   DateTime  @updatedAt                           // When profile was last updated
+  birthDate   DateTime?
+  preferences Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime @updatedAt
 
-  // Relations - One-to-many relationships
-  wishlist WishlistItem[]                                     // Products saved to wishlist
-  cart     CartItem[]                                         // Items in shopping cart
+  wishlist WishlistItem[]
+  cart     CartItem[]
 
-  @@map("buyer_profiles")                                    // Database table name
+  @@map("buyer_profiles")
 }
 
-// Store Theme - Customizable store appearance
-model StoreTheme {
-  id          String   @id @default(cuid())                  // Unique identifier for theme
-  name        String                                          // Theme name (e.g., "Modern", "Classic")
-  description String?                                         // Theme description
-  preview     String?                                         // Preview image URL
-  css         String                                          // Custom CSS styles for theme
-  isActive    Boolean  @default(true)                         // Whether theme is available for use
-  createdAt   DateTime @default(now())                        // When theme was created
-  updatedAt   DateTime @updatedAt                             // When theme was last updated
-
-  // Relations - One-to-many relationships
-  sellers SellerProfile[]                                     // All sellers using this theme
-
-  @@map("store_themes")                                      // Database table name
-}
-
-// Store Location - Physical store locations with co-ownership support
-model Store {
-  id           String        @id @default(cuid())            // Unique identifier for store
-  name         String                                        // Store name
-  description  String?                                       // Store description
-  address      String                                        // Street address
-  city         String                                        // City
-  state        String                                        // State/province
-  country      String                                        // Country
-  postalCode   String                                        // ZIP/postal code
-  latitude     Float                                         // GPS latitude for map display
-  longitude    Float                                         // GPS longitude for map display
-  phone        String?                                       // Store phone number
-  email        String?                                       // Store email address
-  website      String?                                       // Store website URL
-  openingHours Json?                                         // Store operating hours (JSON format)
-  isActive     Boolean       @default(false)                 // Whether store is active (admin approval required)
-  isVerified   Boolean       @default(false)                 // Whether store is verified by admin
-  createdAt    DateTime      @default(now())                 // When store was created
-  updatedAt    DateTime      @updatedAt                      // When store was last updated
-
-  // Relations - One-to-many relationships
-  products     Product[]                                     // All products sold at this store
-  storeMembers StoreMember[]                                 // All staff and co-owners of this store
-  categories   Category[]                                    // Store-specific product categories
-  
-  // Relations - Optional relationships
-  sellerId     String?                                       // Optional: if store belongs to a specific seller
-  seller       SellerProfile? @relation(fields: [sellerId], references: [id])
-
-  @@map("stores")                                            // Database table name
-}
-
-// Store Membership - Co-ownership and staff management system
-model StoreMember {
-  id        String       @id @default(cuid())                // Unique identifier for membership
-  storeId   String                                           // Links to Store model
-  store     Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  userId    String                                           // Links to User model
-  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sellerId  String?                                          // Optional: if member is also a seller
-  seller    SellerProfile? @relation(fields: [sellerId], references: [id])
-  role      StoreRole    @default(STAFF)                     // Member's role in the store
-  isActive  Boolean      @default(true)                      // Whether membership is active
-  joinedAt  DateTime     @default(now())                     // When member joined the store
-  invitedBy String?                                          // User ID who invited this member
-  createdAt DateTime     @default(now())                     // When membership was created
-  updatedAt DateTime     @updatedAt                          // When membership was last updated
-
-  @@unique([storeId, userId])                                // One user can only have one role per store
-  @@map("store_members")                                     // Database table name
-}
-
-// Store member roles with different permission levels
-enum StoreRole {
-  OWNER                                                      // Primary store owner with full control
-  CO_OWNER                                                   // Co-owner with full access rights
-  MANAGER                                                    // Store manager with limited admin access
-  STAFF                                                      // Store staff with basic access
-}
-
-// Seller Profile - Business information for sellers
 model SellerProfile {
-  id           String      @id @default(cuid())              // Unique identifier for seller profile
-  userId       String      @unique                           // Links to User model (one-to-one)
+  id           String      @id @default(cuid())
+  userId       String      @unique
   user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  businessName String                                        // Official business name
-  businessType String                                        // Type of business (e.g., "Retail", "Wholesale")
-  description  String?                                       // Business description
-  logo         String?                                       // Business logo URL
-  banner       String?                                       // Business banner image URL
-  themeId      String?                                       // Links to StoreTheme model
+  businessName String
+  businessType String
+  description  String?
+  logo         String?
+  banner       String?
+  themeId      Int?
   theme        StoreTheme? @relation(fields: [themeId], references: [id])
-  isVerified   Boolean     @default(false)                   // Whether business is verified by admin
-  isActive     Boolean     @default(false)                   // Whether seller can operate (admin approval required)
-  isApproved   Boolean     @default(false)                   // Whether admin has approved the seller
-  approvalDate DateTime?                                      // When admin approved the seller
-  approvedBy   String?                                        // Admin user ID who approved the seller
-  createdAt    DateTime      @default(now())                 // When profile was created
-  updatedAt    DateTime      @updatedAt                      // When profile was last updated
+  isVerified   Boolean     @default(false)
+  isActive     Boolean     @default(false)
+  isApproved   Boolean     @default(false)
+  approvalDate DateTime?
+  approvedBy   String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 
-  // Relations - One-to-many relationships
-  stores     Store[]                                         // All stores owned by this seller
-  products   Product[]                                        // All products sold by this seller
-  orders     Order[]                                          // All orders received by this seller
-  categories Category[]                                       // All categories created by this seller
-  storeMemberships StoreMember[]                              // All store memberships as co-owner/staff
+  stores           Store[]
+  products         Product[]
+  orders           Order[]
+  storeMemberships StoreMember[]
 
-  @@map("seller_profiles")                                   // Database table name
+  @@map("seller_profiles")
 }
 
-// Product Categories - Hierarchical product organization
-model Category {
-  id          String         @id @default(cuid())            // Unique identifier for category
-  name        String                                         // Category name
-  description String?                                        // Category description
-  image       String?                                        // Category image URL
-  parentId    String?                                        // Links to parent category (for hierarchy)
-  parent      Category?      @relation("CategoryHierarchy", fields: [parentId], references: [id])
-  children    Category[]     @relation("CategoryHierarchy")  // Sub-categories
-  storeId     String?                                        // Optional: links to specific store
-  store       Store?         @relation(fields: [storeId], references: [id])
-  sellerId    String?                                        // Optional: links to specific seller
-  seller      SellerProfile? @relation(fields: [sellerId], references: [id])
-  isActive    Boolean        @default(true)                  // Whether category is active
-  createdAt   DateTime       @default(now())                 // When category was created
-  updatedAt   DateTime       @updatedAt                      // When category was last updated
-
-  // Relations - One-to-many relationships
-  products Product[]                                          // All products in this category
-
-  @@map("categories")                                        // Database table name
-}
-
-// Products - Items available for purchase
-model Product {
-  id           String        @id @default(cuid())            // Unique identifier for product
-  storeId      String                                        // Links to Store model (required)
-  store        Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  categoryId   String                                        // Links to Category model (required)
-  category     Category      @relation(fields: [categoryId], references: [id])
-  sellerId     String?                                       // Optional: links to specific seller
-  seller       SellerProfile? @relation(fields: [sellerId], references: [id])
-  name         String                                         // Product name
-  description  String?                                        // Product description
-  price        Decimal       @db.Decimal(10, 2)              // Current selling price
-  comparePrice Decimal?      @db.Decimal(10, 2)              // Original/compare-at price
-  cost         Decimal?      @db.Decimal(10, 2)              // Product cost for profit calculation
-  sku          String?                                        // Stock keeping unit
-  barcode      String?                                        // Product barcode
-  weight       Float?                                         // Product weight
-  dimensions   Json?                                          // Length, width, height (JSON format)
-  images       Json                                           // Array of product image URLs (JSON format)
-  isActive     Boolean       @default(true)                  // Whether product is available for purchase
-  isFeatured   Boolean       @default(false)                 // Whether product is featured
-  stock        Int           @default(0)                     // Current stock quantity
-  minStock     Int           @default(0)                     // Minimum stock threshold
-  maxStock     Int?                                           // Maximum stock capacity
-  createdAt    DateTime      @default(now())                 // When product was created
-  updatedAt    DateTime      @updatedAt                      // When product was last updated
-
-  // Relations - One-to-many relationships
-  orderItems OrderItem[]                                      // All order items containing this product
-  reviews    Review[]                                         // All reviews for this product
-  wishlist   WishlistItem[]                                   // All wishlist items for this product
-  cart       CartItem[]                                       // All cart items for this product
-
-  @@map("products")                                           // Database table name
-}
-
-// Shopping Cart - Items users want to purchase
-model CartItem {
-  id        String       @id @default(cuid())                // Unique identifier for cart item
-  buyerId   String                                           // Links to BuyerProfile model
-  buyer     BuyerProfile @relation(fields: [buyerId], references: [id], onDelete: Cascade)
-  productId String                                           // Links to Product model
-  product   Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
-  quantity  Int                                              // Quantity of product in cart
-  createdAt DateTime     @default(now())                     // When item was added to cart
-  updatedAt DateTime     @updatedAt                          // When cart item was last updated
-
-  @@unique([buyerId, productId])                             // One product per buyer in cart
-  @@map("cart_items")                                        // Database table name
-}
-
-// Wishlist - Products users want to save for later
-model WishlistItem {
-  id        String       @id @default(cuid())                // Unique identifier for wishlist item
-  buyerId   String                                           // Links to BuyerProfile model
-  buyer     BuyerProfile @relation(fields: [buyerId], references: [id], onDelete: Cascade)
-  productId String                                           // Links to Product model
-  product   Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
-  createdAt DateTime     @default(now())                     // When item was added to wishlist
-
-  @@unique([buyerId, productId])                             // One product per buyer in wishlist
-  @@map("wishlist_items")                                    // Database table name
-}
-
-// Orders - Customer purchases
-model Order {
-  id        String        @id @default(cuid())               // Unique identifier for order
-  buyerId   String                                           // Links to User model (buyer)
-  buyer     User          @relation(fields: [buyerId], references: [id])
-  sellerId  String                                           // Links to SellerProfile model
-  seller    SellerProfile @relation(fields: [sellerId], references: [id])
-  status    OrderStatus   @default(PENDING)                  // Current order status
-  total     Decimal       @db.Decimal(10, 2)                 // Total order amount
-  subtotal  Decimal       @db.Decimal(10, 2)                 // Subtotal before tax/shipping
-  tax       Decimal       @db.Decimal(10, 2)                 // Tax amount
-  shipping  Decimal       @db.Decimal(10, 2)                 // Shipping cost
-  discount  Decimal       @db.Decimal(10, 2)                 // Discount amount
-  notes     String?                                           // Order notes
-  createdAt DateTime       @default(now())                   // When order was created
-  updatedAt DateTime       @updatedAt                        // When order was last updated
-
-  // Relations - One-to-many relationships
-  items             OrderItem[]                               // All items in this order
-  shippingAddress   Address     @relation(fields: [shippingAddressId], references: [id])
-  shippingAddressId String                                     // Links to shipping address
-
-  @@map("orders")                                             // Database table name
-}
-
-// Order status progression
-enum OrderStatus {
-  PENDING                                                    // Order placed, waiting for confirmation
-  CONFIRMED                                                  // Order confirmed by seller
-  PROCESSING                                                 // Order being prepared
-  SHIPPED                                                    // Order shipped to customer
-  DELIVERED                                                  // Order delivered to customer
-  CANCELLED                                                  // Order cancelled
-  REFUNDED                                                   // Order refunded
-}
-
-// Order Items - Individual products within an order
-model OrderItem {
-  id        String   @id @default(cuid())                    // Unique identifier for order item
-  orderId   String                                           // Links to Order model
-  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId String                                           // Links to Product model
-  product   Product  @relation(fields: [productId], references: [id])
-  quantity  Int                                              // Quantity ordered
-  price     Decimal  @db.Decimal(10, 2)                     // Price per unit at time of order
-  total     Decimal  @db.Decimal(10, 2)                     // Total price for this item
-  createdAt DateTime @default(now())                         // When order item was created
-
-  @@map("order_items")                                       // Database table name
-}
-
-// Product Reviews - Customer feedback and ratings
-model Review {
-  id         String   @id @default(cuid())                   // Unique identifier for review
-  buyerId    String                                           // Links to User model (buyer)
-  buyer      User     @relation(fields: [buyerId], references: [id])
-  productId  String                                           // Links to Product model
-  product    Product  @relation(fields: [productId], references: [id])
-  rating     Int                                              // Rating from 1-5 stars
-  comment    String?                                          // Review text comment
-  images     Json?                                            // Array of review image URLs (JSON format)
-  isVerified Boolean  @default(false)                         // Whether review is verified (purchased product)
-  createdAt  DateTime @default(now())                         // When review was created
-  updatedAt  DateTime @updatedAt                              // When review was last updated
-
-  @@unique([buyerId, productId])                             // One review per buyer per product
-  @@map("reviews")                                            // Database table name
-}
-
-// Addresses - Shipping and billing addresses
-model Address {
-  id         String      @id @default(cuid())                // Unique identifier for address
-  userId     String                                           // Links to User model
-  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type       AddressType @default(SHIPPING)                  // Address type: shipping or billing
-  name       String                                           // Recipient name
-  phone      String                                           // Contact phone number
-  address    String                                           // Street address
-  city       String                                           // City
-  state      String                                           // State/province
-  country    String                                           // Country
-  postalCode String                                           // ZIP/postal code
-  isDefault  Boolean     @default(false)                      // Whether this is the default address
-  createdAt  DateTime    @default(now())                      // When address was created
-  updatedAt  DateTime    @updatedAt                           // When address was last updated
-
-  // Relations - One-to-many relationships
-  orders Order[]                                               // All orders using this address
-
-  @@map("addresses")                                          // Database table name
-}
-
-// Address types
-enum AddressType {
-  SHIPPING                                                   // Delivery address
-  BILLING                                                    // Billing address
-}
-
-// Admin Profile - Extended information for administrators
 model AdminProfile {
-  id          String   @id @default(cuid())                  // Unique identifier for admin profile
-  userId      String   @unique                               // Links to User model (one-to-one)
+  id          String   @id @default(cuid())
+  userId      String   @unique
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  permissions Json                                             // Admin permissions (JSON format)
-  createdAt   DateTime @default(now())                        // When profile was created
-  updatedAt   DateTime @updatedAt                             // When profile was last updated
+  permissions Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  @@map("admin_profiles")                                    // Database table name
+  @@map("admin_profiles")
 }
 
-// Staff Profile - Extended information for staff members
 model StaffProfile {
-  id          String   @id @default(cuid())                  // Unique identifier for staff profile
-  userId      String   @unique                               // Links to User model (one-to-one)
+  id          String   @id @default(cuid())
+  userId      String   @unique
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role        String                                           // Staff role (e.g., "Support", "Moderator")
-  permissions Json                                             // Staff permissions (JSON format)
-  createdAt   DateTime @default(now())                        // When profile was created
-  updatedAt   DateTime @updatedAt                             // When profile was last updated
+  role        String
+  permissions Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  @@map("staff_profiles")                                    // Database table name
+  @@map("staff_profiles")
 }
 
-// Notifications - System and user notifications
-model Notification {
-  id        String   @id @default(cuid())                    // Unique identifier for notification
-  userId    String                                           // Links to User model
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type      String                                           // Notification type (e.g., "Order", "Product", "System")
-  title     String                                           // Notification title
-  message   String                                           // Notification message
-  isRead    Boolean  @default(false)                         // Whether notification has been read
-  data      Json?                                            // Additional notification data (JSON format)
-  createdAt DateTime @default(now())                         // When notification was created
+// ============================================================================
+// STORE MODELS
+// ============================================================================
 
-  @@map("notifications")                                     // Database table name
+model StoreTheme {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  preview     String?
+  css         String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  sellers SellerProfile[]
+
+  @@map("store_themes")
+}
+
+model Store {
+  id           String   @id @default(cuid())
+  name         String
+  description  String?
+  address      String
+  city         String
+  state        String
+  country      String
+  postalCode   String
+  latitude     Float
+  longitude    Float
+  phone        String?
+  email        String?
+  website      String?
+  openingHours Json?
+  isActive     Boolean  @default(false)
+  isVerified   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  products     Product[]
+  storeMembers StoreMember[]
+
+  sellerId String?
+  seller   SellerProfile? @relation(fields: [sellerId], references: [id])
+
+  @@map("stores")
+}
+
+model StoreMember {
+  id        String         @id @default(cuid())
+  storeId   String
+  store     Store          @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sellerId  String?
+  seller    SellerProfile? @relation(fields: [sellerId], references: [id])
+  role      StoreRole      @default(STAFF)
+  isActive  Boolean        @default(true)
+  joinedAt  DateTime       @default(now())
+  invitedBy String?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@unique([storeId, userId])
+  @@map("store_members")
+}
+
+enum StoreRole {
+  OWNER
+  CO_OWNER
+  MANAGER
+  STAFF
+}
+
+// ============================================================================
+// CATEGORY MODELS
+// ============================================================================
+
+model MainCategory {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  image       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  categories Category[]
+  products   Product[]
+
+  @@map("main_categories")
+}
+
+model Category {
+  id             Int      @id @default(autoincrement())
+  name           String
+  description    String?
+  image          String?
+  mainCategoryId Int
+  mainCategory   MainCategory @relation(fields: [mainCategoryId], references: [id], onDelete: Cascade)
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  subcategories Subcategory[]
+  products      Product[]
+
+  @@map("categories")
+}
+
+model Subcategory {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  image       String?
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  products    Product[]
+
+  @@map("subcategories")
+}
+
+// ============================================================================
+// PRODUCT MODELS
+// ============================================================================
+
+model Product {
+  id             String         @id @default(cuid())
+  storeId        String
+  store          Store          @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  mainCategoryId Int?
+  mainCategory   MainCategory?  @relation(fields: [mainCategoryId], references: [id])
+  subcategoryId  Int?
+  subcategory    Subcategory?   @relation(fields: [subcategoryId], references: [id])
+  categoryId     Int?
+  category       Category?      @relation(fields: [categoryId], references: [id])
+  sellerId       String?
+  seller         SellerProfile? @relation(fields: [sellerId], references: [id])
+  name           String
+  description    String?
+  price          Decimal        @db.Decimal(10, 2)
+  comparePrice   Decimal?       @db.Decimal(10, 2)
+  cost           Decimal?       @db.Decimal(10, 2)
+  sku            String?
+  barcode        String?
+  weight         Float?
+  dimensions     Json?
+  images         Json
+  isActive       Boolean        @default(true)
+  isFeatured     Boolean        @default(false)
+  stock          Int            @default(0)
+  minStock       Int            @default(0)
+  maxStock       Int?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  orderItems OrderItem[]
+  reviews    Review[]
+  wishlist   WishlistItem[]
+  cart       CartItem[]
+
+  @@map("products")
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  buyerId    String
+  buyer      User     @relation(fields: [buyerId], references: [id])
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  rating     Int
+  comment    String?
+  images     Json?
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([buyerId, productId])
+  @@map("reviews")
+}
+
+// ============================================================================
+// ORDER MODELS
+// ============================================================================
+
+model Order {
+  id        String        @id @default(cuid())
+  buyerId   String
+  buyer     User          @relation(fields: [buyerId], references: [id])
+  sellerId  String
+  seller    SellerProfile @relation(fields: [sellerId], references: [id])
+  status    OrderStatus   @default(PENDING)
+  total     Decimal       @db.Decimal(10, 2)
+  subtotal  Decimal       @db.Decimal(10, 2)
+  tax       Decimal       @db.Decimal(10, 2)
+  shipping  Decimal       @db.Decimal(10, 2)
+  discount  Decimal       @db.Decimal(10, 2)
+  notes     String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  items             OrderItem[]
+  shippingAddress   Address     @relation(fields: [shippingAddressId], references: [id])
+  shippingAddressId String
+
+  @@map("orders")
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Decimal  @db.Decimal(10, 2)
+  total     Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+
+  @@map("order_items")
+}
+
+// ============================================================================
+// SHOPPING MODELS
+// ============================================================================
+
+model CartItem {
+  id        String       @id @default(cuid())
+  buyerId   String
+  buyer     BuyerProfile @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@unique([buyerId, productId])
+  @@map("cart_items")
+}
+
+model WishlistItem {
+  id        String       @id @default(cuid())
+  buyerId   String
+  buyer     BuyerProfile @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@unique([buyerId, productId])
+  @@map("wishlist_items")
+}
+
+// ============================================================================
+// ADDRESS MODELS
+// ============================================================================
+
+model Address {
+  id         String      @id @default(cuid())
+  userId     String
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type       AddressType @default(SHIPPING)
+  name       String
+  phone      String
+  address    String
+  city       String
+  state      String
+  country    String
+  postalCode String
+  isDefault  Boolean     @default(false)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  orders Order[]
+
+  @@map("addresses")
+}
+
+enum AddressType {
+  SHIPPING
+  BILLING
+}
+
+// ============================================================================
+// NOTIFICATION MODELS
+// ============================================================================
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  data      Json?
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
 }

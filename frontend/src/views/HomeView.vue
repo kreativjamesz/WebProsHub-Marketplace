@@ -1,81 +1,37 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
 import SafeImage from '@/components/ui/SafeImage.vue'
+import { useMarketplaceStore } from '@/stores/marketplace'
 
 const router = useRouter()
+const marketplaceStore = useMarketplaceStore()
 
 // State
-const featuredCategories = ref([
-  {
-    id: '1',
-    name: 'Electronics',
-    icon: '/category-electronics.jpg',
-    productCount: 1247
-  },
-  {
-    id: '2',
-    name: 'Fashion',
-    icon: '/category-fashion.jpg',
-    productCount: 892
-  },
-  {
-    id: '3',
-    name: 'Home & Garden',
-    icon: '/category-home.jpg',
-    productCount: 654
-  },
-  {
-    id: '4',
-    name: 'Sports',
-    icon: '/category-sports.jpg',
-    productCount: 456
-  }
-])
+const featuredProducts = ref<any[]>([])
+const loading = ref({
+  categories: false,
+  products: false
+})
 
-const featuredProducts = ref([
-  {
-    id: '1',
-    name: 'Premium Wireless Headphones',
-    price: 199.99,
-    rating: 4.5,
-    reviewCount: 128,
-    image: '/product-headphones.jpg',
-    store: 'TechStore'
-  },
-  {
-    id: '2',
-    name: 'Organic Cotton T-Shirt',
-    price: 29.99,
-    rating: 4.8,
-    reviewCount: 89,
-    image: '/product-tshirt.jpg',
-    store: 'FashionHub'
-  },
-  {
-    id: '3',
-    name: 'Smart Home Security Camera',
-    price: 149.99,
-    rating: 4.6,
-    reviewCount: 203,
-    image: '/product-camera.jpg',
-    store: 'SmartHome'
-  },
-  {
-    id: '4',
-    name: 'Professional Yoga Mat',
-    price: 49.99,
-    rating: 4.7,
-    reviewCount: 156,
-    image: '/product-yoga.jpg',
-    store: 'FitnessPro'
-  }
-])
+// Computed properties for real data
+const featuredCategories = computed(() => {
+  return marketplaceStore.mainCategories.map(cat => ({
+    id: cat.id,
+    name: cat.name,
+    icon: cat.image || '/category-placeholder.jpg',
+    productCount: marketplaceStore.getProductsByMainCategory(cat.id).length,
+    description: cat.description
+  }))
+})
+
+const totalProducts = computed(() => marketplaceStore.products.length)
+const totalStores = computed(() => marketplaceStore.stores.length)
 
 // Methods
-const navigateToCategory = (categoryId: string) => {
-  router.push(`/marketplace?category=${categoryId}`)
+const navigateToCategory = (categoryId: number) => {
+  router.push(`/marketplace?mainCategory=${categoryId}`)
 }
 
 const viewProduct = (productId: string) => {
@@ -97,9 +53,32 @@ const isInWishlist = (productId: string) => {
   return false
 }
 
+// Load data from database
+const loadHomeData = async () => {
+  try {
+    loading.value.categories = true
+    loading.value.products = true
+
+    // Load categories and products in parallel
+    await Promise.all([
+      marketplaceStore.fetchCategories(),
+      marketplaceStore.fetchProducts({ limit: 8, featured: true })
+    ])
+
+    // Get featured products
+    featuredProducts.value = marketplaceStore.products.slice(0, 8)
+  } catch (error) {
+    console.error('Error loading home data:', error)
+    toast.error('Failed to load homepage data')
+  } finally {
+    loading.value.categories = false
+    loading.value.products = false
+  }
+}
+
 // Lifecycle
 onMounted(() => {
-  // Load featured data
+  loadHomeData()
 })
 </script>
 
@@ -192,7 +171,17 @@ onMounted(() => {
           </p>
         </div>
         
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <!-- Loading state for categories -->
+        <div v-if="loading.categories" class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div v-for="i in 4" :key="i" class="bg-card rounded-lg shadow-sm p-6 text-center animate-pulse">
+            <div class="w-16 h-16 bg-muted rounded-lg mx-auto mb-4"></div>
+            <div class="h-4 bg-muted rounded mb-2"></div>
+            <div class="h-3 bg-muted rounded"></div>
+          </div>
+        </div>
+        
+        <!-- Real categories from database -->
+        <div v-else class="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div
             v-for="category in featuredCategories"
             :key="category.id"
@@ -203,8 +192,8 @@ onMounted(() => {
               <SafeImage
                 :src="category.icon"
                 :alt="category.name"
-                class="w-full h-full rounded-lg"
-                object-fit="cover"
+                class="w-full h-full rounded-lg object-cover"
+                fallback="/category-placeholder.jpg"
               />
             </div>
             <h3 class="font-semibold text-foreground mb-2">{{ category.name }}</h3>
@@ -234,7 +223,20 @@ onMounted(() => {
           </router-link>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Loading state for products -->
+        <div v-if="loading.products" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div v-for="i in 4" :key="i" class="bg-card rounded-lg shadow-sm border border-border animate-pulse">
+            <div class="w-full h-48 bg-muted rounded-t-lg"></div>
+            <div class="p-4">
+              <div class="h-4 bg-muted rounded mb-2"></div>
+              <div class="h-3 bg-muted rounded mb-3"></div>
+              <div class="h-8 bg-muted rounded"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Real products from database -->
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div
             v-for="product in featuredProducts"
             :key="product.id"
@@ -243,10 +245,10 @@ onMounted(() => {
           >
             <div class="relative">
               <SafeImage
-                :src="product.image"
+                :src="product.images?.[0] || '/product-placeholder.jpg'"
                 :alt="product.name"
-                class="w-full h-48 rounded-t-lg"
-                object-fit="cover"
+                class="w-full h-48 rounded-t-lg object-cover"
+                fallback="/product-placeholder.jpg"
               />
               <div class="absolute top-2 right-2">
                 <button
@@ -267,25 +269,25 @@ onMounted(() => {
               </h3>
               <div class="flex items-center justify-between mb-3">
                 <span class="text-lg font-bold text-foreground">
-                  ${{ product.price.toFixed(2) }}
+                  ₱{{ Number(product.price).toFixed(2) }}
                 </span>
                 <div class="flex items-center space-x-1">
                   <svg
                     v-for="star in 5"
                     :key="star"
-                    :class="star <= product.rating ? 'text-yellow-400' : 'text-muted'"
+                    :class="star <= 4 ? 'text-yellow-400' : 'text-muted'"
                     class="w-4 h-4"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
-                  <span class="text-sm text-muted-foreground">({{ product.reviewCount }})</span>
+                  <span class="text-sm text-muted-foreground">({{ product.reviews?.length || 0 }})</span>
                 </div>
               </div>
               
               <div class="text-sm text-muted-foreground mb-3">
-                {{ product.store }}
+                {{ product.store?.name || 'Store' }}
               </div>
               
               <button
@@ -295,6 +297,31 @@ onMounted(() => {
                 Add to Cart
               </button>
             </div>
+          </div>
+        </div>
+        
+        <!-- No products message -->
+        <div v-if="!loading.products && featuredProducts.length === 0" class="text-center py-12">
+          <p class="text-muted-foreground text-lg">No featured products available at the moment.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Marketplace Stats -->
+    <div class="py-16 bg-muted">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          <div>
+            <div class="text-4xl font-bold text-primary mb-2">{{ totalProducts }}</div>
+            <p class="text-muted-foreground">Products Available</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-primary mb-2">{{ totalStores }}</div>
+            <p class="text-muted-foreground">Active Stores</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-primary mb-2">{{ featuredCategories.length }}</div>
+            <p class="text-muted-foreground">Product Categories</p>
           </div>
         </div>
       </div>

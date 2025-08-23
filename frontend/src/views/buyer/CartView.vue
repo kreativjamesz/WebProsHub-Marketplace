@@ -242,9 +242,6 @@ const cartItems = ref<CartItem[]>([])
 const promoCode = ref('')
 const recentlyViewed = ref<Product[]>([])
 
-// Use centralized mock data
-const mockRecentlyViewed = mockProducts.slice(2, 4) // AirPods Pro and iPad Air
-
 // Computed properties
 const totalItems = computed(() => {
   return cartItems.value.reduce((total, item) => total + item.quantity, 0)
@@ -310,7 +307,7 @@ const loadCartData = async () => {
     
     // Using mock data for now
     cartItems.value = mockCartItems
-    recentlyViewed.value = mockRecentlyViewed
+    recentlyViewed.value = []
   } catch (error) {
     console.error('Error loading cart data:', error)
   }
