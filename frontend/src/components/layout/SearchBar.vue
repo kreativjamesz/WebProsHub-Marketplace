@@ -1,102 +1,112 @@
 <template>
   <div class="flex-1 max-w-lg mx-8 hidden lg:block">
     <div class="relative">
-      <!-- Main Search Input -->
-      <div class="relative">
-        <SearchIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+      <!-- Main Search Input with Universe Theme -->
+      <div class="relative group">
+        <SearchIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-universe-primary pointer-events-none transition-all duration-300 group-hover:text-universe-accent group-hover:scale-110" />
         <Input
           v-model="searchValue"
           type="text"
           placeholder="Search for products, stores, or categories..."
-          class="w-full pl-10 pr-12 py-2 h-10 text-sm bg-background border-border focus:border-primary transition-all duration-200"
+          class="w-full pl-10 pr-12 py-2 h-10 text-sm glass-universe border-universe-border/30 focus:border-universe-primary focus:ring-2 focus:ring-universe-primary/30 transition-all duration-300 placeholder:text-muted-foreground/70 hover:border-universe-border/50 focus:shadow-lg focus:shadow-universe-primary/20"
           @focus="showSuggestions = true"
           @keydown="handleKeydown"
           @keyup.enter="handleSearch"
           aria-label="Search for products, stores, or categories"
         />
         
-        <!-- Clear Button -->
+        <!-- Glow Effect for Search Input -->
+        <div class="absolute inset-0 rounded-md bg-gradient-to-r from-universe-primary/10 via-universe-secondary/5 to-universe-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+        
+        <!-- Clear Button with Universe Theme -->
         <button
           v-if="searchValue"
           @click="clearSearch"
-          class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 hover:bg-muted rounded-sm transition-colors duration-200"
+          class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 hover:bg-universe-primary/10 rounded-sm transition-all duration-300 hover:scale-110"
           aria-label="Clear search"
         >
-          <XIcon class="h-4 w-4 text-muted-foreground hover:text-foreground" />
+          <XIcon class="h-4 w-4 text-universe-primary hover:text-universe-accent transition-colors duration-300" />
         </button>
       </div>
 
-      <!-- Search Suggestions Dropdown -->
+      <!-- Search Suggestions Dropdown with Universe Theme -->
       <Transition
-        enter-active-class="transition ease-out duration-200"
-        enter-from-class="opacity-0 translate-y-1"
-        enter-to-class="opacity-100 translate-y-0"
-        leave-active-class="transition ease-in duration-150"
-        leave-from-class="opacity-100 translate-y-0"
-        leave-to-class="opacity-0 translate-y-1"
+        enter-active-class="transition ease-out duration-300"
+        enter-from-class="opacity-0 translate-y-2 scale-95"
+        enter-to-class="opacity-100 translate-y-0 scale-100"
+        leave-active-class="transition ease-in duration-200"
+        leave-from-class="opacity-100 translate-y-0 scale-100"
+        leave-to-class="opacity-0 translate-y-2 scale-95"
       >
         <div
           v-if="showSuggestions && (searchValue || recentSearches.length > 0)"
-          class="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-lg z-50 max-h-96 overflow-hidden"
+          class="absolute top-full left-0 right-0 mt-2 card-cosmic border-universe-border/40 shadow-2xl shadow-universe-primary/20 z-50 max-h-96 overflow-hidden backdrop-blur-xl"
         >
           <!-- Search Suggestions -->
-          <div v-if="searchValue && filteredSuggestions.length > 0" class="p-2">
-            <div class="text-xs font-medium text-muted-foreground uppercase tracking-wider px-2 py-1 mb-2">
+          <div v-if="searchValue && filteredSuggestions.length > 0" class="p-3">
+            <div class="text-xs font-medium text-universe-primary uppercase tracking-wider px-2 py-1 mb-3 flex items-center">
+              <div class="w-2 h-2 bg-universe-primary rounded-full mr-2 animate-pulse"></div>
               Quick Search
             </div>
-            <div class="space-y-1">
+            <div class="space-y-2">
               <button
                 v-for="suggestion in filteredSuggestions.slice(0, 5)"
                 :key="suggestion.id"
                 @click="selectSuggestion(suggestion)"
-                class="w-full flex items-center p-2 rounded-md hover:bg-accent transition-colors duration-200 text-left group"
+                class="w-full flex items-center p-3 rounded-lg hover:bg-universe-primary/10 transition-all duration-300 text-left group border border-transparent hover:border-universe-border/30 hover:shadow-lg hover:shadow-universe-primary/20"
               >
-                <component :is="suggestion.icon" class="h-4 w-4 text-muted-foreground mr-3" />
-                <div class="flex-1">
-                  <div class="font-medium text-foreground">{{ suggestion.label }}</div>
-                  <div class="text-xs text-muted-foreground">{{ suggestion.description }}</div>
+                <div class="p-2 rounded-full bg-universe-primary/10 group-hover:bg-universe-primary/20 transition-all duration-300 mr-3">
+                  <component :is="suggestion.icon" class="h-4 w-4 text-universe-primary group-hover:text-universe-accent transition-all duration-300" />
                 </div>
-                <ArrowRightIcon class="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors duration-200" />
+                <div class="flex-1">
+                  <div class="font-medium text-foreground group-hover:text-universe-primary transition-colors duration-300">{{ suggestion.label }}</div>
+                  <div class="text-xs text-muted-foreground group-hover:text-universe-primary/70 transition-colors duration-300">{{ suggestion.description }}</div>
+                </div>
+                <ArrowRightIcon class="h-4 w-4 text-universe-primary/50 group-hover:text-universe-primary group-hover:translate-x-1 transition-all duration-300" />
               </button>
             </div>
           </div>
 
           <!-- Recent Searches -->
-          <div v-if="recentSearches.length > 0" class="p-2 border-t border-border">
-            <div class="flex items-center justify-between mb-2">
-              <div class="text-xs font-medium text-muted-foreground uppercase tracking-wider px-2 py-1">
+          <div v-if="recentSearches.length > 0" class="p-3 border-t border-universe-border/20">
+            <div class="flex items-center justify-between mb-3">
+              <div class="text-xs font-medium text-universe-secondary uppercase tracking-wider px-2 py-1 flex items-center">
+                <div class="w-2 h-2 bg-universe-secondary rounded-full mr-2 animate-pulse"></div>
                 Recent Searches
               </div>
               <button
                 @click="clearRecentSearches"
-                class="text-xs text-muted-foreground hover:text-foreground transition-colors duration-200"
+                class="text-xs text-universe-secondary/70 hover:text-universe-secondary transition-all duration-300 hover:scale-105"
               >
                 Clear All
               </button>
             </div>
-            <div class="space-y-1">
+            <div class="space-y-2">
               <button
                 v-for="search in recentSearches.slice(0, 3)"
                 :key="search"
                 @click="selectRecentSearch(search)"
-                class="w-full flex items-center p-2 rounded-md hover:bg-accent transition-colors duration-200 text-left group"
+                class="w-full flex items-center p-3 rounded-lg hover:bg-universe-secondary/10 transition-all duration-300 text-left group border border-transparent hover:border-universe-border/30"
               >
-                <ClockIcon class="h-4 w-4 text-muted-foreground mr-3 group-hover:text-primary transition-colors duration-200" />
-                <span class="flex-1 text-sm text-foreground">{{ search }}</span>
+                <div class="p-2 rounded-full bg-universe-secondary/10 group-hover:bg-universe-secondary/20 transition-all duration-300 mr-3">
+                  <ClockIcon class="h-4 w-4 text-universe-secondary group-hover:text-universe-secondary/80 transition-all duration-300" />
+                </div>
+                <span class="flex-1 text-sm text-foreground group-hover:text-universe-secondary transition-colors duration-300">{{ search }}</span>
                 <button
                   @click.stop="removeRecentSearch(search)"
-                  class="opacity-0 group-hover:opacity-100 p-1 hover:bg-muted rounded-sm transition-all duration-200"
+                  class="opacity-0 group-hover:opacity-100 p-1 hover:bg-universe-secondary/10 rounded-sm transition-all duration-300 hover:scale-110"
                   aria-label="Remove recent search"
                 >
-                  <XIcon class="h-3 w-3 text-muted-foreground hover:text-destructive" />
+                  <XIcon class="h-3 w-3 text-universe-secondary/70 hover:text-universe-secondary" />
                 </button>
               </button>
             </div>
           </div>
 
           <!-- Popular Searches -->
-          <div v-if="!searchValue" class="p-2 border-t border-border">
-            <div class="text-xs font-medium text-muted-foreground uppercase tracking-wider px-2 py-1 mb-2">
+          <div v-if="!searchValue" class="p-3 border-t border-universe-border/20">
+            <div class="text-xs font-medium text-universe-accent uppercase tracking-wider px-2 py-1 mb-3 flex items-center">
+              <div class="w-2 h-2 bg-universe-accent rounded-full mr-2 animate-pulse"></div>
               Popular Searches
             </div>
             <div class="flex flex-wrap gap-2">
@@ -104,7 +114,7 @@
                 v-for="tag in popularTags"
                 :key="tag"
                 @click="selectPopularTag(tag)"
-                class="px-3 py-1 text-xs bg-muted hover:bg-primary hover:text-primary-foreground text-muted-foreground rounded-full transition-all duration-200"
+                class="px-3 py-1 text-xs glass-universe hover:bg-universe-accent/20 hover:text-universe-accent text-muted-foreground rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-universe-accent/20 border border-universe-border/20 hover:border-universe-accent/40"
               >
                 {{ tag }}
               </button>

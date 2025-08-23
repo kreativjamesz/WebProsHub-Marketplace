@@ -1,14 +1,27 @@
 <template>
   <header
-    class="bg-background text-foreground shadow-sm border-b border-border sticky top-0 z-40"
+    class="universe-header sticky top-0 z-40 backdrop-blur-xl border-b border-universe-border/20"
     role="banner"
   >
-    <div class="container mx-auto px-4">
-      <div class="flex items-center justify-between h-16">
-        <!-- Logo and Brand -->
-        <AppLogo :solo="isMobile" />
+    <!-- Animated Universe Background -->
+    <div class="universe-bg">
+      <div class="stars"></div>
+      <div class="nebula"></div>
+      <div class="cosmic-dust"></div>
+    </div>
+    
+    <!-- Glow Effect Overlay -->
+    <div class="header-glow"></div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo and Brand with Glow -->
+        <div class="logo-container">
+          <AppLogo :solo="isMobile" />
+          <div class="logo-glow"></div>
+        </div>
 
-        <!-- Search Bar -->
+        <!-- Search Bar with Universe Theme -->
         <SearchBar
           v-model="searchQuery"
           :show-mobile-search="showMobileSearch"
@@ -16,8 +29,8 @@
           @toggle-mobile="showMobileSearch = !showMobileSearch"
         />
 
-        <!-- User Section -->
-        <div class="flex items-center space-x-4">
+        <!-- User Section with Glowing Effects -->
+        <div class="flex items-center space-x-6">
           <!-- Mobile Search Toggle -->
           <MobileSearchToggle
             v-if="isMobile"
@@ -25,14 +38,23 @@
             @toggle="showMobileSearch = !showMobileSearch"
           />
 
-          <!-- Color Theme -->
-          <ColorThemeDropdown />
+          <!-- Color Theme with Glow -->
+          <div class="theme-container">
+            <ColorThemeDropdown />
+            <div class="theme-glow"></div>
+          </div>
 
-          <!-- Wishlist -->
-          <WishlistButton :count="wishlistCount" />
+          <!-- Wishlist with Pulse Effect -->
+          <div class="wishlist-container">
+            <WishlistButton :count="wishlistCount" />
+            <div class="wishlist-pulse"></div>
+          </div>
 
-          <!-- Shopping Cart -->
-          <CartButton />
+          <!-- Shopping Cart with Glow -->
+          <div class="cart-container">
+            <CartButton />
+            <div class="cart-glow"></div>
+          </div>
 
           <!-- User Menu or Auth Buttons -->
           <UserSection
@@ -51,21 +73,21 @@
           />
         </div>
       </div>
-
-      <!-- Mobile Search -->
-      <MobileSearch
-        v-if="showMobileSearch && isMobile"
-        v-model="searchQuery"
-        @search="handleSearch"
-      />
-
-      <!-- Mobile Menu -->
-      <MobileMenu
-        v-if="showMobileMenu && isMobile"
-        :is-authenticated="authStore.isAuthenticated"
-        @close="showMobileMenu = false"
-      />
     </div>
+
+    <!-- Mobile Search -->
+    <MobileSearch
+      v-if="showMobileSearch && isMobile"
+      v-model="searchQuery"
+      @search="handleSearch"
+    />
+
+    <!-- Mobile Menu -->
+    <MobileMenu
+      v-if="showMobileMenu && isMobile"
+      :is-authenticated="authStore.isAuthenticated"
+      @close="showMobileMenu = false"
+    />
   </header>
 </template>
 
@@ -156,6 +178,306 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/* Universe Header Base Styles */
+.universe-header {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.8) 0%,
+    rgba(30, 41, 59, 0.6) 50%,
+    rgba(51, 65, 85, 0.8) 100%
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated Universe Background */
+.universe-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Stars Animation */
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, #ffffff, transparent),
+    radial-gradient(2px 2px at 40px 70px, #ffffff, transparent),
+    radial-gradient(1px 1px at 90px 40px, #ffffff, transparent),
+    radial-gradient(1px 1px at 130px 80px, #ffffff, transparent),
+    radial-gradient(2px 2px at 160px 30px, #ffffff, transparent);
+  background-repeat: repeat;
+  background-size: 200px 100px;
+  animation: twinkle 8s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* Nebula Effect */
+.nebula {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(147, 51, 234, 0.1) 0%,
+    rgba(79, 70, 229, 0.05) 40%,
+    rgba(236, 72, 153, 0.03) 70%,
+    transparent 100%
+  );
+  animation: nebula-drift 20s ease-in-out infinite;
+}
+
+@keyframes nebula-drift {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.2); }
+}
+
+/* Cosmic Dust */
+.cosmic-dust {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(1px 1px at 50px 50px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 100px 100px, rgba(255, 255, 255, 0.2), transparent),
+    radial-gradient(1px 1px at 150px 150px, rgba(255, 255, 255, 0.4), transparent);
+  background-size: 200px 200px;
+  animation: dust-float 15s linear infinite;
+}
+
+@keyframes dust-float {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-200px); }
+}
+
+/* Header Glow Effect */
+.header-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(147, 51, 234, 0.1) 0%,
+    transparent 50%,
+    rgba(79, 70, 229, 0.05) 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Logo Container with Glow */
+.logo-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.logo-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 60px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(147, 51, 234, 0.3) 0%,
+    rgba(79, 70, 229, 0.2) 50%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  filter: blur(20px);
+  animation: logo-pulse 4s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes logo-pulse {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* Theme Container with Glow */
+.theme-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.theme-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(
+    circle at center,
+    rgba(236, 72, 153, 0.2) 0%,
+    rgba(147, 51, 234, 0.1) 50%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  filter: blur(15px);
+  animation: theme-rotate 6s linear infinite;
+  z-index: -1;
+}
+
+@keyframes theme-rotate {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Wishlist Container with Pulse */
+.wishlist-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.wishlist-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(
+    circle at center,
+    rgba(239, 68, 68, 0.3) 0%,
+    rgba(239, 68, 68, 0.1) 50%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  filter: blur(10px);
+  animation: wishlist-pulse 2s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes wishlist-pulse {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+}
+
+/* Cart Container with Glow */
+.cart-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cart-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(
+    circle at center,
+    rgba(34, 197, 94, 0.3) 0%,
+    rgba(34, 197, 94, 0.1) 50%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  filter: blur(15px);
+  animation: cart-bounce 3s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes cart-bounce {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* Border with Universe Theme */
+.border-universe-border {
+  border-color: rgba(147, 51, 234, 0.3);
+}
+
+/* Enhanced Hover Effects */
+.universe-header *:hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .universe-header {
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+  }
+  
+  .logo-glow {
+    width: 80px;
+    height: 40px;
+  }
+  
+  .theme-glow,
+  .cart-glow {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .wishlist-pulse {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+/* Dark Mode Enhancements */
+.dark .universe-header {
+  background: linear-gradient(
+    135deg,
+    rgba(2, 6, 23, 0.9) 0%,
+    rgba(15, 23, 42, 0.7) 50%,
+    rgba(30, 41, 59, 0.9) 100%
+  );
+}
+
+.dark .stars {
+  opacity: 0.8;
+}
+
+.dark .nebula {
+  opacity: 0.6;
+}
+
+.dark .cosmic-dust {
+  opacity: 0.7;
+}
+
+/* Smooth transitions for theme switching */
+.universe-header,
+.universe-header * {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus styles for better accessibility */
+.focus-visible:focus-visible {
+  outline: 2px solid rgba(147, 51, 234, 0.6);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 /* Custom scrollbar for mobile menu */
 .mobile-menu::-webkit-scrollbar {
   width: 4px;
@@ -166,18 +488,13 @@ onUnmounted(() => {
 }
 
 .mobile-menu::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted) / 0.5);
+  background: rgba(147, 51, 234, 0.3);
   border-radius: 2px;
 }
 
-/* Smooth transitions */
-.transition-all {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Focus styles for better accessibility */
-.focus-visible:focus-visible {
-  outline: 2px solid hsl(var(--ring));
-  outline-offset: 2px;
+/* Glass morphism effect for child components */
+.universe-header > * {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 </style>

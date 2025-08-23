@@ -1,10 +1,10 @@
 <template>
-  <div class="py-8">
+  <div class="py-8 bg-background text-foreground">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">My Orders</h1>
-        <p class="mt-2 text-gray-600">Track your orders and view order history</p>
+        <h1 class="text-3xl font-bold text-foreground">My Orders</h1>
+        <p class="mt-2 text-muted-foreground">Track your orders and view order history</p>
       </div>
 
       <!-- Filters and Search -->
@@ -14,13 +14,13 @@
             v-model="searchQuery"
             type="text"
             placeholder="Search orders by ID, store name, or product..."
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground placeholder-muted-foreground transition-colors duration-200"
           />
         </div>
         <div class="flex gap-2">
           <select
             v-model="statusFilter"
-            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground transition-colors duration-200"
           >
             <option value="">All Statuses</option>
             <option value="PENDING">Pending</option>
@@ -31,7 +31,7 @@
           </select>
           <select
             v-model="sortBy"
-            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground transition-colors duration-200"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
@@ -46,13 +46,13 @@
         <div
           v-for="order in filteredOrders"
           :key="order.id"
-          class="bg-white rounded-lg shadow-md overflow-hidden"
+          class="bg-card rounded-lg shadow-md overflow-hidden border border-border"
         >
           <!-- Order Header -->
-          <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <div class="px-6 py-4 bg-muted/50 border-b border-border">
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-4">
-                <h3 class="text-lg font-medium text-gray-900">Order #{{ order.id }}</h3>
+                <h3 class="text-lg font-medium text-foreground">Order #{{ order.id }}</h3>
                 <span
                   class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
                   :class="getStatusClass(order.status)"
@@ -61,14 +61,14 @@
                 </span>
               </div>
               <div class="text-right">
-                <p class="text-sm text-gray-600">{{ formatDate(new Date(order.createdAt)) }}</p>
-                <p class="text-lg font-semibold text-gray-900">₱{{ order.total.toFixed(2) }}</p>
+                <p class="text-sm text-muted-foreground">{{ formatDate(new Date(order.createdAt)) }}</p>
+                <p class="text-lg font-semibold text-foreground">₱{{ order.total.toFixed(2) }}</p>
               </div>
             </div>
           </div>
 
           <!-- Order Items -->
-          <div class="divide-y divide-gray-200">
+          <div class="divide-y divide-border">
             <div
               v-for="item in order.items"
               :key="item.id"
@@ -76,7 +76,7 @@
             >
               <!-- Product Image -->
               <div class="flex-shrink-0">
-                <div class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden">
+                <div class="w-16 h-16 bg-muted rounded-lg overflow-hidden">
                   <img
                     v-if="item.product.images && item.product.images.length > 0"
                     :src="item.product.images[0]"
@@ -85,10 +85,10 @@
                   />
                   <div
                     v-else
-                    class="w-full h-16 bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center"
+                    class="w-full h-16 bg-gradient-to-br from-muted to-muted/80 flex items-center justify-center"
                   >
                     <svg
-                      class="w-6 h-6 text-gray-500"
+                      class="w-6 h-6 text-muted-foreground"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -106,19 +106,19 @@
 
               <!-- Product Info -->
               <div class="flex-1 min-w-0">
-                <h4 class="text-sm font-medium text-gray-900 mb-1">{{ item.product.name }}</h4>
-                <p class="text-sm text-gray-600">Quantity: {{ item.quantity }}</p>
-                <p class="text-sm text-gray-500">
+                <h4 class="text-sm font-medium text-foreground mb-1">{{ item.product.name }}</h4>
+                <p class="text-sm text-muted-foreground">Quantity: {{ item.quantity }}</p>
+                <p class="text-sm text-muted-foreground">
                   Store: {{ order.sellerId }}
                 </p>
               </div>
 
               <!-- Price -->
               <div class="text-right">
-                <p class="text-sm font-medium text-gray-900">
+                <p class="text-sm font-medium text-foreground">
                   ₱{{ item.product.price.toFixed(2) }}
                 </p>
-                <p class="text-sm text-gray-600">
+                <p class="text-sm text-muted-foreground">
                   ₱{{ (item.product.price * item.quantity).toFixed(2) }} total
                 </p>
               </div>
@@ -126,9 +126,9 @@
           </div>
 
           <!-- Order Actions -->
-          <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+          <div class="px-6 py-4 bg-muted/50 border-t border-border">
             <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-4 text-sm text-gray-600">
+              <div class="flex items-center space-x-4 text-sm text-muted-foreground">
                 <span>{{ order.items.length }} items</span>
                 <span>•</span>
                 <span>Ordered {{ formatDate(new Date(order.createdAt)) }}</span>
@@ -138,7 +138,7 @@
               <div class="flex space-x-3">
                 <router-link
                   :to="`/buyer/orders/${order.id}`"
-                  class="px-4 py-2 text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50 transition-colors duration-200 font-medium"
+                  class="px-4 py-2 text-primary border border-primary rounded-md hover:bg-primary/10 transition-colors duration-200 font-medium"
                 >
                   View Details
                 </router-link>
@@ -154,7 +154,7 @@
                 <button
                   v-if="order.status === 'PENDING'"
                   @click="cancelOrder(order.id)"
-                  class="px-4 py-2 text-red-600 border border-red-600 rounded-md hover:bg-red-50 transition-colors duration-200 font-medium"
+                  class="px-4 py-2 text-destructive border border-destructive rounded-md hover:bg-destructive/10 transition-colors duration-200 font-medium"
                 >
                   Cancel Order
                 </button>
@@ -166,7 +166,7 @@
 
       <!-- Empty State -->
       <div v-else class="text-center py-12">
-        <div class="text-gray-400 mb-4">
+        <div class="text-muted-foreground mb-4">
           <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               stroke-linecap="round"
@@ -176,11 +176,11 @@
             />
           </svg>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">No orders found</h3>
-        <p class="text-gray-500 mb-6">You haven't placed any orders yet.</p>
+        <h3 class="text-lg font-medium text-foreground mb-2">No orders found</h3>
+        <p class="text-muted-foreground mb-6">You haven't placed any orders yet.</p>
         <router-link
           to="/marketplace"
-          class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium"
+          class="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors duration-200 font-medium"
         >
           Start Shopping
         </router-link>
@@ -192,7 +192,7 @@
           <button
             @click="currentPage--"
             :disabled="currentPage === 1"
-            class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-md hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
           >
             Previous
           </button>
@@ -202,10 +202,10 @@
             :key="page"
             @click="currentPage = page"
             :class="[
-              'px-3 py-2 text-sm font-medium rounded-md',
+              'px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200',
               currentPage === page
-                ? 'bg-blue-600 text-white'
-                : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50',
+                ? 'bg-primary text-primary-foreground'
+                : 'text-muted-foreground bg-card border border-border hover:bg-accent',
             ]"
           >
             {{ page }}
@@ -214,7 +214,7 @@
           <button
             @click="currentPage++"
             :disabled="currentPage === totalPages"
-            class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-md hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
           >
             Next
           </button>
@@ -227,10 +227,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useColorMode } from '@vueuse/core'
 import type { Order } from '@/types/marketplace'
 import { mockOrders } from '@/mocks'
 
 const router = useRouter()
+
+// Theme
+const mode = useColorMode()
 
 // Reactive data
 const orders = ref<Order[]>([])
@@ -300,17 +304,17 @@ const visiblePages = computed(() => {
 const getStatusClass = (status: string) => {
   switch (status) {
     case 'DELIVERED':
-      return 'bg-green-100 text-green-800'
+      return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
     case 'IN_TRANSIT':
-      return 'bg-blue-100 text-blue-800'
+      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
     case 'PROCESSING':
-      return 'bg-yellow-100 text-yellow-800'
+      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'
     case 'PENDING':
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-muted text-muted-foreground'
     case 'CANCELLED':
-      return 'bg-red-100 text-red-800'
+      return 'bg-destructive/20 text-destructive dark:bg-destructive/10'
     default:
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-muted text-muted-foreground'
   }
 }
 
@@ -370,3 +374,20 @@ onMounted(() => {
   loadOrders()
 })
 </script>
+
+<style scoped>
+/* Dark mode adjustments for images */
+:global(.dark) img {
+  filter: brightness(0.9) contrast(1.1);
+}
+
+/* Smooth transitions for theme switching */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Enhanced hover effects for dark mode */
+:global(.dark) .hover\:bg-accent:hover {
+  background-color: hsl(var(--accent) / 0.1);
+}
+</style>

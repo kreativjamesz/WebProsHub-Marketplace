@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useColorMode } from '@vueuse/core'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
 import { useGuestCartStore } from '@/stores/guestCart'
@@ -18,6 +19,9 @@ const route = useRoute()
 const authStore = useAuthStore()
 const cartStore = useCartStore()
 const guestCartStore = useGuestCartStore()
+
+// Color mode management
+const mode = useColorMode()
 
 // Determine which layout to use based on route
 const currentLayout = computed(() => {
@@ -99,7 +103,7 @@ watch(() => authStore.isAuthenticated, async (isAuthenticated) => {
 </script>
 
 <template>
-  <div id="app" class="min-h-screen">
+  <div id="app" class="min-h-screen" :class="mode">
     <!-- Loading overlay -->
     <div v-if="!authStore.isInitialized" class="fixed inset-0 bg-background/90 flex items-center justify-center z-50">
       <div class="text-center">

@@ -252,7 +252,7 @@ watch(
 )
 
 const viewProduct = (productId: string) => {
-  router.push(`/products/${productId}`)
+  router.push(`/marketplace/products/${productId}`)
 }
 
 const toggleWishlist = (productId: string) => {

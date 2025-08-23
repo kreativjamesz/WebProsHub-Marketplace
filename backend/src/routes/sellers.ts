@@ -1,10 +1,9 @@
 import { Router, Request, Response } from 'express'
 import { body, validationResult } from 'express-validator'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '../prisma/client'
 import { authenticateToken, requireSeller } from '../middleware/auth'
 
 const router = Router()
-const prisma = new PrismaClient()
 
 // Validation middleware
 const validateSellerProfile = [
@@ -406,5 +405,222 @@ router.get('/orders', authenticateToken, requireSeller, async (req: Request, res
     res.status(500).json({ error: 'Internal server error' })
   }
 })
+
+// ============================================================================
+// DASHBOARD ENDPOINTS
+// ============================================================================
+
+// Get seller dashboard data
+router.get('/dashboard', authenticateToken, requireSeller, async (req: Request, res: Response) => {
+  try {
+    const sellerId = req.user!.userId
+    
+    // Get all dashboard data in parallel
+    const [stats, recentOrders, lowStockProducts] = await Promise.all([
+      getSellerStats(sellerId),
+      getRecentOrders(sellerId, 5),
+      getLowStockProducts(sellerId, 5)
+    ])
+
+    res.json({
+      stats,
+      recentOrders,
+      lowStockProducts
+    })
+  } catch (error) {
+    console.error('Get dashboard data error:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+// Get seller stats
+router.get('/dashboard/stats', authenticateToken, requireSeller, async (req: Request, res: Response) => {
+  try {
+    const sellerId = req.user!.userId
+    const stats = await getSellerStats(sellerId)
+    res.json(stats)
+  } catch (error) {
+    console.error('Get stats error:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+// Get recent orders
+router.get('/dashboard/recent-orders', authenticateToken, requireSeller, async (req: Request, res: Response) => {
+  try {
+    const sellerId = req.user!.userId
+    const { limit = 5 } = req.query
+    const orders = await getRecentOrders(sellerId, Number(limit))
+    res.json(orders)
+  } catch (error) {
+    console.error('Get recent orders error:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+// Get low stock products
+router.get('/dashboard/low-stock-products', authenticateToken, requireSeller, async (req: Request, res: Response) => {
+  try {
+    const sellerId = req.user!.userId
+    const { limit = 5 } = req.query
+    const products = await getLowStockProducts(sellerId, Number(limit))
+    res.json(products)
+  } catch (error) {
+    console.error('Get low stock products error:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+// Get sales performance
+router.get('/dashboard/sales-performance', authenticateToken, requireSeller, async (req: Request, res: Response) => {
+  try {
+    const sellerId = req.user!.userId
+    const { period = '7d' } = req.query
+    
+    // Calculate date range based on period
+    const now = new Date()
+    let startDate = new Date()
+    
+    switch (period) {
+      case '7d':
+        startDate.setDate(now.getDate() - 7)
+        break
+      case '30d':
+        startDate.setDate(now.getDate() - 30)
+        break
+      case '3m':
+        startDate.setMonth(now.getMonth() - 3)
+        break
+      case '1y':
+        startDate.setFullYear(now.getFullYear() - 1)
+        break
+      default:
+        startDate.setDate(now.getDate() - 7)
+    }
+
+    const salesData = await prisma.order.findMany({
+      where: {
+        sellerId,
+        createdAt: { gte: startDate },
+        status: { not: 'CANCELLED' }
+      },
+      select: {
+        total: true,
+        createdAt: true,
+        status: true
+      },
+      orderBy: { createdAt: 'asc' }
+    })
+
+    res.json({
+      period,
+      startDate,
+      endDate: now,
+      totalSales: salesData.reduce((sum, order) => sum + Number(order.total), 0),
+      totalOrders: salesData.length,
+      salesData
+    })
+  } catch (error) {
+    console.error('Get sales performance error:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+async function getSellerStats(sellerId: string) {
+  const now = new Date()
+  const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+  const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+
+  // Get current month stats
+  const currentMonthStats = await prisma.order.aggregate({
+    where: {
+      sellerId,
+      createdAt: { gte: thisMonth },
+      status: { not: 'CANCELLED' }
+    },
+    _sum: { total: true },
+    _count: true
+  })
+
+  // Get last month stats
+  const lastMonthStats = await prisma.order.aggregate({
+    where: {
+      sellerId,
+      createdAt: { gte: lastMonth, lt: thisMonth },
+      status: { not: 'CANCELLED' }
+    },
+    _sum: { total: true },
+    _count: true
+  })
+
+  // Get product stats
+  const productStats = await prisma.product.aggregate({
+    where: { sellerId, isActive: true },
+    _count: true
+  })
+
+  const lowStockProducts = await prisma.product.count({
+    where: {
+      sellerId,
+      isActive: true,
+      stock: { lte: 5 }
+    }
+  })
+
+  // Calculate growth percentages
+  const currentSales = Number(currentMonthStats._sum.total || 0)
+  const lastSales = Number(lastMonthStats._sum.total || 0)
+  const salesGrowth = lastSales > 0 ? ((currentSales - lastSales) / lastSales) * 100 : 0
+
+  const currentOrders = currentMonthStats._count
+  const lastOrders = lastMonthStats._count
+  const ordersGrowth = lastOrders > 0 ? ((currentOrders - lastOrders) / lastOrders) * 100 : 0
+
+  return {
+    totalSales: currentSales,
+    salesGrowth: Math.round(salesGrowth * 100) / 100,
+    totalOrders: currentOrders,
+    ordersGrowth: Math.round(ordersGrowth * 100) / 100,
+    activeProducts: productStats._count,
+    lowStockProducts,
+    newCustomers: 0, // TODO: Implement customer tracking
+    customersGrowth: 0 // TODO: Implement customer tracking
+  }
+}
+
+async function getRecentOrders(sellerId: string, limit: number) {
+  return await prisma.order.findMany({
+    where: { sellerId },
+    include: {
+      buyer: { select: { id: true, name: true, email: true } },
+      items: { include: { product: true } }
+    },
+    orderBy: { createdAt: 'desc' },
+    take: limit
+  })
+}
+
+async function getLowStockProducts(sellerId: string, limit: number) {
+  return await prisma.product.findMany({
+    where: {
+      sellerId,
+      isActive: true,
+      stock: { lte: 5 }
+    },
+    select: {
+      id: true,
+      name: true,
+      sku: true,
+      stock: true,
+      minStock: true
+    },
+    orderBy: { stock: 'asc' },
+    take: limit
+  })
+}
 
 export default router

@@ -21,7 +21,7 @@
           <div
             v-for="deal in featuredDeals"
             :key="deal.id"
-            class="bg-card border border-border rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+            class="bg-card border border-border rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
           >
             <div class="relative">
               <img :src="deal.image" :alt="deal.title" class="w-full h-48 object-cover" />
@@ -63,7 +63,7 @@
               <div class="flex items-center justify-between">
                 <div class="text-sm text-muted-foreground">Ends: {{ deal.endDate }}</div>
                 <button
-                  class="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
+                  class="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors duration-200"
                 >
                   Shop Now
                 </button>
@@ -80,7 +80,7 @@
           <div
             v-for="category in categoryDeals"
             :key="category.id"
-            class="bg-card border border-border rounded-lg p-6 text-center hover:shadow-lg transition-shadow duration-300"
+            class="bg-card border border-border rounded-lg p-6 text-center hover:shadow-lg transition-all duration-300"
           >
             <div
               class="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center"
@@ -92,7 +92,7 @@
             </h3>
             <p class="text-muted-foreground mb-4">{{ category.dealCount }} active deals</p>
             <button
-              class="bg-secondary text-secondary-foreground px-4 py-2 rounded-md hover:bg-secondary/80 transition-colors w-full"
+              class="bg-secondary text-secondary-foreground px-4 py-2 rounded-md hover:bg-secondary/80 transition-colors duration-200 w-full"
             >
               View Deals
             </button>
@@ -114,7 +114,7 @@
             <div
               v-for="item in flashSaleItems"
               :key="item.id"
-              class="border border-border rounded-lg p-4 text-center"
+              class="border border-border rounded-lg p-4 text-center bg-background"
             >
               <img
                 :src="item.image"
@@ -127,7 +127,7 @@
                 <span class="text-muted-foreground line-through"> ${{ item.regularPrice }} </span>
               </div>
               <button
-                class="bg-destructive text-destructive-foreground px-3 py-1 rounded text-sm hover:bg-destructive/90 transition-colors w-full"
+                class="bg-destructive text-destructive-foreground px-3 py-1 rounded text-sm hover:bg-destructive/90 transition-colors duration-200 w-full"
               >
                 Buy Now
               </button>
@@ -148,10 +148,10 @@
             <input
               type="email"
               placeholder="Enter your email"
-              class="flex-1 px-4 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              class="flex-1 px-4 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors duration-200 placeholder-muted-foreground"
             />
             <button
-              class="bg-primary text-primary-foreground px-6 py-2 rounded-md hover:bg-primary/90 transition-colors"
+              class="bg-primary text-primary-foreground px-6 py-2 rounded-md hover:bg-primary/90 transition-colors duration-200"
             >
               Subscribe
             </button>
@@ -164,6 +164,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useColorMode } from '@vueuse/core'
+
+// Theme
+const mode = useColorMode()
 
 // Mock data for deals
 const featuredDeals = ref([
@@ -267,5 +271,24 @@ onUnmounted(() => {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Dark mode adjustments for images */
+:global(.dark) img {
+  filter: brightness(0.9) contrast(1.1);
+}
+
+/* Smooth transitions for theme switching */
+.container {
+  transition: all 0.3s ease;
+}
+
+/* Enhanced hover effects for dark mode */
+:global(.dark) .hover\:shadow-lg:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+:global(.dark) .hover\:shadow-xl:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
 }
 </style>

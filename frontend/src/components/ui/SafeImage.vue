@@ -19,7 +19,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  fallback: '/placeholder-image.svg',
+  fallback: '/zig-logo.svg',
   class: ''
 })
 

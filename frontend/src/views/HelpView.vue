@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-accent">
+  <div class="min-h-screen bg-background text-foreground">
     <!-- Hero Section -->
     <div class="bg-card">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -26,7 +26,7 @@
             v-model="searchQuery"
             type="text"
             placeholder="Search for help articles, guides, or topics..."
-            class="w-full px-4 py-3 pl-12 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent text-lg"
+            class="w-full px-4 py-3 pl-12 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent text-lg bg-background text-foreground placeholder-muted-foreground"
           />
           <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
             <svg
@@ -48,7 +48,7 @@
     </div>
 
     <!-- Quick Help Categories -->
-    <div class="py-16">
+    <div class="py-16 bg-background">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-3xl font-bold text-foreground text-center mb-12">Quick Help Categories</h2>
 
@@ -56,7 +56,7 @@
           <div
             v-for="category in helpCategories"
             :key="category.id"
-            class="bg-card rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+            class="bg-card rounded-lg shadow-md p-6 hover:shadow-lg transition-all duration-200 cursor-pointer border border-border"
             @click="selectCategory(category)"
           >
             <div class="flex items-center mb-4">
@@ -126,7 +126,7 @@
     </div>
 
     <!-- Step-by-Step Guides -->
-    <div class="py-16">
+    <div class="py-16 bg-background">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-3xl font-bold text-foreground text-center mb-12">Step-by-Step Guides</h2>
 
@@ -134,7 +134,7 @@
           <div
             v-for="guide in stepByStepGuides"
             :key="guide.id"
-            class="bg-card rounded-lg shadow-md overflow-hidden"
+            class="bg-card rounded-lg shadow-md overflow-hidden border border-border"
           >
             <div class="p-6">
               <h3 class="text-xl font-medium text-foreground mb-3">{{ guide.title }}</h3>
@@ -158,7 +158,7 @@
           <div
             v-for="video in videoTutorials"
             :key="video.id"
-            class="bg-card rounded-lg shadow-md overflow-hidden"
+            class="bg-card rounded-lg shadow-md overflow-hidden border border-border"
           >
             <div class="aspect-w-16 aspect-h-9 bg-muted">
               <div class="flex items-center justify-center h-48">
@@ -228,6 +228,10 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useColorMode } from '@vueuse/core'
+
+// Theme
+const mode = useColorMode()
 
 // Search query
 const searchQuery = ref('')
@@ -390,7 +394,7 @@ const stepByStepGuides = ref([
 const videoTutorials = ref([
   {
     id: '1',
-    title: 'Getting Started with WebProsHub',
+    title: 'Getting Started with Zig',
     description: 'Complete walkthrough of the platform for new users',
     duration: '15:30',
   },
@@ -447,6 +451,6 @@ const selectCategory = (category: any) => {
 // Lifecycle
 onMounted(() => {
   // Set page title
-  document.title = 'Help & Support - WebProsHub Marketplace'
+  document.title = 'Help & Support - Zig Marketplace'
 })
 </script>

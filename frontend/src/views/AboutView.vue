@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-background">
+  <div class="min-h-screen bg-background text-foreground">
     <!-- Hero Section -->
     <div class="relative bg-gradient-to-br from-primary/10 via-primary/5 to-background">
       <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
@@ -39,7 +39,7 @@
     </div>
 
     <!-- Mission & Vision -->
-    <div class="py-20">
+    <div class="py-20 bg-background">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <!-- Mission -->
@@ -123,7 +123,7 @@
     </div>
 
     <!-- Values -->
-    <div class="py-20">
+    <div class="py-20 bg-background">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-4xl font-bold text-foreground mb-4">Our Core Values</h2>
@@ -234,7 +234,7 @@
     </div>
 
     <!-- Statistics -->
-    <div class="py-20">
+    <div class="py-20 bg-background">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-4xl font-bold text-foreground mb-4">By The Numbers</h2>
@@ -303,6 +303,10 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { useColorMode } from '@vueuse/core'
+
+// Theme
+const mode = useColorMode()
 
 // Lifecycle
 onMounted(() => {
@@ -317,5 +321,12 @@ onMounted(() => {
     linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px);
   background-size: 20px 20px;
+}
+
+/* Dark mode adjustments for grid pattern */
+:global(.dark) .bg-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
 }
 </style>

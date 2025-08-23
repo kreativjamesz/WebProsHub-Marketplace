@@ -72,6 +72,62 @@ export default {
           border: "oklch(var(--sidebar-border))",
           ring: "oklch(var(--sidebar-ring))",
         },
+        // Modern color overrides to replace dull slate colors
+        slate: {
+          50: '#f8fafc',   // Very light blue-gray
+          100: '#f1f5f9',  // Light blue-gray
+          200: '#e2e8f0',  // Lighter blue-gray
+          300: '#cbd5e1',  // Medium blue-gray
+          400: '#94a3b8',  // Medium-dark blue-gray
+          500: '#64748b',  // Dark blue-gray
+          600: '#475569',  // Darker blue-gray
+          700: '#334155',  // Very dark blue-gray
+          800: '#1e293b',  // Almost black blue-gray
+          900: '#0f172a',  // Deep black blue-gray
+          950: '#020617',  // Pure black
+        },
+        // Alternative modern neutral colors
+        neutral: {
+          50: '#fafafa',   // Pure white
+          100: '#f5f5f5',  // Very light gray
+          200: '#e5e5e5',  // Light gray
+          300: '#d4d4d4',  // Medium light gray
+          400: '#a3a3a3',  // Medium gray
+          500: '#737373',  // Medium dark gray
+          600: '#525252',  // Dark gray
+          700: '#404040',  // Very dark gray
+          800: '#262626',  // Almost black
+          900: '#171717',  // Deep black
+          950: '#0a0a0a',  // Pure black
+        },
+        // Modern blue-gray alternative
+        blueGray: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
+          950: '#020617',
+        },
+        // Modern stone alternative (warmer tones)
+        stone: {
+          50: '#fafaf9',
+          100: '#f5f5f4',
+          200: '#e7e5e4',
+          300: '#d6d3d1',
+          400: '#a8a29e',
+          500: '#78716c',
+          600: '#57534e',
+          700: '#44403c',
+          800: '#292524',
+          900: '#1c1917',
+          950: '#0c0a09',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

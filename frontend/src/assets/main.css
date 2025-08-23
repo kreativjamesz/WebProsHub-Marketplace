@@ -14,7 +14,7 @@
   --color-sidebar-accent: var(--sidebar-accent);
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-foreground: var(--sidebar-accent-foreground);
   --color-sidebar: var(--sidebar);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
@@ -41,6 +41,18 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Universe Theme Colors */
+  --color-universe-primary: var(--universe-primary);
+  --color-universe-secondary: var(--universe-secondary);
+  --color-universe-accent: var(--universe-accent);
+  --color-universe-border: var(--universe-border);
+  --color-universe-glow: var(--universe-glow);
+  --color-nebula-purple: var(--nebula-purple);
+  --color-nebula-blue: var(--nebula-blue);
+  --color-nebula-pink: var(--nebula-pink);
+  --color-cosmic-dust: var(--cosmic-dust);
+  --color-stars: var(--stars);
 }
 
 :root {
@@ -76,6 +88,31 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.606 0.25 292.717);
+  
+  /* Universe Theme Variables */
+  --universe-primary: rgba(147, 51, 234, 1);
+  --universe-secondary: rgba(79, 70, 229, 1);
+  --universe-accent: rgba(236, 72, 153, 1);
+  --universe-border: rgba(147, 51, 234, 0.3);
+  --universe-glow: rgba(147, 51, 234, 0.2);
+  --nebula-purple: rgba(147, 51, 234, 0.1);
+  --nebula-blue: rgba(79, 70, 229, 0.05);
+  --nebula-pink: rgba(236, 72, 153, 0.03);
+  --cosmic-dust: rgba(255, 255, 255, 0.3);
+  --stars: rgba(255, 255, 255, 0.8);
+  
+  /* Modern slate color overrides - more vibrant and contemporary */
+  --slate-50: oklch(0.98 0.005 240);   /* Very light blue-gray */
+  --slate-100: oklch(0.95 0.008 240);  /* Light blue-gray */
+  --slate-200: oklch(0.89 0.012 240);  /* Lighter blue-gray */
+  --slate-300: oklch(0.8 0.015 240);   /* Medium blue-gray */
+  --slate-400: oklch(0.65 0.02 240);   /* Medium-dark blue-gray */
+  --slate-500: oklch(0.5 0.025 240);   /* Dark blue-gray */
+  --slate-600: oklch(0.4 0.03 240);    /* Darker blue-gray */
+  --slate-700: oklch(0.3 0.035 240);   /* Very dark blue-gray */
+  --slate-800: oklch(0.2 0.04 240);    /* Almost black blue-gray */
+  --slate-900: oklch(0.15 0.045 240);  /* Deep black blue-gray */
+  --slate-950: oklch(0.1 0.05 240);    /* Pure black */
 }
 
 .dark {
@@ -98,18 +135,36 @@
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.541 0.281 293.009);
   --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.541 0.281 293.009);
-  --sidebar-primary-foreground: oklch(0.969 0.016 293.756);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.541 0.281 293.009);
+  
+  /* Dark mode universe theme enhancements */
+  --universe-primary: rgba(168, 85, 247, 1);
+  --universe-secondary: rgba(99, 102, 241, 1);
+  --universe-accent: rgba(244, 114, 182, 1);
+  --universe-border: rgba(168, 85, 247, 0.4);
+  --universe-glow: rgba(168, 85, 247, 0.3);
+  --nebula-purple: rgba(168, 85, 247, 0.15);
+  --nebula-blue: rgba(99, 102, 241, 0.1);
+  --nebula-pink: rgba(244, 114, 182, 0.08);
+  --cosmic-dust: rgba(255, 255, 255, 0.4);
+  --stars: rgba(255, 255, 255, 0.9);
+  
+  /* Dark mode slate overrides - more vibrant and modern */
+  --slate-50: oklch(0.95 0.008 240);   /* Slightly darker for dark mode */
+  --slate-100: oklch(0.9 0.012 240);   /* Light blue-gray */
+  --slate-200: oklch(0.8 0.015 240);   /* Lighter blue-gray */
+  --slate-300: oklch(0.7 0.02 240);    /* Medium blue-gray */
+  --slate-400: oklch(0.6 0.025 240);   /* Medium-dark blue-gray */
+  --slate-500: oklch(0.5 0.03 240);    /* Dark blue-gray */
+  --slate-600: oklch(0.4 0.035 240);   /* Darker blue-gray */
+  --slate-700: oklch(0.3 0.04 240);    /* Very dark blue-gray */
+  --slate-800: oklch(0.25 0.045 240);  /* Almost black blue-gray */
+  --slate-900: oklch(0.2 0.05 240);    /* Deep black blue-gray */
+  --slate-950: oklch(0.15 0.055 240);  /* Pure black */
+}
+
+/* Auto mode - follows system preference */
+.auto {
+  /* This will automatically switch between light and dark based on system preference */
 }
 
 @layer base {
@@ -117,7 +172,17 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground transition-colors duration-200;
+  }
+  
+  /* Smooth transitions for theme switching */
+  html {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Ensure proper contrast in both themes */
+  .dark img {
+    filter: brightness(0.9) contrast(1.1);
   }
 }
 
@@ -145,22 +210,49 @@
     @apply border border-border hover:border-primary text-foreground hover:text-primary px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200;
   }
   
+  /* Universe Theme Buttons */
+  .btn-universe {
+    @apply bg-gradient-to-r from-universe-primary to-universe-secondary hover:from-universe-primary/90 hover:to-universe-secondary/90 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-universe-primary/25;
+  }
+  
+  .btn-universe-outline {
+    @apply border border-universe-border hover:border-universe-primary text-universe-primary hover:text-universe-primary/80 px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:shadow-lg hover:shadow-universe-primary/20;
+  }
+  
+  .btn-cosmic {
+    @apply bg-gradient-to-r from-nebula-purple via-nebula-blue to-nebula-pink hover:from-nebula-purple/80 hover:via-nebula-blue/80 hover:to-nebula-pink/80 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 backdrop-blur-sm;
+  }
+  
   /* Form Input Mixins */
   .form-input {
-    @apply block w-full px-3 py-2 border border-input rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground;
+    @apply block w-full px-3 py-2 border border-input rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground transition-colors duration-200;
   }
   
   .form-label {
     @apply block text-sm font-medium text-foreground mb-2;
   }
   
+  /* Universe Theme Form Inputs */
+  .form-input-universe {
+    @apply block w-full px-3 py-2 border border-universe-border/30 rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-universe-primary/50 focus:border-universe-primary bg-background/50 backdrop-blur-sm text-foreground transition-all duration-300 focus:shadow-lg focus:shadow-universe-primary/20;
+  }
+  
   /* Card Mixins */
   .card {
-    @apply bg-card rounded-lg shadow-md p-6 border border-border;
+    @apply bg-card rounded-lg shadow-md p-6 border border-border transition-colors duration-200;
   }
   
   .card-hover {
-    @apply bg-card rounded-lg shadow-md p-6 border border-border hover:shadow-lg transition-shadow duration-200;
+    @apply bg-card rounded-lg shadow-md p-6 border border-border hover:shadow-lg transition-all duration-200;
+  }
+  
+  /* Universe Theme Cards */
+  .card-universe {
+    @apply bg-gradient-to-br from-card/80 to-card/40 rounded-lg shadow-lg p-6 border border-universe-border/20 backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:shadow-universe-primary/20 hover:border-universe-border/40;
+  }
+  
+  .card-cosmic {
+    @apply bg-gradient-to-br from-nebula-purple/10 via-nebula-blue/5 to-nebula-pink/10 rounded-lg shadow-lg p-6 border border-universe-border/30 backdrop-blur-md transition-all duration-300 hover:shadow-2xl hover:shadow-universe-primary/30;
   }
   
   /* Icon Button Mixins */
@@ -170,5 +262,120 @@
   
   .icon-btn-primary {
     @apply p-2 text-primary hover:text-primary/80 transition-colors duration-200;
+  }
+  
+  /* Universe Theme Icon Buttons */
+  .icon-btn-universe {
+    @apply p-2 text-universe-primary hover:text-universe-primary/80 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-universe-primary/30;
+  }
+  
+  .icon-btn-cosmic {
+    @apply p-2 text-universe-accent hover:text-universe-accent/80 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-universe-accent/30;
+  }
+  
+  /* Theme-aware background utilities */
+  .bg-theme-primary {
+    @apply bg-primary text-primary-foreground;
+  }
+  
+  .bg-theme-secondary {
+    @apply bg-secondary text-secondary-foreground;
+  }
+  
+  .bg-theme-muted {
+    @apply bg-muted text-muted-foreground;
+  }
+  
+  .bg-theme-accent {
+    @apply bg-accent text-accent-foreground;
+  }
+  
+  .bg-theme-card {
+    @apply bg-card text-card-foreground;
+  }
+  
+  /* Universe Theme Backgrounds */
+  .bg-universe-primary {
+    @apply bg-universe-primary text-white;
+  }
+  
+  .bg-universe-secondary {
+    @apply bg-universe-secondary text-white;
+  }
+  
+  .bg-universe-accent {
+    @apply bg-universe-accent text-white;
+  }
+  
+  .bg-nebula {
+    @apply bg-gradient-to-br from-nebula-purple via-nebula-blue to-nebula-pink;
+  }
+  
+  .bg-cosmic {
+    @apply bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900;
+  }
+  
+  /* Glass Morphism Utilities */
+  .glass {
+    @apply backdrop-blur-md bg-white/10 border border-white/20;
+  }
+  
+  .glass-dark {
+    @apply backdrop-blur-md bg-black/10 border border-white/10;
+  }
+  
+  .glass-universe {
+    @apply backdrop-blur-xl bg-universe-primary/5 border border-universe-border/30;
+  }
+  
+  /* Glow Effects */
+  .glow-universe {
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+  }
+  
+  .glow-universe-strong {
+    box-shadow: 0 0 40px rgba(147, 51, 234, 0.5);
+  }
+  
+  .glow-nebula {
+    box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
+  }
+  
+  .glow-cosmic {
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+  }
+  
+  /* Dark mode specific utilities */
+  .dark .bg-theme-primary {
+    @apply bg-primary/90 text-primary-foreground;
+  }
+  
+  .dark .bg-theme-secondary {
+    @apply bg-secondary/90 text-secondary-foreground;
+  }
+  
+  .dark .bg-theme-muted {
+    @apply bg-muted/90 text-muted-foreground;
+  }
+  
+  .dark .bg-theme-accent {
+    @apply bg-accent/90 text-accent-foreground;
+  }
+  
+  .dark .bg-theme-card {
+    @apply bg-card/90 text-card-foreground;
+  }
+  
+  /* Dark mode universe enhancements */
+  .dark .glass-universe {
+    @apply backdrop-blur-xl bg-universe-primary/10 border border-universe-border/50;
+  }
+  
+  .dark .glow-universe {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+  }
+  
+  .dark .glow-universe-strong {
+    box-shadow: 0 0 40px rgba(168, 85, 247, 0.6);
   }
 }

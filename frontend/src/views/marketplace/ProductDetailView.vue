@@ -484,7 +484,7 @@ const tabs = [
 
 // Methods
 const navigateToProduct = (productId: string) => {
-  router.push(`/products/${productId}`)
+  router.push(`/marketplace/products/${productId}`)
 }
 
 const addToCart = () => {

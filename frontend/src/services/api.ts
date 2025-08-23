@@ -97,6 +97,13 @@ export const apiService = {
     updateProduct: (id: string, data: any) => api.put(`/sellers/products/${id}`, data),
     deleteProduct: (id: string) => api.delete(`/sellers/products/${id}`),
     getOrders: (params?: any) => api.get('/sellers/orders', { params }),
+    
+    // Dashboard endpoints
+    getDashboardData: () => api.get('/sellers/dashboard'),
+    getStats: () => api.get('/sellers/dashboard/stats'),
+    getRecentOrders: (limit?: number) => api.get('/sellers/dashboard/recent-orders', { params: { limit } }),
+    getLowStockProducts: (limit?: number) => api.get('/sellers/dashboard/low-stock-products', { params: { limit } }),
+    getSalesPerformance: (period: string) => api.get('/sellers/dashboard/sales-performance', { params: { period } }),
   },
 
   // Buyers

@@ -3,171 +3,214 @@
     <DropdownMenuTrigger as-child>
       <Button
         variant="ghost"
-        class="hidden md:flex bg-muted hover:bg-muted/80 rounded-full transition-all duration-200 hover:scale-105"
+        class="navigation-trigger hidden md:flex glass-universe hover:bg-universe-primary/20 rounded-full transition-all duration-300 hover:scale-105 border border-universe-border/30 hover:border-universe-primary/50 group"
       >
-        <MenuIcon class="h-6 w-6 text-foreground" />
+        <div class="relative">
+          <MenuIcon class="h-6 w-6 text-universe-primary group-hover:text-universe-accent transition-all duration-300" />
+          <!-- Animated glow effect -->
+          <div class="absolute inset-0 w-6 h-6 bg-universe-primary/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </div>
       </Button>
     </DropdownMenuTrigger>
-    <DropdownMenuContent align="end" class="w-80 p-2 max-h-[80vh] overflow-y-auto">
-      <!-- Main Navigation Section -->
-      <div class="mb-4">
-        <DropdownMenuLabel
-          class="text-sm font-semibold text-muted-foreground uppercase tracking-wider px-2 py-1"
-        >
-          Main Navigation
-        </DropdownMenuLabel>
-        <div class="space-y-1">
-          <DropdownMenuItem v-for="item in mainNavigation" :key="item.path" as-child>
-            <router-link
-              :to="item.path"
-              class="w-full flex items-center p-3 rounded-lg hover:bg-accent transition-colors duration-200"
-            >
-              <component :is="item.icon" class="mr-3 h-5 w-5 text-primary" />
-              <div class="flex-1 text-left">
-                <div class="font-medium text-foreground">{{ item.label }}</div>
-                <div class="text-xs text-muted-foreground">{{ item.description }}</div>
+    
+    <DropdownMenuContent 
+      align="end" 
+      class="navigation-mega-menu w-[900px] p-6 max-h-[70vh] overflow-y-auto backdrop-blur-xl border border-universe-border/40 shadow-2xl shadow-universe-primary/20"
+    >
+      <!-- Cosmic Background Elements -->
+      <div class="cosmic-bg-elements">
+        <div class="cosmic-star cosmic-star-1"></div>
+        <div class="cosmic-star cosmic-star-2"></div>
+        <div class="cosmic-star cosmic-star-3"></div>
+        <div class="cosmic-nebula"></div>
+      </div>
+      
+      <!-- Horizontal Mega Menu Layout -->
+      <div class="grid grid-cols-5 gap-6 relative z-10">
+        <!-- Column 1: Main Navigation -->
+        <div class="space-y-4">
+          <DropdownMenuLabel class="section-header">
+            <div class="flex items-center">
+              <div class="w-2 h-2 bg-universe-primary rounded-full mr-3 animate-pulse"></div>
+              <span class="text-sm font-semibold text-universe-primary uppercase tracking-wider">Main Navigation</span>
+            </div>
+          </DropdownMenuLabel>
+          <div class="space-y-2">
+            <DropdownMenuItem v-for="item in mainNavigation" :key="item.path" as-child>
+              <router-link
+                :to="item.path"
+                class="navigation-item group"
+              >
+                <div class="icon-container bg-universe-primary/10 group-hover:bg-universe-primary/20">
+                  <component :is="item.icon" class="h-4 w-4 text-universe-primary group-hover:text-universe-accent" />
+                </div>
+                <div class="flex-1 text-left">
+                  <div class="font-medium text-foreground group-hover:text-universe-primary text-sm transition-colors duration-300">{{ item.label }}</div>
+                  <div class="text-xs text-muted-foreground group-hover:text-universe-primary/70 transition-colors duration-300">{{ item.description }}</div>
+                </div>
+                <div class="arrow-indicator">
+                  <ArrowRightIcon class="h-3 w-3 text-universe-primary/50 group-hover:text-universe-primary group-hover:translate-x-1 transition-all duration-300" />
+                </div>
+              </router-link>
+            </DropdownMenuItem>
+          </div>
+        </div>
+
+        <!-- Column 2: Marketplace Features -->
+        <div class="space-y-4">
+          <DropdownMenuLabel class="section-header">
+            <div class="flex items-center">
+              <div class="w-2 h-2 bg-universe-secondary rounded-full mr-3 animate-pulse"></div>
+              <span class="text-sm font-semibold text-universe-secondary uppercase tracking-wider">Marketplace</span>
+            </div>
+          </DropdownMenuLabel>
+          <div class="space-y-2">
+            <DropdownMenuItem v-for="item in marketplaceFeatures" :key="item.path" as-child>
+              <router-link
+                :to="item.path"
+                class="navigation-item group"
+              >
+                <div class="icon-container bg-universe-secondary/10 group-hover:bg-universe-secondary/20">
+                  <component :is="item.icon" class="h-4 w-4 text-universe-secondary group-hover:text-universe-secondary/80" />
+                </div>
+                <div class="flex-1 text-left">
+                  <div class="font-medium text-foreground group-hover:text-universe-secondary text-sm transition-colors duration-300">{{ item.label }}</div>
+                  <div class="text-xs text-muted-foreground group-hover:text-universe-secondary/70 transition-colors duration-300">{{ item.description }}</div>
+                </div>
+                <div class="arrow-indicator">
+                  <ArrowRightIcon class="h-3 w-3 text-universe-secondary/50 group-hover:text-universe-secondary group-hover:translate-x-1 transition-all duration-300" />
+                </div>
+              </router-link>
+            </DropdownMenuItem>
+          </div>
+        </div>
+
+        <!-- Column 3: Information -->
+        <div class="space-y-4">
+          <DropdownMenuLabel class="section-header">
+            <div class="flex items-center">
+              <div class="w-2 h-2 bg-universe-accent rounded-full mr-3 animate-pulse"></div>
+              <span class="text-sm font-semibold text-universe-accent uppercase tracking-wider">Information</span>
+            </div>
+          </DropdownMenuLabel>
+          <div class="space-y-2">
+            <DropdownMenuItem v-for="item in information" :key="item.path" as-child>
+              <router-link
+                :to="item.path"
+                class="navigation-item group"
+              >
+                <div class="icon-container bg-universe-accent/10 group-hover:bg-universe-accent/20">
+                  <component :is="item.icon" class="h-4 w-4 text-universe-accent group-hover:text-universe-accent/80" />
+                </div>
+                <div class="flex-1 text-left">
+                  <div class="font-medium text-foreground group-hover:text-universe-accent text-sm transition-colors duration-300">{{ item.label }}</div>
+                  <div class="text-xs text-muted-foreground group-hover:text-universe-accent/70 transition-colors duration-300">{{ item.description }}</div>
+                </div>
+                <div class="arrow-indicator">
+                  <ArrowRightIcon class="h-3 w-3 text-universe-accent/50 group-hover:text-universe-accent group-hover:translate-x-1 transition-all duration-300" />
+                </div>
+              </router-link>
+            </DropdownMenuItem>
+          </div>
+        </div>
+
+        <!-- Column 4: Business -->
+        <div class="space-y-4">
+          <DropdownMenuLabel class="section-header">
+            <div class="flex items-center">
+              <div class="w-2 h-2 bg-gradient-to-r from-universe-primary to-universe-secondary rounded-full mr-3 animate-pulse"></div>
+              <span class="text-sm font-semibold bg-gradient-to-r from-universe-primary to-universe-secondary bg-clip-text text-transparent uppercase tracking-wider">Business</span>
+            </div>
+          </DropdownMenuLabel>
+          <div class="space-y-2">
+            <DropdownMenuItem v-for="item in business" :key="item.path" as-child>
+              <router-link
+                :to="item.path"
+                class="navigation-item group"
+              >
+                <div class="icon-container bg-gradient-to-r from-universe-primary/10 to-universe-secondary/10 group-hover:from-universe-primary/20 group-hover:to-universe-secondary/20">
+                  <component :is="item.icon" class="h-4 w-4 text-universe-primary group-hover:text-universe-secondary" />
+                </div>
+                <div class="flex-1 text-left">
+                  <div class="font-medium text-foreground group-hover:text-universe-primary text-sm transition-colors duration-300">{{ item.label }}</div>
+                  <div class="text-xs text-muted-foreground group-hover:text-universe-primary/70 transition-colors duration-300">{{ item.description }}</div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <component
+                    v-if="item.rightIcon"
+                    :is="item.rightIcon"
+                    class="h-3 w-3 text-universe-primary/70 group-hover:text-universe-primary transition-colors duration-300"
+                  />
+                  <div class="arrow-indicator">
+                    <ArrowRightIcon class="h-3 w-3 text-universe-primary/50 group-hover:text-universe-primary group-hover:translate-x-1 transition-all duration-300" />
+                  </div>
+                </div>
+              </router-link>
+            </DropdownMenuItem>
+          </div>
+        </div>
+
+        <!-- Column 5: Authentication & User Actions -->
+        <div class="space-y-4">
+          <!-- Authentication Section -->
+          <template v-if="!authStore.isAuthenticated">
+            <DropdownMenuLabel class="section-header">
+              <div class="flex items-center">
+                <div class="w-2 h-2 bg-gradient-to-r from-universe-accent to-universe-primary rounded-full mr-3 animate-pulse"></div>
+                <span class="text-sm font-semibold bg-gradient-to-r from-universe-accent to-universe-primary bg-clip-text text-transparent uppercase tracking-wider">Account</span>
               </div>
-              <component
-                v-if="item.rightIcon"
-                :is="item.rightIcon"
-                class="h-4 w-4 text-muted-foreground"
-              />
-            </router-link>
-          </DropdownMenuItem>
+            </DropdownMenuLabel>
+            <div class="space-y-2">
+              <DropdownMenuItem v-for="item in authItems" :key="item.path" as-child>
+                <router-link
+                  :to="item.path"
+                  class="navigation-item group"
+                >
+                  <div class="icon-container bg-gradient-to-r from-universe-accent/10 to-universe-primary/10 group-hover:from-universe-accent/20 group-hover:to-universe-primary/20">
+                    <component :is="item.icon" class="h-4 w-4 text-universe-accent group-hover:text-universe-primary" />
+                  </div>
+                  <div class="flex-1 text-left">
+                    <div class="font-medium text-foreground group-hover:text-universe-accent text-sm transition-colors duration-300">{{ item.label }}</div>
+                    <div class="text-xs text-muted-foreground group-hover:text-universe-accent/70 transition-colors duration-300">{{ item.description }}</div>
+                  </div>
+                  <div class="arrow-indicator">
+                    <ArrowRightIcon class="h-3 w-3 text-universe-accent/50 group-hover:text-universe-accent group-hover:translate-x-1 transition-all duration-300" />
+                  </div>
+                </router-link>
+              </DropdownMenuItem>
+            </div>
+          </template>
+
+          <!-- User Actions -->
+          <template v-else>
+            <DropdownMenuLabel class="section-header">
+              <div class="flex items-center">
+                <div class="w-2 h-2 bg-gradient-to-r from-universe-primary to-universe-accent rounded-full mr-3 animate-pulse"></div>
+                <span class="text-sm font-semibold bg-gradient-to-r from-universe-primary to-universe-accent bg-clip-text text-transparent uppercase tracking-wider">My Account</span>
+              </div>
+            </DropdownMenuLabel>
+            <div class="space-y-2">
+              <DropdownMenuItem v-for="item in userActions" :key="item.path" as-child>
+                <router-link
+                  :to="item.path"
+                  class="navigation-item group"
+                >
+                  <div class="icon-container bg-gradient-to-r from-universe-primary/10 to-universe-accent/10 group-hover:from-universe-primary/20 group-hover:to-universe-accent/20">
+                    <component :is="item.icon" class="h-4 w-4 text-universe-primary group-hover:text-universe-accent" />
+                  </div>
+                  <div class="flex-1 text-left">
+                    <div class="font-medium text-foreground group-hover:text-universe-primary text-sm transition-colors duration-300">{{ item.label }}</div>
+                    <div class="text-xs text-muted-foreground group-hover:text-universe-primary/70 transition-colors duration-300">{{ item.description }}</div>
+                  </div>
+                  <div class="arrow-indicator">
+                    <ArrowRightIcon class="h-3 w-3 text-universe-primary/50 group-hover:text-universe-primary group-hover:translate-x-1 transition-all duration-300" />
+                  </div>
+                </router-link>
+              </DropdownMenuItem>
+            </div>
+          </template>
         </div>
       </div>
-
-      <!-- Marketplace Features Section -->
-      <div class="mb-4">
-        <DropdownMenuLabel
-          class="text-sm font-semibold text-muted-foreground uppercase tracking-wider px-2 py-1"
-        >
-          Marketplace Features
-        </DropdownMenuLabel>
-        <div class="space-y-1">
-          <DropdownMenuItem v-for="item in marketplaceFeatures" :key="item.path" as-child>
-            <router-link
-              :to="item.path"
-              class="w-full flex items-center p-3 rounded-lg hover:bg-accent transition-colors duration-200"
-            >
-              <component :is="item.icon" class="mr-3 h-5 w-5 text-primary" />
-              <div class="flex-1 text-left">
-                <div class="font-medium text-foreground">{{ item.label }}</div>
-                <div class="text-xs text-muted-foreground">{{ item.description }}</div>
-              </div>
-              <component
-                v-if="item.rightIcon"
-                :is="item.rightIcon"
-                class="h-4 w-4 text-muted-foreground"
-              />
-            </router-link>
-          </DropdownMenuItem>
-        </div>
-      </div>
-
-      <!-- Information Section -->
-      <div class="mb-4">
-        <DropdownMenuLabel
-          class="text-sm font-semibold text-muted-foreground uppercase tracking-wider px-2 py-1"
-        >
-          Information
-        </DropdownMenuLabel>
-        <div class="space-y-1">
-          <DropdownMenuItem v-for="item in information" :key="item.path" as-child>
-            <router-link
-              :to="item.path"
-              class="w-full flex items-center p-3 rounded-lg hover:bg-accent transition-colors duration-200"
-            >
-              <component :is="item.icon" class="mr-3 h-5 w-5 text-primary" />
-              <div class="flex-1 text-left">
-                <div class="font-medium text-foreground">{{ item.label }}</div>
-                <div class="text-xs text-muted-foreground">{{ item.description }}</div>
-              </div>
-              <component
-                v-if="item.rightIcon"
-                :is="item.rightIcon"
-                class="h-4 w-4 text-muted-foreground"
-              />
-            </router-link>
-          </DropdownMenuItem>
-        </div>
-      </div>
-
-      <!-- Business Section -->
-      <div class="mb-4">
-        <DropdownMenuLabel
-          class="text-sm font-semibold text-muted-foreground uppercase tracking-wider px-2 py-1"
-        >
-          Business
-        </DropdownMenuLabel>
-        <div class="space-y-1">
-          <DropdownMenuItem v-for="item in business" :key="item.path" as-child>
-            <router-link
-              :to="item.path"
-              class="w-full flex items-center p-3 rounded-lg hover:bg-accent transition-colors duration-200"
-            >
-              <component :is="item.icon" class="mr-3 h-5 w-5 text-primary" />
-              <div class="flex-1 text-left">
-                <div class="font-medium text-foreground">{{ item.label }}</div>
-                <div class="text-xs text-muted-foreground">{{ item.description }}</div>
-              </div>
-              <component
-                v-if="item.rightIcon"
-                :is="item.rightIcon"
-                class="h-4 w-4 text-muted-foreground"
-              />
-            </router-link>
-          </DropdownMenuItem>
-        </div>
-      </div>
-
-      <!-- Authentication Section -->
-      <template v-if="!authStore.isAuthenticated">
-        <DropdownMenuSeparator class="my-3" />
-        <div class="space-y-1">
-          <DropdownMenuItem v-for="item in authItems" :key="item.path" as-child>
-            <router-link
-              :to="item.path"
-              class="w-full flex items-center p-3 rounded-lg hover:bg-accent transition-colors duration-200"
-            >
-              <component :is="item.icon" class="mr-3 h-5 w-5 text-primary" />
-              <div class="flex-1 text-left">
-                <div class="font-medium text-foreground">{{ item.label }}</div>
-                <div class="text-xs text-muted-foreground">{{ item.description }}</div>
-              </div>
-              <component
-                v-if="item.rightIcon"
-                :is="item.rightIcon"
-                class="h-4 w-4 text-muted-foreground"
-              />
-            </router-link>
-          </DropdownMenuItem>
-        </div>
-      </template>
-
-      <!-- Quick Actions Footer -->
-      <template v-if="authStore.isAuthenticated">
-        <DropdownMenuSeparator class="my-3" />
-        <div class="space-y-1">
-          <DropdownMenuItem v-for="item in userActions" :key="item.path" as-child>
-            <router-link
-              :to="item.path"
-              class="w-full flex items-center p-3 rounded-lg hover:bg-accent transition-colors duration-200"
-            >
-              <component :is="item.icon" class="mr-3 h-5 w-5 text-primary" />
-              <div class="flex-1 text-left">
-                <div class="font-medium text-foreground">{{ item.label }}</div>
-                <div class="text-xs text-muted-foreground">{{ item.description }}</div>
-              </div>
-              <component
-                v-if="item.rightIcon"
-                :is="item.rightIcon"
-                class="h-4 w-4 text-muted-foreground"
-              />
-            </router-link>
-          </DropdownMenuItem>
-        </div>
-      </template>
     </DropdownMenuContent>
   </DropdownMenu>
 </template>
@@ -407,18 +450,337 @@ const userActions: NavigationItem[] = [
 </script>
 
 <style scoped>
-/* Custom scrollbar for dropdown if needed */
-:deep(.dropdown-menu-content) {
-  max-height: 80vh;
-  overflow-y: auto;
+/* Navigation Menu Universe Theme Styles */
+.navigation-mega-menu {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.95) 0%,
+    rgba(30, 41, 59, 0.9) 50%,
+    rgba(51, 65, 85, 0.95) 100%
+  );
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
 }
 
-/* Smooth transitions */
-:deep(.dropdown-menu-item) {
-  transition: all 0.2s ease-in-out;
+/* Cosmic Background Elements */
+.cosmic-bg-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
 }
 
-:deep(.dropdown-menu-item:hover) {
-  transform: translateX(4px);
+/* Animated Cosmic Stars */
+.cosmic-star {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #ffffff;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: cosmic-twinkle 4s ease-in-out infinite;
+}
+
+.cosmic-star-1 {
+  top: 20%;
+  left: 15%;
+  animation-delay: 0s;
+}
+
+.cosmic-star-2 {
+  top: 60%;
+  right: 20%;
+  animation-delay: 1.5s;
+}
+
+.cosmic-star-3 {
+  bottom: 30%;
+  left: 50%;
+  animation-delay: 3s;
+}
+
+@keyframes cosmic-twinkle {
+  0%, 100% { 
+    opacity: 0.3; 
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.2);
+    filter: brightness(1.5);
+  }
+}
+
+/* Cosmic Nebula Effect */
+.cosmic-nebula {
+  position: absolute;
+  top: -30%;
+  left: -30%;
+  right: -30%;
+  bottom: -30%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(147, 51, 234, 0.08) 0%,
+    rgba(79, 70, 229, 0.04) 40%,
+    rgba(236, 72, 153, 0.02) 70%,
+    transparent 100%
+  );
+  animation: nebula-float 25s ease-in-out infinite;
+}
+
+@keyframes nebula-float {
+  0%, 100% { 
+    transform: rotate(0deg) scale(1) translateY(0px); 
+  }
+  50% { 
+    transform: rotate(180deg) scale(1.1) translateY(-10px); 
+  }
+}
+
+/* Navigation Trigger Button */
+.navigation-trigger {
+  position: relative;
+  overflow: hidden;
+}
+
+.navigation-trigger::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(147, 51, 234, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.navigation-trigger:hover::before {
+  left: 100%;
+}
+
+/* Section Headers */
+.section-header {
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(147, 51, 234, 0.2);
+}
+
+/* Navigation Items */
+.navigation-item {
+  @apply w-full flex items-center p-3 rounded-xl transition-all duration-300 cursor-pointer;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.navigation-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(147, 51, 234, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.navigation-item:hover::before {
+  left: 100%;
+}
+
+.navigation-item:hover {
+  background: rgba(147, 51, 234, 0.05);
+  border-color: rgba(147, 51, 234, 0.3);
+  transform: translateX(8px) scale(1.02);
+  box-shadow: 
+    0 8px 25px rgba(147, 51, 234, 0.15),
+    0 4px 10px rgba(147, 51, 234, 0.1);
+}
+
+/* Icon Containers */
+.icon-container {
+  @apply w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition-all duration-300;
+  border: 1px solid rgba(147, 51, 234, 0.2);
+}
+
+.navigation-item:hover .icon-container {
+  transform: scale(1.1) rotate(5deg);
+  border-color: rgba(147, 51, 234, 0.4);
+  box-shadow: 0 4px 15px rgba(147, 51, 234, 0.3);
+}
+
+/* Arrow Indicators */
+.arrow-indicator {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.navigation-item:hover .arrow-indicator {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Enhanced Hover Effects for Different Sections */
+.navigation-item:hover .icon-container.bg-universe-primary\/10 {
+  background: rgba(147, 51, 234, 0.2);
+  box-shadow: 0 4px 15px rgba(147, 51, 234, 0.3);
+}
+
+.navigation-item:hover .icon-container.bg-universe-secondary\/10 {
+  background: rgba(79, 70, 229, 0.2);
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+}
+
+.navigation-item:hover .icon-container.bg-universe-accent\/10 {
+  background: rgba(236, 72, 153, 0.2);
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+}
+
+/* Gradient Icon Containers */
+.navigation-item:hover .icon-container.bg-gradient-to-r.from-universe-primary\/10.to-universe-secondary\/10 {
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(79, 70, 229, 0.2));
+  box-shadow: 
+    0 4px 15px rgba(147, 51, 234, 0.3),
+    0 4px 15px rgba(79, 70, 229, 0.3);
+}
+
+.navigation-item:hover .icon-container.bg-gradient-to-r.from-universe-accent\/10.to-universe-primary\/10 {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(147, 51, 234, 0.2));
+  box-shadow: 
+    0 4px 15px rgba(236, 72, 153, 0.3),
+    0 4px 15px rgba(147, 51, 234, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .navigation-mega-menu {
+    width: 700px;
+    padding: 1rem;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navigation-mega-menu {
+    width: 90vw;
+    max-width: 500px;
+    padding: 0.75rem;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  
+  .navigation-item {
+    padding: 0.75rem;
+  }
+  
+  .icon-container {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+/* Dark Mode Enhancements */
+.dark .navigation-mega-menu {
+  background: linear-gradient(
+    135deg,
+    rgba(2, 6, 23, 0.98) 0%,
+    rgba(15, 23, 42, 0.95) 50%,
+    rgba(30, 41, 59, 0.98) 100%
+  );
+}
+
+.dark .cosmic-star {
+  opacity: 0.8;
+}
+
+.dark .cosmic-nebula {
+  opacity: 0.6;
+}
+
+/* Smooth transitions for theme switching */
+.navigation-mega-menu,
+.navigation-mega-menu * {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus styles for better accessibility */
+.navigation-item:focus-visible {
+  outline: 2px solid rgba(147, 51, 234, 0.6);
+  outline-offset: 2px;
+  border-radius: 0.75rem;
+}
+
+/* Custom scrollbar */
+.navigation-mega-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.navigation-mega-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.navigation-mega-menu::-webkit-scrollbar-thumb {
+  background: rgba(147, 51, 234, 0.3);
+  border-radius: 3px;
+}
+
+.navigation-mega-menu::-webkit-scrollbar-thumb:hover {
+  background: rgba(147, 51, 234, 0.5);
+}
+
+/* Glass morphism effect for child components */
+.navigation-mega-menu > * {
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+/* Hover state animations */
+.navigation-item:hover .icon-container {
+  animation: icon-bounce 0.6s ease-in-out;
+}
+
+@keyframes icon-bounce {
+  0%, 100% { transform: scale(1.1) rotate(5deg); }
+  50% { transform: scale(1.2) rotate(10deg); }
+}
+
+/* Section header animations */
+.section-header:hover .w-2 {
+  animation: pulse-glow 1s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 5px currentColor;
+  }
+  50% { 
+    box-shadow: 0 0 20px currentColor, 0 0 30px currentColor;
+  }
 }
 </style>
