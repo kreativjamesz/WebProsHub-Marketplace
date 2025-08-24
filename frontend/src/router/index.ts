@@ -41,31 +41,6 @@ router.beforeEach(async (to, from, next) => {
     return
   }
   
-  // Protected routes
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    // Special handling for routes that should redirect to login with a message
-    if (to.meta.redirectToLogin) {
-      next('/login')
-      return
-    }
-    next('/login')
-    return
-  }
-  
-  // Role-based access control
-  if (to.meta.role && authStore.userRole !== to.meta.role) {
-    if (authStore.canAccessAdmin) {
-      next('/admin/dashboard')
-    } else if (authStore.isSeller) {
-      next('/seller/dashboard')
-    } else if (authStore.isBuyer) {
-      next('/buyer/dashboard')
-    } else {
-      next('/')
-    }
-    return
-  }
-  
   // Seller-specific status checks (Layer 1: Route Guard)
   if (to.meta.role === 'SELLER' && authStore.isAuthenticated) {
     const sellerStatus = await authStore.checkSellerStatus()

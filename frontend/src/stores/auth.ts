@@ -11,6 +11,7 @@ export const useAuthStore = defineStore('auth', () => {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const isInitialized = ref(false)
+  const intendedRoute = ref<string | null>(null)
 
   // Getters
   const isAuthenticated = computed(() => !!user.value && !!token.value)
@@ -179,6 +180,18 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null
   }
 
+  const setIntendedRoute = (route: string) => {
+    intendedRoute.value = route
+  }
+
+  const getIntendedRoute = () => {
+    return intendedRoute.value
+  }
+
+  const clearIntendedRoute = () => {
+    intendedRoute.value = null
+  }
+
   const hasPermission = (permission: string) => {
     if (!user.value) return false
     
@@ -272,5 +285,8 @@ export const useAuthStore = defineStore('auth', () => {
     clearError,
     hasPermission,
     checkSellerStatus,
+    setIntendedRoute,
+    getIntendedRoute,
+    clearIntendedRoute,
   }
 })

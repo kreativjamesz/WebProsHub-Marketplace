@@ -1,0 +1,6 @@
+export { default as HeroSection } from './HeroSection.vue'
+export { default as ServicesSection } from './ServicesSection.vue'
+export { default as CategoriesSection } from './CategoriesSection.vue'
+export { default as FeaturedProductsSection } from './FeaturedProductsSection.vue'
+export { default as StatsSection } from './StatsSection.vue'
+export { default as CTASection } from './CTASection.vue'

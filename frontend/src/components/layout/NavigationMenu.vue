@@ -6,15 +6,19 @@
         class="navigation-trigger hidden md:flex glass-universe hover:bg-universe-primary/20 rounded-full transition-all duration-300 hover:scale-105 border border-universe-border/30 hover:border-universe-primary/50 group"
       >
         <div class="relative">
-          <MenuIcon class="h-6 w-6 text-universe-primary group-hover:text-universe-accent transition-all duration-300" />
+          <MenuIcon
+            class="h-6 w-6 text-universe-primary group-hover:text-universe-accent transition-all duration-300"
+          />
           <!-- Animated glow effect -->
-          <div class="absolute inset-0 w-6 h-6 bg-universe-primary/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div
+            class="absolute inset-0 w-6 h-6 bg-universe-primary/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          ></div>
         </div>
       </Button>
     </DropdownMenuTrigger>
-    
-    <DropdownMenuContent 
-      align="end" 
+
+    <DropdownMenuContent
+      align="end"
       class="navigation-mega-menu w-[900px] p-6 max-h-[70vh] overflow-y-auto backdrop-blur-xl border border-universe-border/40 shadow-2xl shadow-universe-primary/20"
     >
       <!-- Cosmic Background Elements -->
@@ -24,7 +28,7 @@
         <div class="cosmic-star cosmic-star-3"></div>
         <div class="cosmic-nebula"></div>
       </div>
-      
+
       <!-- Horizontal Mega Menu Layout -->
       <div class="grid grid-cols-5 gap-6 relative z-10">
         <!-- Column 1: Main Navigation -->
@@ -32,24 +36,39 @@
           <DropdownMenuLabel class="section-header">
             <div class="flex items-center">
               <div class="w-2 h-2 bg-universe-primary rounded-full mr-3 animate-pulse"></div>
-              <span class="text-sm font-semibold text-universe-primary uppercase tracking-wider">Main Navigation</span>
+              <span class="text-sm font-semibold text-universe-primary uppercase tracking-wider"
+                >Main Navigation</span
+              >
             </div>
           </DropdownMenuLabel>
           <div class="space-y-2">
             <DropdownMenuItem v-for="item in mainNavigation" :key="item.path" as-child>
-              <router-link
-                :to="item.path"
-                class="navigation-item group"
-              >
-                <div class="icon-container bg-universe-primary/10 group-hover:bg-universe-primary/20">
-                  <component :is="item.icon" class="h-4 w-4 text-universe-primary group-hover:text-universe-accent" />
+              <router-link :to="item.path" class="navigation-item group">
+                <div
+                  class="icon-container bg-universe-primary/10 group-hover:bg-universe-primary/20"
+                >
+                  <component
+                    :is="item.icon"
+                    class="h-4 w-4 text-universe-primary group-hover:text-universe-accent"
+                  />
                 </div>
                 <div class="flex-1 text-left">
-                  <div class="font-medium text-foreground group-hover:text-universe-primary text-sm transition-colors duration-300">{{ item.label }}</div>
-                  <div class="text-xs text-muted-foreground group-hover:text-universe-primary/70 transition-colors duration-300">{{ item.description }}</div>
+                  <div
+                    class="font-medium text-foreground group-hover:text-universe-primary text-sm transition-colors duration-300"
+                  >
+                    {{ item.label }}
+                  </div>
+                  <div
+                    class="text-xs text-muted-foreground group-hover:text-universe-primary/70 transition-colors duration-300"
+                  >
+                    {{ item.description }}
+                  </div>
                 </div>
-                <div class="arrow-indicator">
-                  <ArrowRightIcon class="h-3 w-3 text-universe-primary/50 group-hover:text-universe-primary group-hover:translate-x-1 transition-all duration-300" />
+                <div v-if="item.rightIcon" class="arrow-indicator">
+                  <component
+                    :is="item.rightIcon"
+                    class="h-3 w-3 text-universe-primary/50 group-hover:text-universe-primary group-hover:translate-x-1 transition-all duration-300"
+                  />
                 </div>
               </router-link>
             </DropdownMenuItem>
@@ -61,24 +80,39 @@
           <DropdownMenuLabel class="section-header">
             <div class="flex items-center">
               <div class="w-2 h-2 bg-universe-secondary rounded-full mr-3 animate-pulse"></div>
-              <span class="text-sm font-semibold text-universe-secondary uppercase tracking-wider">Marketplace</span>
+              <span class="text-sm font-semibold text-universe-secondary uppercase tracking-wider"
+                >Marketplace</span
+              >
             </div>
           </DropdownMenuLabel>
           <div class="space-y-2">
             <DropdownMenuItem v-for="item in marketplaceFeatures" :key="item.path" as-child>
-              <router-link
-                :to="item.path"
-                class="navigation-item group"
-              >
-                <div class="icon-container bg-universe-secondary/10 group-hover:bg-universe-secondary/20">
-                  <component :is="item.icon" class="h-4 w-4 text-universe-secondary group-hover:text-universe-secondary/80" />
+              <router-link :to="item.path" class="navigation-item group">
+                <div
+                  class="icon-container bg-universe-secondary/10 group-hover:bg-universe-secondary/20"
+                >
+                  <component
+                    :is="item.icon"
+                    class="h-4 w-4 text-universe-secondary group-hover:text-universe-secondary/80"
+                  />
                 </div>
                 <div class="flex-1 text-left">
-                  <div class="font-medium text-foreground group-hover:text-universe-secondary text-sm transition-colors duration-300">{{ item.label }}</div>
-                  <div class="text-xs text-muted-foreground group-hover:text-universe-secondary/70 transition-colors duration-300">{{ item.description }}</div>
+                  <div
+                    class="font-medium text-foreground group-hover:text-universe-secondary text-sm transition-colors duration-300"
+                  >
+                    {{ item.label }}
+                  </div>
+                  <div
+                    class="text-xs text-muted-foreground group-hover:text-universe-secondary/70 transition-colors duration-300"
+                  >
+                    {{ item.description }}
+                  </div>
                 </div>
-                <div class="arrow-indicator">
-                  <ArrowRightIcon class="h-3 w-3 text-universe-secondary/50 group-hover:text-universe-secondary group-hover:translate-x-1 transition-all duration-300" />
+                <div v-if="item.rightIcon" class="arrow-indicator">
+                  <component
+                    :is="item.rightIcon"
+                    class="h-3 w-3 text-universe-secondary/50 group-hover:text-universe-secondary group-hover:translate-x-1 transition-all duration-300"
+                  />
                 </div>
               </router-link>
             </DropdownMenuItem>
@@ -90,24 +124,37 @@
           <DropdownMenuLabel class="section-header">
             <div class="flex items-center">
               <div class="w-2 h-2 bg-universe-accent rounded-full mr-3 animate-pulse"></div>
-              <span class="text-sm font-semibold text-universe-accent uppercase tracking-wider">Information</span>
+              <span class="text-sm font-semibold text-universe-accent uppercase tracking-wider"
+                >Information</span
+              >
             </div>
           </DropdownMenuLabel>
           <div class="space-y-2">
             <DropdownMenuItem v-for="item in information" :key="item.path" as-child>
-              <router-link
-                :to="item.path"
-                class="navigation-item group"
-              >
+              <router-link :to="item.path" class="navigation-item group">
                 <div class="icon-container bg-universe-accent/10 group-hover:bg-universe-accent/20">
-                  <component :is="item.icon" class="h-4 w-4 text-universe-accent group-hover:text-universe-accent/80" />
+                  <component
+                    :is="item.icon"
+                    class="h-4 w-4 text-universe-accent group-hover:text-universe-accent/80"
+                  />
                 </div>
                 <div class="flex-1 text-left">
-                  <div class="font-medium text-foreground group-hover:text-universe-accent text-sm transition-colors duration-300">{{ item.label }}</div>
-                  <div class="text-xs text-muted-foreground group-hover:text-universe-accent/70 transition-colors duration-300">{{ item.description }}</div>
+                  <div
+                    class="font-medium text-foreground group-hover:text-universe-accent text-sm transition-colors duration-300"
+                  >
+                    {{ item.label }}
+                  </div>
+                  <div
+                    class="text-xs text-muted-foreground group-hover:text-universe-accent/70 transition-colors duration-300"
+                  >
+                    {{ item.description }}
+                  </div>
                 </div>
-                <div class="arrow-indicator">
-                  <ArrowRightIcon class="h-3 w-3 text-universe-accent/50 group-hover:text-universe-accent group-hover:translate-x-1 transition-all duration-300" />
+                <div v-if="item.rightIcon" class="arrow-indicator">
+                  <component
+                    :is="item.rightIcon"
+                    class="h-3 w-3 text-universe-accent/50 group-hover:text-universe-accent group-hover:translate-x-1 transition-all duration-300"
+                  />
                 </div>
               </router-link>
             </DropdownMenuItem>
@@ -118,97 +165,86 @@
         <div class="space-y-4">
           <DropdownMenuLabel class="section-header">
             <div class="flex items-center">
-              <div class="w-2 h-2 bg-gradient-to-r from-universe-primary to-universe-secondary rounded-full mr-3 animate-pulse"></div>
-              <span class="text-sm font-semibold bg-gradient-to-r from-universe-primary to-universe-secondary bg-clip-text text-transparent uppercase tracking-wider">Business</span>
+              <div class="w-2 h-2 bg-universe-primary rounded-full mr-3 animate-pulse"></div>
+              <span class="text-sm font-semibold text-universe-primary uppercase tracking-wider"
+                >Business</span
+              >
             </div>
           </DropdownMenuLabel>
           <div class="space-y-2">
             <DropdownMenuItem v-for="item in business" :key="item.path" as-child>
-              <router-link
-                :to="item.path"
-                class="navigation-item group"
-              >
-                <div class="icon-container bg-gradient-to-r from-universe-primary/10 to-universe-secondary/10 group-hover:from-universe-primary/20 group-hover:to-universe-secondary/20">
-                  <component :is="item.icon" class="h-4 w-4 text-universe-primary group-hover:text-universe-secondary" />
+              <router-link :to="item.path" class="navigation-item group">
+                <div
+                  class="icon-container bg-universe-primary/10 group-hover:bg-universe-primary/20"
+                >
+                  <component
+                    :is="item.icon"
+                    class="h-4 w-4 text-universe-primary group-hover:text-universe-accent"
+                  />
                 </div>
                 <div class="flex-1 text-left">
-                  <div class="font-medium text-foreground group-hover:text-universe-primary text-sm transition-colors duration-300">{{ item.label }}</div>
-                  <div class="text-xs text-muted-foreground group-hover:text-universe-primary/70 transition-colors duration-300">{{ item.description }}</div>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <component
-                    v-if="item.rightIcon"
-                    :is="item.rightIcon"
-                    class="h-3 w-3 text-universe-primary/70 group-hover:text-universe-primary transition-colors duration-300"
-                  />
-                  <div class="arrow-indicator">
-                    <ArrowRightIcon class="h-3 w-3 text-universe-primary/50 group-hover:text-universe-primary group-hover:translate-x-1 transition-all duration-300" />
+                  <div
+                    class="font-medium text-foreground group-hover:text-universe-primary text-sm transition-colors duration-300"
+                  >
+                    {{ item.label }}
                   </div>
+                  <div
+                    class="text-xs text-muted-foreground group-hover:text-universe-primary/70 transition-colors duration-300"
+                  >
+                    {{ item.description }}
+                  </div>
+                </div>
+                <div v-if="item.rightIcon" class="arrow-indicator">
+                  <component
+                    :is="item.rightIcon"
+                    class="h-3 w-3 text-universe-primary/50 group-hover:text-universe-primary group-hover:translate-x-1 transition-all duration-300"
+                  />
                 </div>
               </router-link>
             </DropdownMenuItem>
           </div>
         </div>
 
-        <!-- Column 5: Authentication & User Actions -->
+        <!-- Column 5: User Actions -->
         <div class="space-y-4">
-          <!-- Authentication Section -->
-          <template v-if="!authStore.isAuthenticated">
-            <DropdownMenuLabel class="section-header">
-              <div class="flex items-center">
-                <div class="w-2 h-2 bg-gradient-to-r from-universe-accent to-universe-primary rounded-full mr-3 animate-pulse"></div>
-                <span class="text-sm font-semibold bg-gradient-to-r from-universe-accent to-universe-primary bg-clip-text text-transparent uppercase tracking-wider">Account</span>
-              </div>
-            </DropdownMenuLabel>
-            <div class="space-y-2">
-              <DropdownMenuItem v-for="item in authItems" :key="item.path" as-child>
-                <router-link
-                  :to="item.path"
-                  class="navigation-item group"
-                >
-                  <div class="icon-container bg-gradient-to-r from-universe-accent/10 to-universe-primary/10 group-hover:from-universe-accent/20 group-hover:to-universe-primary/20">
-                    <component :is="item.icon" class="h-4 w-4 text-universe-accent group-hover:text-universe-primary" />
-                  </div>
-                  <div class="flex-1 text-left">
-                    <div class="font-medium text-foreground group-hover:text-universe-accent text-sm transition-colors duration-300">{{ item.label }}</div>
-                    <div class="text-xs text-muted-foreground group-hover:text-universe-accent/70 transition-colors duration-300">{{ item.description }}</div>
-                  </div>
-                  <div class="arrow-indicator">
-                    <ArrowRightIcon class="h-3 w-3 text-universe-accent/50 group-hover:text-universe-accent group-hover:translate-x-1 transition-all duration-300" />
-                  </div>
-                </router-link>
-              </DropdownMenuItem>
+          <DropdownMenuLabel class="section-header">
+            <div class="flex items-center">
+              <div class="w-2 h-2 bg-universe-accent rounded-full mr-3 animate-pulse"></div>
+              <span class="text-sm font-semibold text-universe-accent uppercase tracking-wider"
+                >Account</span
+              >
             </div>
-          </template>
-
-          <!-- User Actions -->
-          <template v-else>
-            <DropdownMenuLabel class="section-header">
-              <div class="flex items-center">
-                <div class="w-2 h-2 bg-gradient-to-r from-universe-primary to-universe-accent rounded-full mr-3 animate-pulse"></div>
-                <span class="text-sm font-semibold bg-gradient-to-r from-universe-primary to-universe-accent bg-clip-text text-transparent uppercase tracking-wider">My Account</span>
-              </div>
-            </DropdownMenuLabel>
-            <div class="space-y-2">
-              <DropdownMenuItem v-for="item in userActions" :key="item.path" as-child>
-                <router-link
-                  :to="item.path"
-                  class="navigation-item group"
-                >
-                  <div class="icon-container bg-gradient-to-r from-universe-primary/10 to-universe-accent/10 group-hover:from-universe-primary/20 group-hover:to-universe-accent/20">
-                    <component :is="item.icon" class="h-4 w-4 text-universe-primary group-hover:text-universe-accent" />
+          </DropdownMenuLabel>
+          <div class="space-y-2">
+            <DropdownMenuItem v-for="item in userActions" :key="item.path" as-child>
+              <router-link :to="item.path" class="navigation-item group">
+                <div class="icon-container bg-universe-accent/10 group-hover:bg-universe-accent/20">
+                  <component
+                    :is="item.icon"
+                    class="h-4 w-4 text-universe-accent group-hover:text-universe-accent/80"
+                  />
+                </div>
+                <div class="flex-1 text-left">
+                  <div
+                    class="font-medium text-foreground group-hover:text-universe-accent text-sm transition-colors duration-300"
+                  >
+                    {{ item.label }}
                   </div>
-                  <div class="flex-1 text-left">
-                    <div class="font-medium text-foreground group-hover:text-universe-primary text-sm transition-colors duration-300">{{ item.label }}</div>
-                    <div class="text-xs text-muted-foreground group-hover:text-universe-primary/70 transition-colors duration-300">{{ item.description }}</div>
+                  <div
+                    class="text-xs text-muted-foreground group-hover:text-universe-accent/70 transition-colors duration-300"
+                  >
+                    {{ item.description }}
                   </div>
-                  <div class="arrow-indicator">
-                    <ArrowRightIcon class="h-3 w-3 text-universe-primary/50 group-hover:text-universe-primary group-hover:translate-x-1 transition-all duration-300" />
-                  </div>
-                </router-link>
-              </DropdownMenuItem>
-            </div>
-          </template>
+                </div>
+                <div v-if="item.rightIcon" class="arrow-indicator">
+                  <component
+                    :is="item.rightIcon"
+                    class="h-3 w-3 text-universe-accent/50 group-hover:text-universe-accent group-hover:translate-x-1 transition-all duration-300"
+                  />
+                </div>
+              </router-link>
+            </DropdownMenuItem>
+          </div>
         </div>
       </div>
     </DropdownMenuContent>
@@ -449,7 +485,7 @@ const userActions: NavigationItem[] = [
 ]
 </script>
 
-<style scoped>
+<style scoped lang="css">
 /* Navigation Menu Universe Theme Styles */
 .navigation-mega-menu {
   background: linear-gradient(
@@ -506,13 +542,14 @@ const userActions: NavigationItem[] = [
 }
 
 @keyframes cosmic-twinkle {
-  0%, 100% { 
-    opacity: 0.3; 
+  0%,
+  100% {
+    opacity: 0.3;
     transform: scale(1);
     filter: brightness(1);
   }
-  50% { 
-    opacity: 1; 
+  50% {
+    opacity: 1;
     transform: scale(1.2);
     filter: brightness(1.5);
   }
@@ -536,11 +573,12 @@ const userActions: NavigationItem[] = [
 }
 
 @keyframes nebula-float {
-  0%, 100% { 
-    transform: rotate(0deg) scale(1) translateY(0px); 
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1) translateY(0px);
   }
-  50% { 
-    transform: rotate(180deg) scale(1.1) translateY(-10px); 
+  50% {
+    transform: rotate(180deg) scale(1.1) translateY(-10px);
   }
 }
 
@@ -557,12 +595,7 @@ const userActions: NavigationItem[] = [
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(147, 51, 234, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(147, 51, 234, 0.2), transparent);
   transition: left 0.5s ease;
 }
 
@@ -579,7 +612,7 @@ const userActions: NavigationItem[] = [
 
 /* Navigation Items */
 .navigation-item {
-  @apply w-full flex items-center p-3 rounded-xl transition-all duration-300 cursor-pointer;
+  /* @apply w-full flex items-center rounded-xl transition-all duration-300 cursor-pointer; */
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid transparent;
   position: relative;
@@ -593,12 +626,7 @@ const userActions: NavigationItem[] = [
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(147, 51, 234, 0.1),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(147, 51, 234, 0.1), transparent);
   transition: left 0.5s ease;
 }
 
@@ -610,14 +638,14 @@ const userActions: NavigationItem[] = [
   background: rgba(147, 51, 234, 0.05);
   border-color: rgba(147, 51, 234, 0.3);
   transform: translateX(8px) scale(1.02);
-  box-shadow: 
+  box-shadow:
     0 8px 25px rgba(147, 51, 234, 0.15),
     0 4px 10px rgba(147, 51, 234, 0.1);
 }
 
 /* Icon Containers */
 .icon-container {
-  @apply w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition-all duration-300;
+  /* @apply w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition-all duration-300; */
   border: 1px solid rgba(147, 51, 234, 0.2);
 }
 
@@ -656,16 +684,18 @@ const userActions: NavigationItem[] = [
 }
 
 /* Gradient Icon Containers */
-.navigation-item:hover .icon-container.bg-gradient-to-r.from-universe-primary\/10.to-universe-secondary\/10 {
+.navigation-item:hover
+  .icon-container.bg-gradient-to-r.from-universe-primary\/10.to-universe-secondary\/10 {
   background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(79, 70, 229, 0.2));
-  box-shadow: 
+  box-shadow:
     0 4px 15px rgba(147, 51, 234, 0.3),
     0 4px 15px rgba(79, 70, 229, 0.3);
 }
 
-.navigation-item:hover .icon-container.bg-gradient-to-r.from-universe-accent\/10.to-universe-primary\/10 {
+.navigation-item:hover
+  .icon-container.bg-gradient-to-r.from-universe-accent\/10.to-universe-primary\/10 {
   background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(147, 51, 234, 0.2));
-  box-shadow: 
+  box-shadow:
     0 4px 15px rgba(236, 72, 153, 0.3),
     0 4px 15px rgba(147, 51, 234, 0.3);
 }
@@ -676,7 +706,7 @@ const userActions: NavigationItem[] = [
     width: 700px;
     padding: 1rem;
   }
-  
+
   .grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
@@ -689,16 +719,16 @@ const userActions: NavigationItem[] = [
     max-width: 500px;
     padding: 0.75rem;
   }
-  
+
   .grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
   }
-  
+
   .navigation-item {
     padding: 0.75rem;
   }
-  
+
   .icon-container {
     width: 2rem;
     height: 2rem;
@@ -766,8 +796,13 @@ const userActions: NavigationItem[] = [
 }
 
 @keyframes icon-bounce {
-  0%, 100% { transform: scale(1.1) rotate(5deg); }
-  50% { transform: scale(1.2) rotate(10deg); }
+  0%,
+  100% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(10deg);
+  }
 }
 
 /* Section header animations */
@@ -776,11 +811,14 @@ const userActions: NavigationItem[] = [
 }
 
 @keyframes pulse-glow {
-  0%, 100% { 
+  0%,
+  100% {
     box-shadow: 0 0 5px currentColor;
   }
-  50% { 
-    box-shadow: 0 0 20px currentColor, 0 0 30px currentColor;
+  50% {
+    box-shadow:
+      0 0 20px currentColor,
+      0 0 30px currentColor;
   }
 }
 </style>

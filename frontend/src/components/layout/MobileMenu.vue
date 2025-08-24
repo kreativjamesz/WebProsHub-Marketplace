@@ -194,7 +194,6 @@
 </template>
 
 <script setup lang="ts">
-import ColorThemeDropdown from '@/components/ColorThemeDropdown.vue'
 import {
   HomeIcon,
   StoreIcon,
@@ -277,7 +276,7 @@ const userActions = [
 ] as const
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
 /* Mobile Menu Universe Theme Styles */
 .mobile-menu-universe {
   background: linear-gradient(
@@ -387,7 +386,12 @@ const userActions = [
 }
 
 .mobile-nav-item {
-  @apply flex items-center p-3 rounded-xl transition-all duration-300 cursor-pointer;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid transparent;
   position: relative;
@@ -425,7 +429,14 @@ const userActions = [
 
 /* Mobile Icon Containers */
 .mobile-icon-container {
-  @apply w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition-all duration-300;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid rgba(147, 51, 234, 0.2);
 }
 
@@ -437,7 +448,11 @@ const userActions = [
 
 /* Mobile Navigation Text */
 .mobile-nav-text {
-  @apply flex-1 text-base font-medium text-foreground transition-colors duration-300;
+  flex: 1;
+  font-size: 1rem;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mobile-nav-item:hover .mobile-nav-text {

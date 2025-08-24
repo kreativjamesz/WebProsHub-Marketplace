@@ -1,4 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router'
+import { requireAuth } from '@/router/guards'
 
 export const marketplaceRoutes: RouteRecordRaw[] = [
   {
@@ -77,6 +78,7 @@ export const marketplaceRoutes: RouteRecordRaw[] = [
     path: '/wishlist',
     name: 'public-wishlist',
     component: () => import('@/views/marketplace/PublicWishlistView.vue'),
+    beforeEnter: requireAuth,
     meta: { 
       title: 'Wishlist - WebProsHubMarketplace',
       requiresAuth: true,

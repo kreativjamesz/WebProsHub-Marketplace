@@ -101,9 +101,16 @@ export const useMarketplaceStore = defineStore('marketplace', () => {
         mainCategories.value = response.data.mainCategories
         categories.value = response.data.categories
         subcategories.value = response.data.subcategories
+        
+        console.log('Categories loaded from API:', {
+          mainCategories: mainCategories.value,
+          categories: categories.value,
+          subcategories: subcategories.value
+        })
       } else {
         // Fallback for old structure
         categories.value = response.data
+        console.log('Categories loaded with fallback structure:', categories.value)
       }
     } catch (error) {
       console.error('Error fetching categories:', error)
@@ -141,6 +148,13 @@ export const useMarketplaceStore = defineStore('marketplace', () => {
     } catch (error) {
       console.error('Error fetching products:', error)
       errors.value.products = 'Failed to load products. Please try again.'
+      
+      // For development, you might want to use mock data here
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Using mock products for development')
+        // You can add mock products here if needed
+      }
+      
       throw error
     } finally {
       loading.value.products = false
@@ -185,6 +199,24 @@ export const useMarketplaceStore = defineStore('marketplace', () => {
       return response.data.products || response.data
     } catch (error) {
       console.error('Error fetching featured products:', error)
+      
+      // Return empty array if API fails
+      return []
+    }
+  }
+
+  const getFeaturedProductsWithFallback = async () => {
+    try {
+      const featured = await getFeaturedProducts()
+      if (featured && featured.length > 0) {
+        return featured
+      }
+      
+      // If no featured products, get recent products
+      const recent = await apiService.marketplace.getProducts({ limit: 8, sortBy: 'createdAt' })
+      return recent.data.products || recent.data || []
+    } catch (error) {
+      console.error('Error fetching featured products with fallback:', error)
       return []
     }
   }
@@ -253,6 +285,7 @@ export const useMarketplaceStore = defineStore('marketplace', () => {
     fetchProducts,
     searchProducts,
     getFeaturedProducts,
+    getFeaturedProductsWithFallback,
     getProductsByStore,
     clearErrors,
     resetState,

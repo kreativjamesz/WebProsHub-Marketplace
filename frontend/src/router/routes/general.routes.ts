@@ -1,4 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router'
+import { requireAuth } from '@/router/guards'
 
 export const generalRoutes: RouteRecordRaw[] = [
   {
@@ -32,6 +33,7 @@ export const generalRoutes: RouteRecordRaw[] = [
     path: '/profile',
     name: 'profile',
     component: () => import('@/views/ProfileView.vue'),
+    beforeEnter: requireAuth,
     meta: { 
       requiresAuth: true, 
       title: 'Profile - WebProsHubMarketplace',
@@ -42,6 +44,7 @@ export const generalRoutes: RouteRecordRaw[] = [
     path: '/settings',
     name: 'settings',
     component: () => import('@/views/SettingsView.vue'),
+    beforeEnter: requireAuth,
     meta: { 
       requiresAuth: true, 
       title: 'Settings - WebProsHubMarketplace',

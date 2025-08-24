@@ -5,6 +5,7 @@ import { useColorMode } from '@vueuse/core'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
 import { useGuestCartStore } from '@/stores/guestCart'
+import { useThemeStore } from '@/stores/theme'
 import {
   DefaultLayout,
   AuthLayout,
@@ -14,13 +15,16 @@ import {
   BlankLayout,
   GuestLayout
 } from '@/layouts'
+import { AuthDialog } from '@/components/auth'
+import { authDialogState } from '@/utils/authEvents'
 
 const route = useRoute()
 const authStore = useAuthStore()
 const cartStore = useCartStore()
 const guestCartStore = useGuestCartStore()
+const themeStore = useThemeStore()
 
-// Color mode management
+// Color mode management - now handled by theme store
 const mode = useColorMode()
 
 // Determine which layout to use based on route
@@ -28,7 +32,7 @@ const currentLayout = computed(() => {
   if (route.meta.layout) {
     switch (route.meta.layout) {
       case 'auth':
-        return AuthLayout
+        return DefaultLayout
       case 'admin':
         return AdminLayout
       case 'seller':
@@ -76,6 +80,9 @@ const isGuestRoute = (path: string) => {
 }
 
 onMounted(async () => {
+  // Initialize theme store
+  themeStore.initializeTheme()
+  
   await authStore.checkAuth()
 })
 
@@ -103,7 +110,7 @@ watch(() => authStore.isAuthenticated, async (isAuthenticated) => {
 </script>
 
 <template>
-  <div id="app" class="min-h-screen" :class="mode">
+  <div id="app" class="min-h-screen" :class="themeStore.currentTheme">
     <!-- Loading overlay -->
     <div v-if="!authStore.isInitialized" class="fixed inset-0 bg-background/90 flex items-center justify-center z-50">
       <div class="text-center">

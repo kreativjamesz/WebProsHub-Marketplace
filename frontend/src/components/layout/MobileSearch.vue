@@ -115,7 +115,7 @@ defineEmits<Emits>()
 
 /* Mobile Search Input */
 .mobile-search-input {
-  @apply w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300;
+  /* @apply w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300; */
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(147, 51, 234, 0.3);
   color: #ffffff;

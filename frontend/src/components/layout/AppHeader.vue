@@ -88,6 +88,7 @@
       :is-authenticated="authStore.isAuthenticated"
       @close="showMobileMenu = false"
     />
+
   </header>
 </template>
 
@@ -95,6 +96,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useColorMode } from '@vueuse/core'
 
 import { useWishlistStore } from '@/stores/wishlist'
 import { debounce } from '@/utils/debounce'
@@ -117,6 +119,9 @@ const authStore = useAuthStore()
 const wishlistStore = useWishlistStore()
 const { isMobile } = useScreenSize()
 
+// Theme system - CONNECTED TO ColorThemeDropdown
+const mode = useColorMode()
+
 // State
 const searchQuery = ref('')
 const showMobileSearch = ref(false)
@@ -124,6 +129,13 @@ const showMobileMenu = ref(false)
 
 // Computed properties for better performance
 const wishlistCount = computed(() => wishlistStore.itemCount)
+
+// Check if we're in light mode - NOW CONNECTED TO useColorMode
+const isLightMode = computed(() => {
+  return mode.value === 'light' || 
+         document.documentElement.classList.contains('light') ||
+         document.documentElement.classList.contains('light-mode')
+})
 
 // Watch for screen size changes and auto-close mobile menus
 watch(isMobile, (newIsMobile) => {
@@ -465,9 +477,50 @@ onUnmounted(() => {
   opacity: 0.7;
 }
 
+/* Light Mode Enhancements */
+/* Light Mode Enhancements */
+.light .universe-header {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(245, 245, 250, 0.7) 50%,
+    rgba(230, 230, 240, 0.85) 100%
+  );
+  border-bottom: 1px solid rgba(147, 51, 234, 0.12);
+}
+
+.light .stars {
+  opacity: 0.4;
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, #a3a3a3, transparent),
+    radial-gradient(2px 2px at 40px 70px, #d1d5db, transparent),
+    radial-gradient(1px 1px at 90px 40px, #e5e7eb, transparent),
+    radial-gradient(1px 1px at 130px 80px, #cbd5e1, transparent),
+    radial-gradient(2px 2px at 160px 30px, #f3f4f6, transparent);
+}
+
+.light .nebula {
+  opacity: 0.2;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(147, 51, 234, 0.05) 0%,
+    rgba(79, 70, 229, 0.03) 40%,
+    rgba(236, 72, 153, 0.01) 70%,
+    transparent 100%
+  );
+}
+
+.light .cosmic-dust {
+  opacity: 0.3;
+  background-image:
+    radial-gradient(1px 1px at 50px 50px, rgba(200, 200, 200, 0.2), transparent),
+    radial-gradient(1px 1px at 100px 100px, rgba(220, 220, 220, 0.15), transparent),
+    radial-gradient(1px 1px at 150px 150px, rgba(240, 240, 240, 0.25), transparent);
+}
+
 /* Smooth transitions for theme switching */
-.universe-header,
-.universe-header * {
+.dark .universe-header,
+.dark .universe-header * {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
